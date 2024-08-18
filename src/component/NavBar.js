@@ -1008,9 +1008,7 @@ function NavBar() {
                         
                         {/* Get application button */}
                         <li className="nav-item ms-2">
-                            <button className="btn btn-sm mb-0">
-                                <QrItem />
-                            </button>
+                            <QrItem />
                         </li>
                         {/* Responsive navbar toggler */}
                         <li className="nav-item">

@@ -60,7 +60,7 @@ function CardItem() {
 
     return (
         <div className="card-container">
-            <div className="card" onClick={showActionSheet}>
+            <div className="card-box" onClick={showActionSheet}>
                 Click Me
             </div>
 

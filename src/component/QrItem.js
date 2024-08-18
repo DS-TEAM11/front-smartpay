@@ -50,8 +50,9 @@ function QrItem() {
 
     return (
         <div>
-            <button onClick={handleButtonClick}>
-                {isQrVisible ? 'QR 숨기기' : '결제 QR 생성'}
+            <button className="btn" onClick={handleButtonClick}>
+                <i class="bi bi-person-circle"></i>
+                {isQrVisible ? ' QR 숨기기' : ' 결제 QR 생성'}
             </button>
 
             {isQrVisible && (

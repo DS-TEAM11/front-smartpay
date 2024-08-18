@@ -1,4 +1,5 @@
 import React from "react";
+import NavBar from "../component/NavBar";
 import Header from "../component/Header";
 import Footer from "../component/Footer";
 
@@ -14,9 +15,9 @@ const Home = () => {
     }
 
     return (
-        <>
+        <>  
+            <NavBar />
             <Header />
-            Home 페이지입니다.
             <div style={styles.card}>
 
             </div>

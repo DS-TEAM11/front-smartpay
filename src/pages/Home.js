@@ -1,3 +1,6 @@
+import React from "react";
+import Header from "../component/Header";
+import Footer from "../component/Footer";
 
 const Home = () => {
     const styles = {
@@ -12,10 +15,12 @@ const Home = () => {
 
     return (
         <>
+            <Header />
             Home 페이지입니다.
             <div style={styles.card}>
 
             </div>
+            <Footer />
         </>
     )
 }

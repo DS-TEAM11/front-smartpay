@@ -2,7 +2,7 @@ function Footer() {
 
     return (
         <>
-        
+            footer입니다
         </>
     )
 }

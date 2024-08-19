@@ -1,6 +1,6 @@
 import React from 'react';
 import Receipt from './component/Receipt';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.css';
 
 function App() {
     return (

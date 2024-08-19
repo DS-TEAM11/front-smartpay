@@ -1,9 +1,8 @@
-import axios from "axios"
-import React, { useEffect, useState, useRef } from "react";
-import { Stomp } from "@stomp/stompjs";
+import axios from 'axios';
+import React, { useEffect, useState, useRef } from 'react';
+import { Stomp } from '@stomp/stompjs';
 
 function Chat() {
-
     const stompClient = useRef(null);
     // 채팅 내용들을 저장할 변수
     const [messages, setMessages] = new useState([]);
@@ -16,12 +15,12 @@ function Chat() {
 
     // 웹소켓 연결 설정
     const connect = () => {
-        const socket = new WebSocket("ws://192.168.45.137:8091/ws");
+        const socket = new WebSocket('ws://192.168.0.30:8091/ws');
         stompClient.current = Stomp.over(socket);
         stompClient.current.connect({}, () => {
-        stompClient.current.subscribe(`/sub/chatroom/1`, (message) => {
-        const newMessage = JSON.parse(message.body);
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
+            stompClient.current.subscribe(`/sub/chatroom/1`, (message) => {
+                const newMessage = JSON.parse(message.body);
+                setMessages((prevMessages) => [...prevMessages, newMessage]);
             });
         });
     };
@@ -35,14 +34,18 @@ function Chat() {
 
     // 기존 채팅 메시지를 서버로부터 가져오는 함수
     const fetchMessages = () => {
-        return axios.get("http://192.168.45.137:8091/chat/1")
-            .then(response => {
+        return axios
+            .get('http://192.168.0.30:8091/chat/1')
+            .then((response) => {
                 console.log(response.data); // 응답 데이터 로그
                 setMessages(response.data);
             })
-            .catch(error => {
-                console.error("There was an error fetching the messages!", error);
-        });
+            .catch((error) => {
+                console.error(
+                    'There was an error fetching the messages!',
+                    error,
+                );
+            });
     };
 
     useEffect(() => {
@@ -51,18 +54,18 @@ function Chat() {
 
         // 컴포넌트 언마운트 시 웹소켓 연결 해제
         return () => disconnect();
-      }, []);
+    }, []);
 
     //메세지 전송
     const sendMessage = () => {
         if (stompClient.current && inputValue) {
-        const body = {
-            id : 1,
-            name : "테스트1",
-            message : inputValue
-        };
-        stompClient.current.send(`/pub/message`, {}, JSON.stringify(body));
-        setInputValue('');
+            const body = {
+                id: 1,
+                name: '테스트1',
+                message: inputValue,
+            };
+            stompClient.current.send(`/pub/message`, {}, JSON.stringify(body));
+            setInputValue('');
         }
     };
 

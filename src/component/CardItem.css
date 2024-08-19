@@ -1,7 +1,11 @@
 /* CardItem.css */
+.cardItem {
+    width: 95%;
+    margin: auto;
+}
 
 .card-container {
-    position: relative;
+    /* position: relative; */
 }
 
 .card-box {
@@ -34,18 +38,17 @@
     margin: 20px 0;
 }
 
-.qr-code { 
-    width: 100%
+.qr-code {
+    width: 100%;
 }
 
 .timer-bar {
     height: 100%;
-    background-color: #6F42C1;
+    background-color: #6f42c1;
     transition: width 1s linear;
 }
 
 .timer-text {
-
 }
 
 #actionSheet {

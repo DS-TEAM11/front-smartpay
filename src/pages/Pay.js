@@ -2,13 +2,22 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PaymentSuccess from "../component/Receipt";
-
+import Button from "../component/Button";
+import Order from "../component/Order";
+import Header from "../component/Header";
+import RecoCard from "../component/RecoCard";
 const Pay = () => {
+  const franchise = "gs25"
+  const testprice= 150000;
+  const testsave =300;
+  const testtype= "적립";
+  
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentData, setPaymentData] = useState(null);
   const navigate = useNavigate();
 
   const handlePayment = async () => {
+    //
     const paymentData = {
       orderNo: "TEST",
       price: 150000,
@@ -67,28 +76,38 @@ const Pay = () => {
       }
     }
   };
-
+//컴포넌트 확인용 데이터?
+  let getIsAi = false;
   return (
     <div>
-      {!paymentSuccess ? (
-        <button onClick={handlePayment} style={buttonStyle}>
-          결제하기
-        </button>
-      ) : (
-        <PaymentSuccess paymentData={paymentData} />
+      <Header/>
+      <Order/>
+      
+        <div className="d-flex justify-content-center">
+          
+          <div className="col-10 row">
+          {getIsAi && (
+
+            <div className="p-2 px-4 aiInfo">
+              <p>
+              ※ 이 카드는 편의점 이용금액 1,000원당 2마일리지 특별적립 혜택을 받을 수 있어요.
+              </p>
+            </div>
+          )}
+            <Button onClick={handlePayment} text={"이 카드로 결제하기"}/>
+              
+            <p className="text-decoration-underline text-end mt-2 p-0" href="">다른 카드 선택하기</p>
+          
+          </div>
+        </div>
+      
+      {!getIsAi && (
+         <RecoCard/> 
       )}
     </div>
   );
 };
 
-const buttonStyle = {
-  padding: "10px 20px",
-  backgroundColor: "#4CAF50",
-  color: "white",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-  fontSize: "16px",
-};
+
 
 export default Pay;

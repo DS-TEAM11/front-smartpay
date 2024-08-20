@@ -62,7 +62,15 @@ function CardItem() {
     const timerWidth = (timeLeft / 180) * 100;
 
     return (
-        <div className="cardItem">
+        <>
+{/* =======================
+Main Banner START */}
+<section className="position-relative overflow-hidden pb-0 pt-xl-9">
+  <div className="container pt-4 pt-sm-5">
+    <div className="row g-xl-5">
+      {/* Hero content START */}
+      <div className="col-xl-7 mb-5 mb-xl-0">
+      <div className="cardItem">
             <div className="card-container">
                 <div className="card-box" onClick={showActionSheet}>
                     Click Me
@@ -103,7 +111,7 @@ function CardItem() {
                             className="fullscreen-toggle"
                             onClick={toggleFullScreen}
                         >
-                            <i class="bi bi-arrow-up-square"></i>
+                            <i className="bi bi-arrow-up-square"></i>
                         </div>
                         <div className="option close" onClick={hideActionSheet}>
                             ← 돌아가기
@@ -112,6 +120,17 @@ function CardItem() {
                 </div>
             </div>
         </div>
+      </div>
+      
+    </div>
+  </div>
+</section>
+{/* =======================
+Main Banner END */}
+
+        
+        </>
+        
     );
 }
 

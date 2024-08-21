@@ -1,0 +1,14 @@
+
+.rankImg{
+    filter: drop-shadow(5px 5px 5px gray);
+    width: 120%;
+    border: 1px solid white;
+}
+.borderTest {
+    background-color:  #4F46E5;
+    color: #fff;
+}
+.white{
+    color: #fff;
+
+}

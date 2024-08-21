@@ -1,0 +1,15 @@
+.fixed-container {
+    width: 100%;
+    height: 844px;
+    margin: 0 auto; /* 화면 중앙에 위치 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* 선택사항: 내용이 넘치는 경우 숨김 */
+    background-color: #ffffff; /* 선택사항: 배경색 추가 */
+}
+
+.MainLogo img {
+    width: 300px;
+    height: auto; /* 높이를 자동으로 맞춰 로고 비율 유지 */
+}

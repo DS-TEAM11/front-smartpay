@@ -1,7 +1,7 @@
-import React, { // 훅 모음
-    useState, // 상태 관리
-    useEffect, // 생명주기 관리
-    forwardRef, // 컴포넌트 참조 관리
+import React, {
+    useState,
+    useEffect,
+    forwardRef,
     useImperativeHandle,
 } from 'react';
 import axios from 'axios';

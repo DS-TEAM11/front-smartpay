@@ -1,13 +1,8 @@
-import React, { // 훅 모음
-    useState, // 상태 관리
-    useEffect, // 생명주기 관리
-    forwardRef, // 컴포넌트 참조 관리
-    useImperativeHandle,
-} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './QrItem.css';
+import './CardItem.css';
 
-const QrItem = forwardRef((props, ref) => {
+function CardItem() {
     const [qrCodeUrl, setQrCodeUrl] = useState('');
     const [isQrVisible, setIsQrVisible] = useState(false);
     const [isActionSheetVisible, setIsActionSheetVisible] = useState(false);
@@ -39,10 +34,6 @@ const QrItem = forwardRef((props, ref) => {
         return () => clearInterval(timer);
     }, [isQrVisible, timeLeft]);
 
-    useImperativeHandle(ref, () => ({
-        showActionSheet,
-    }));
-
     const formatTime = (seconds) => {
         const minutes = Math.floor(seconds / 60)
             .toString()
@@ -71,8 +62,12 @@ const QrItem = forwardRef((props, ref) => {
     const timerWidth = (timeLeft / 180) * 100;
 
     return (
-        <div className="qrItem">
+        <div className="cardItem">
             <div className="card-container">
+                <div className="card-box" onClick={showActionSheet}>
+                    Click Me
+                </div>
+
                 <div
                     id="actionSheet"
                     className={`${isActionSheetVisible ? 'active' : ''} ${
@@ -108,7 +103,7 @@ const QrItem = forwardRef((props, ref) => {
                             className="fullscreen-toggle"
                             onClick={toggleFullScreen}
                         >
-                            <i className="bi bi-arrow-up-square"></i>
+                            <i class="bi bi-arrow-up-square"></i>
                         </div>
                         <div className="option close" onClick={hideActionSheet}>
                             ← 돌아가기
@@ -118,6 +113,6 @@ const QrItem = forwardRef((props, ref) => {
             </div>
         </div>
     );
-});
+}
 
-export default QrItem;
+export default CardItem;

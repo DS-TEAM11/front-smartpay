@@ -1,0 +1,57 @@
+.receipt {
+    width: 95%;
+    margin: auto;
+}
+
+.topInfo {
+    text-align: left;
+}
+
+.detailInfo {
+    margin: auto;
+    border-radius: 1rem;
+}
+
+.detailInfo > * {
+    margin: 0 2rem;
+}
+
+.purchaseItemInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 1rem;
+}
+.purchaseItemInfo > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.7rem;
+}
+
+.purchaseItemName {
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 1rem;
+}
+.infoTitle {
+    font-weight: bold;
+}
+
+.infoValue {
+}
+
+.royalblue {
+    font-weight: bold;
+    color: #4f46e5;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.purchaseShopName {
+    font-size: 1.25rem;
+    text-align: right;
+}

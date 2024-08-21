@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 
 import Home from './pages/Home';
 import Register from './pages/Register';

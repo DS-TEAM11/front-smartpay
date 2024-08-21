@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
 import { Stomp } from '@stomp/stompjs';
+// import { Stomp } from 'stompjs';
 
 function Chat() {
     const stompClient = useRef(null);
@@ -15,7 +16,7 @@ function Chat() {
 
     // 웹소켓 연결 설정
     const connect = () => {
-        const socket = new WebSocket('ws://192.168.0.30:8091/ws');
+        const socket = new WebSocket('ws://localhost:8091/ws');
         stompClient.current = Stomp.over(socket);
         stompClient.current.connect({}, () => {
             stompClient.current.subscribe(`/sub/chatroom/1`, (message) => {
@@ -35,7 +36,7 @@ function Chat() {
     // 기존 채팅 메시지를 서버로부터 가져오는 함수
     const fetchMessages = () => {
         return axios
-            .get('http://192.168.0.30:8091/chat/1')
+            .get('http://localhost:8091/chat/1')
             .then((response) => {
                 console.log(response.data); // 응답 데이터 로그
                 setMessages(response.data);

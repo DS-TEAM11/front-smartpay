@@ -3,7 +3,7 @@ import Button from './Button';
 const Header = () => {
     return (
         <>
-            <header className="header-sticky header-absolute shadow">
+            <header className="header-sticky header-absolute border-bottom">
                 {/* <!-- Logo Nav START --> */}
                 <nav className="navbar navbar-expand-xl">
                     <div className="container">
@@ -11,12 +11,13 @@ const Header = () => {
                         <a className="navbar-brand col-5 py-0" href="/">
                             <img
                                 className="light-mode-item navbar-brand-item"
-                                src="assets/images/splogo2.png"
+                                src="/assets/images/splogo2.png"
                                 alt="logo"
-                                style={{ width: '40%', height: 'auto' }}
+                                style={{ width: '40px', height: 'auto' }}
                             />
                         </a>
                         {/* <!-- Logo END --> */}
+
                         {/* <!-- Main navbar START --> */}
                         <div
                             className="navbar-collapse collapse "
@@ -26,43 +27,32 @@ const Header = () => {
                                 {/* <!-- Nav item --> */}
                                 <li className="nav-item">
                                     {' '}
-                                    <a
-                                        className="nav-link"
-                                        href="contact-v1.html"
-                                    >
+                                    <a className="nav-link" href="/">
                                         메인 홈{' '}
                                     </a>{' '}
                                 </li>
                                 <li className="nav-item">
                                     {' '}
-                                    <a
-                                        className="nav-link"
-                                        href="contact-v1.html"
-                                    >
+                                    <a className="nav-link" href="/history">
                                         결제 내역
                                     </a>{' '}
                                 </li>
                                 <li className="nav-item">
                                     {' '}
-                                    <a
-                                        className="nav-link"
-                                        href="contact-v1.html"
-                                    >
+                                    <a className="nav-link" href="/rank">
                                         이달의 카드 순위
                                     </a>{' '}
                                 </li>
                                 <li className="nav-item">
                                     {' '}
-                                    <a
-                                        className="nav-link"
-                                        href="contact-v1.html"
-                                    >
+                                    <a className="nav-link" href="/mypage">
                                         마이페이지
                                     </a>{' '}
                                 </li>
                             </ul>
                         </div>
                         {/* <!-- Main navbar END --> */}
+
                         {/* <!-- Buttons --> */}
                         <ul className="nav align-items-center dropdown-hover ms-sm-2">
                             <div className="me-3">
@@ -97,4 +87,5 @@ const Header = () => {
         </>
     );
 };
+
 export default Header;

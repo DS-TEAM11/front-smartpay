@@ -1,18 +1,17 @@
-.Order{
+.Order {
     width: 95%;
     margin: auto;
 }
-img{
+img {
     width: 65%;
 }
-.card-info-container {
+.card-info-container2 {
     display: flex;
     justify-content: space-between;
-    width: 65%; 
-    align-items: center; 
-  }
-
-  .blue-text {
-    color: #4F46E5;
+    width: 65%;
+    align-items: center;
 }
-  
+
+.blue-text {
+    color: #4f46e5;
+}

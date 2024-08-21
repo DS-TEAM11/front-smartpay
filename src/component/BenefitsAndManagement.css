@@ -1,0 +1,79 @@
+.benefits-management-container {
+    width: 100%;
+    max-width: 430px;
+    height: 60%; /* 화면의 나머지 60%를 사용 */
+    padding: 10px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; /* 혜택과 관리 섹션 간 공간 분배 */
+    box-sizing: border-box;
+}
+
+/* 혜택 섹션 스타일 */
+.benefits-section {
+    margin-bottom: 10px;
+    flex: 1;
+}
+
+.benefits-items {
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    gap: 10px;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    background-color: #f0f4f8;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.benefit-item img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.benefit-item p {
+    font-size: 16px;
+    color: #4f46e5;
+    margin: 0;
+    flex: 1;
+    text-align: left;
+}
+
+/* 카드 관리 섹션 스타일 */
+.management-section {
+    margin-top: 10px;
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+}
+
+.management-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    background-color: #f0f4f8;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.management-item img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+.management-item p {
+    font-size: 12px;
+    color: #333;
+    margin: 0;
+    text-align: center;
+}

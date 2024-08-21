@@ -1,14 +1,13 @@
 import React from 'react';
-import {BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
 import Home from './pages/Home';
 import Chat from './component/Chat';
-import Pay from "./pages/Pay"; 
-import PaymentSuccess from "./component/Receipt"; 
+import Pay from './pages/Pay';
+import PaymentSuccess from './component/Receipt';
 import Seller from './pages/Seller';
 import CardRank from './pages/CardRank';
-
-
+import PayHistory from './pages/PayHistory';
 
 function App() {
     return (
@@ -25,10 +24,10 @@ function App() {
                 <Route path="/pay" element={<Pay />} />
                 <Route path="/pay/success" element={<PaymentSuccess />} />
                 <Route path="rank" element={<CardRank />} />
+                <Route path="/history" element={<PayHistory />} />
             </Routes>
         </>
     );
-  
 }
 
 export default App;

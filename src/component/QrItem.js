@@ -19,6 +19,7 @@ const QrItem = forwardRef((props, ref) => {
             .get(endpoint, { responseType: 'blob' })
             .then((response) => {
                 setQrCodeUrl(URL.createObjectURL(response.data));
+                //웹소켓 연결
                 setIsQrVisible(true);
             })
             .catch((error) => {

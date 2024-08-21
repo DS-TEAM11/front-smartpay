@@ -66,7 +66,9 @@ const Receipt = (props) => {
                             <div className="infoValue">본인</div>
                         </div>
                     </div>
-                    <Button text={'돌아가기'}> </Button>
+                    <Button text={'돌아가기'} className="back_btn">
+                        {' '}
+                    </Button>
                 </div>
             </div>
         </>

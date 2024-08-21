@@ -1,7 +1,11 @@
-import "./Button.css";
+import './Button.css';
 
-const Button = ({ text, onClick }) => {
-    return <button className="Button" onClick={onClick}>{text}</button>;
+const Button = ({ className, text, onClick }) => {
+    return (
+        <button className={`Button ${className}`} onClick={onClick}>
+            {text}
+        </button>
+    );
 };
 
 export default Button;

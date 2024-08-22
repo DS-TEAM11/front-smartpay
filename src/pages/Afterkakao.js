@@ -5,13 +5,10 @@ const Afterkakao = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // URL에서 쿼리 파라미터로 토큰 추출
+        //토큰 추출
         const urlParams = new URLSearchParams(window.location.search);
         const accessToken = urlParams.get('accessToken');
         const refreshToken = urlParams.get('refreshToken');
-
-        console.log('URL에서 추출한 AccessToken:', accessToken);
-        console.log('URL에서 추출한 RefreshToken:', refreshToken);
 
         // 로컬 스토리지에 AccessToken 저장
         if (accessToken) {

@@ -13,13 +13,39 @@ import image6 from '../img/home6.png';
 
 const Home = () => {
     const [cards, setCards] = useState([]);
-    const memberNo = 2;
+    const [memberNo, setMemberNo] = useState(null);
+
+    useEffect(() => {
+        // 로컬스토리지에서 토큰 가져오기
+        const token = localStorage.getItem('accessToken');
+
+        if (token) {
+            // 백엔드로 memberNo 요청
+            axios
+                .get('http://localhost:8091/member/findMember', {
+                    headers: {
+                        Authorization: token, // Bearer 포함
+                    },
+                })
+                .then((response) => {
+                    setMemberNo(response.data); // 응답받은 memberNo 저장
+                })
+                .catch((error) => {
+                    console.error('memberNo 요청 에러', error);
+                });
+        }
+    }, []);
 
     useEffect(() => {
         if (memberNo) {
+            const token = localStorage.getItem('accessToken');
+
             axios
                 .get(`http://localhost:8091/api/cards/byMember`, {
                     params: { memberNo },
+                    headers: {
+                        Authorization: token, // Bearer 포함
+                    },
                 })
                 .then((response) => {
                     // 카드 데이터를 regDate 기준으로 정렬

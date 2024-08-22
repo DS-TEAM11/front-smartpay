@@ -52,7 +52,7 @@ const Login = () => {
                 localStorage.setItem('accessToken', accessToken);
 
                 if (rememberMe) {
-                    console.log('아이디 기억눌림, 로컬스토리지에 이메일저장');
+                    console.log('아이디 기억, 로컬스토리지에 이메일저장');
                     localStorage.setItem('savedEmail', email);
                 } else {
                     console.log(
@@ -62,7 +62,7 @@ const Login = () => {
                 }
 
                 if (autoLogin) {
-                    console.log('자동로그인 눌림, 리프레시토큰을 쿠키에 저장 ');
+                    console.log('자동로그인, 리프레시토큰을 쿠키에 저장 ');
                     document.cookie = `refreshToken=${refreshToken}; path=/; httpOnly`;
                 }
 
@@ -83,48 +83,9 @@ const Login = () => {
     };
 
     const handleKakaoLogin = () => {
-        console.log('카카오 로그인 눌림');
         window.location.href =
             'http://localhost:8091/oauth2/authorization/kakao';
     };
-
-    // const handleKakaoLogin = async () => {
-    //     console.log('카카오 로그인 눌림');
-
-    //     try {
-    //         // 카카오 로그인으로 리디렉션
-    //         const response = await axios.get(
-    //             'http://localhost:8091/oauth2/authorization/kakao',
-    //             { withCredentials: true },
-    //         );
-
-    //         console.log('카카오 로그인 응답:', response.headers);
-
-    //         const accessToken = response.headers.authorization;
-    //         const refreshToken = response.headers['authorization-refresh'];
-
-    //         console.log('Tokens:', { accessToken, refreshToken });
-
-    //         if (accessToken) {
-    //             console.log('AccessToken exists, 로컬스토리지에 저장');
-    //             localStorage.setItem('accessToken', accessToken);
-
-    //             if (autoLogin) {
-    //                 console.log('자동로그인 눌림, 리프레시토큰을 쿠키에 저장 ');
-    //                 document.cookie = `refreshToken=${refreshToken}; path=/; httpOnly`;
-    //             }
-
-    //             console.log('카카오 로그인 성공, 메인으로 리다이렉트');
-    //             navigate('/');
-    //         } else {
-    //             console.error('액세스토큰 없음, 카카오 로그인 실패');
-    //             alert('카카오 로그인에 실패했습니다.');
-    //         }
-    //     } catch (error) {
-    //         console.error('카카오 로그인 실패:', error);
-    //         alert('카카오 로그인에 실패했습니다.');
-    //     }
-    // };
 
     return (
         <div className="login-container">

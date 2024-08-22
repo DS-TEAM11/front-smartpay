@@ -7,7 +7,7 @@ function CardItem() {
     const [isQrVisible, setIsQrVisible] = useState(false);
     const [isActionSheetVisible, setIsActionSheetVisible] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(10);
+    const [timeLeft, setTimeLeft] = useState(180);
 
     const createQr = (endpoint) => {
         axios

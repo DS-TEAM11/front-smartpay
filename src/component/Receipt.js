@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import './Receipt.css';
 import axios from 'axios';
 import Button from './Button';
@@ -7,12 +8,9 @@ import Header from './Header';
 // 로그인 정보 + 쿼리스트링에 주문번호(UUID)
 // 쿼리스트링의 값에 따라서 axios 요청 -> 받아온 데이터를 리액트에서 표시
 // 받아온 데이터를 출력하기
-const Receipt = (props) => {
-    const [formData, setFormData] = useState({
-        name: '',
-        amount: '',
-        date: '',
-    });
+const Receipt = (state) => {
+    const location = useLocation();
+    const [formData, setFormData] = useState(location.state.aiData);
 
     const handleChange = (e) => {
         setFormData({
@@ -20,12 +18,11 @@ const Receipt = (props) => {
             [e.target.name]: e.target.value,
         });
     };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Add your logic here to handle form submission
-    };
-
+    useEffect(() => {
+        handleChange(formData);
+    }, [formData]);
+    console.log('영수증 페이지에 정보 전달됨', formData);
+    console.log('영수증 페이지에 정보 전달됨', JSON.stringify(formData));
     return (
         <>
             <Header />

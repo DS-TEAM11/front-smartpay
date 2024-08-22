@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import './Timer.css';
 const Timer = ({ onRemove }) => {
     const [timeLeft, setTimeLeft] = useState(180);
-const timerWidth = (timeLeft / 180) * 100;
+    const timerWidth = (timeLeft / 180) * 100;
     let timer;
     useEffect(() => {
         // console.log(timeLeft);
@@ -29,7 +29,7 @@ const timerWidth = (timeLeft / 180) * 100;
         <div className="timer">
             <div className="timer-bar-bg">
                 <div className="timer-bar" style={{ width: `${timerWidth}%` }}>
-                    ' '
+                    &nbsp;
                 </div>
             </div>
             <p className="timer-text">

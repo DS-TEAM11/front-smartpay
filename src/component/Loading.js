@@ -7,7 +7,7 @@ function Loading({ text }) {
     return (
         <>
             <BlackContainer />
-            <div className="loading d-flex flex-column justify-content-center align-items-center">
+            <div className="loading d-flex flex-column justify-content-center align-items-center w-75 my-auto">
                 <div
                     className="spinner-border text-light spinner-size"
                     role="status"
@@ -21,9 +21,14 @@ function Loading({ text }) {
                     잠시만 기다려주세요.
                 </div>
 
-<div className='buttons'>
-                    
-</div>
+                <div className="buttons d-flex w-100 justify-content-between mt-8">
+                    <div className="text-light fs-6 fw-bolder text-center">
+                        정보 입력 완료
+                    </div>
+                    <div className="text-light fs-6 fw-bolder text-center">
+                        취소하기
+                    </div>
+                </div>
             </div>
         </>
     );

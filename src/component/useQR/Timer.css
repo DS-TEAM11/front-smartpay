@@ -10,12 +10,13 @@
 }
 
 .timer-bar {
-    position: absolute;
+    height: 8px;
     background-color: #6f42c1;
+    border-radius: 5px;
     transition: width 1s linear;
     z-index: 10001;
 }
 
 .timer-text {
-margin-top: 1rem;
+    margin-top: 1rem;
 }

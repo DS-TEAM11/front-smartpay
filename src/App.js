@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import {BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Link,
+    useNavigate,
+} from 'react-router-dom';
 
 import Home from './pages/Home';
 import Register from './pages/Register';
@@ -12,6 +18,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import logo from './img/sp_logo.png';
 import './App.css';
 import WelcomePage from './pages/WelcomePage';
+import Button from './component/Button';
+import NotFoundPage from './pages/404';
+import Test from './pages/Test';
 const SplashScreen = () => {
     const navigate = useNavigate();
 
@@ -44,11 +53,12 @@ function App() {
                     <Route path="/pay" element={<Pay />} />
                     <Route path="/pay/receipt" element={<Receipt />} />
                     <Route path="rank" element={<CardRank />} />
+                    <Route path="test" element={<Test />} />
+                    <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </Router>
         </>
     );
-  
 }
 
 export default App;

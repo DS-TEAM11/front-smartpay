@@ -44,7 +44,6 @@ const Header = () => {
                                     </a>{' '}
                                 </li>
                                 <li className="nav-item">
-                                    {' '}
                                     <a className="nav-link" href="/mypage">
                                         마이페이지
                                     </a>{' '}

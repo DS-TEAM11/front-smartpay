@@ -6,6 +6,8 @@ import React, { // 훅 모음
 } from 'react';
 import axios from 'axios';
 import './QrItem.css';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
 const QrItem = forwardRef((props, ref) => {
     const [qrCodeUrl, setQrCodeUrl] = useState('');
@@ -22,6 +24,43 @@ const QrItem = forwardRef((props, ref) => {
             .then((response) => {
                 setQrCodeUrl(URL.createObjectURL(response.data));
                 //웹소켓 연결
+                const socket = new SockJS('http://localhost:8091/ws');
+                const stompClient = Stomp.over(socket);
+                function send() {
+                    stompClient.send(
+                        '/topic/sellinfo',
+                        {},
+                        JSON.stringify({
+                            message: '거래요청',
+                        }),
+                    );
+                }
+                stompClient.connect({}, function (frame) {
+                    console.log('Connected: ' + frame);
+                    stompClient.subscribe(
+                        '/topic/sellinfo',
+                        function (message) {
+                            const body = JSON.parse(message.body);
+                            console.log('message:', body);
+                            if (body.message === '거래요청') {
+                                alert('거래요청 들어옴');
+                                //어두운 화면 + 로딩중 띄워주고
+                            }
+                            if (body.message === '정보입력완료') {
+                                alert('결제 ㄱ');
+                                //axios로 결제 정보를 담아서 ai 추천 요청
+                                //추천 결과 나오면 페이지 이동해서 받은 정보 보여주기
+                                //axios로 선택한 카드로 결제요청 보내기
+                                //결제 요청 결과에 따라 성공 시)
+                                //결제history DB내용으로 영수증 보여주기(이때 한번 더 웹소켓 접속해서 결제 완료 알림
+                                //-> 판매자도 결제 완료 페이지로 이동: 웹소켓 종료(결제 완료))
+                            }
+                        },
+                    );
+                    //TODO: sellinfo로 값 전달하고 서버에서 받는거 테스트 필요
+                    //받은 값 기반으로 서버 로직 돌리고 리턴값 받는거 테스트 필요
+                });
+
                 setIsQrVisible(true);
             })
             .catch((error) => {

@@ -1,16 +1,21 @@
 import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import Button from './Button';
-import QrItem from './QrItem';
+import Qrtest from './useQR/Qrtest';
 const Header = () => {
-    const qrItemRef = useRef(null);
+    const [showQr, setShowQr] = useState(false); // 상태를 추가하여 QR 코드를 표시할지 여부를 관리합니다.
 
     const handleClick = () => {
-        if (qrItemRef.current) {
-            qrItemRef.current.showActionSheet();
-        }
+        setShowQr(true);
+    };
+    const removeQrItem = () => {
+        setShowQr(false);
     };
     return (
         <>
+            <div className="qrshow">
+                {showQr && <Qrtest onRemove={removeQrItem} />}
+            </div>
             <header className="header-sticky header-absolute border-bottom">
                 {/* <!-- Logo Nav START --> */}
                 <nav className="navbar navbar-expand-xl">
@@ -35,9 +40,9 @@ const Header = () => {
                                 {/* <!-- Nav item --> */}
                                 <li className="nav-item">
                                     {' '}
-                                    <a className="nav-link" href="/">
+                                    <Link className="nav-link" to="/">
                                         메인 홈{' '}
-                                    </a>{' '}
+                                    </Link>
                                 </li>
                                 <li className="nav-item">
                                     {' '}
@@ -52,7 +57,6 @@ const Header = () => {
                                     </a>{' '}
                                 </li>
                                 <li className="nav-item">
-                                    {' '}
                                     <a className="nav-link" href="/mypage">
                                         마이페이지
                                     </a>{' '}
@@ -68,7 +72,6 @@ const Header = () => {
                                     text={'결제 QR 생성'}
                                     onClick={handleClick}
                                 />
-                                <QrItem ref={qrItemRef} />
                             </div>
                             {/* <!-- Responsive navbar toggler --> */}
                             <li className="nav-item">

@@ -8,19 +8,6 @@
     /* position: relative; */
 }
 
-.card-box {
-    width: 150px;
-    height: 100px;
-    background-color: lightblue;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: opacity 0.3s ease;
-}
-
 .timer-bar-container {
     width: 73%;
     height: 10px;

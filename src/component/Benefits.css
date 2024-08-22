@@ -1,0 +1,54 @@
+.benefits-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+    max-width: 430px; /* iOS 화면 너비에 맞춤 */
+    height: auto;
+}
+
+.benefits-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+.benefit-item {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    margin-bottom: 15px;
+    min-width: 280px;
+    box-sizing: border-box;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.benefit-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.benefit-item img {
+    width: 50px;
+    height: 50px;
+    margin-right: 16px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.benefit-item p {
+    font-size: 18px;
+    color: #4f46e5;
+    margin: 0;
+    text-align: left;
+    flex: 1;
+    font-weight: bold;
+}

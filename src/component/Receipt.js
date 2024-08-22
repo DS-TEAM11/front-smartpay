@@ -1,58 +1,76 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import './Receipt.css';
+import axios from 'axios';
+import Button from './Button';
+import Header from './Header';
+// 로그인 정보 -> context 등에서 받아오기
+// 로그인 정보 + 쿼리스트링의 결제 순번
+// Spring Security에서 로그인 정보로 인가
+// 쿼리스트링의 값에 따라서 axios 요청 -> 받아온 데이터를 리액트에서 표시
+// 받아온 데이터를 출력하기
+const Receipt = (props) => {
+    const [formData, setFormData] = useState({
+        name: '',
+        amount: '',
+        date: '',
+    });
 
-const PaymentSuccess = ({ paymentData }) => {
-  const location = useLocation();
-  const data = paymentData || location.state?.paymentData;
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return '날짜 없음';
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Add your logic here to handle form submission
+    };
 
-    const year = dateString.slice(0, 4);
-    const month = dateString.slice(4, 6);
-    const day = dateString.slice(6, 8);
-
-    return `${year}년 ${month}월 ${day}일`;
-  };
-
-  const getCardLastFourDigits = (cardNo) => {
-    if (!cardNo) return '카드 번호 없음';
-    return cardNo.slice(-4);
-  };
-
-  return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>결제 완료</h2>
-      {data ? (
-        <div style={styles.receipt}>
-          <p>주문 번호: {data.orderNo}</p>
-          <p>가맹점: {data.franchiseNo}</p>
-          <p>결제 금액: {data.price ? `${data.price}원` : '결제 금액 없음'}</p>
-          <p>상품: {data.product}</p>
-          <p>결제 일자: {data.payDate ? formatDate(data.payDate) : '결제 일자 없음'}</p>
-          <p>결제 카드: {getCardLastFourDigits(data.cardNo)}</p>
-          <p>받은 혜택: {data.savePrice ? `${data.savePrice}원` : '혜택 금액 없음'}</p>
-          <p>소지자: 본인</p>
-        </div>
-      ) : (
-        <p>결제 데이터가 없습니다.</p>
-      )}
-    </div>
-  );
+    return (
+        <>
+            <Header />
+            <div className="receipt">
+                {/* //component1 -> topInfo */}
+                <div className="topInfo">
+                    <div className="title">결제 완료</div>
+                    <div className="titleSubInfo">2024.00.00. 00:00:00</div>
+                    <div className="titleSubInfo">주문 번호: (uuid)</div>
+                </div>
+                <div className="detailInfo bg-light d-flex flex-column w-95">
+                    <div className="purchaseShopName">GS25 - 동교점</div>
+                    <hr />
+                    <div className="purchaseItemName">
+                        참깨라면(대컵) 외 24종
+                    </div>
+                    <div className="purchaseItemInfo">
+                        {/* axios로 받아온 값을 각각 infoTitle, infoValue로 나눠서 작성 */}
+                        <div className="purchaseItemPriceName">
+                            <div className="infoTitle">결제 금액</div>
+                            <div className="infoValue">150,000원</div>
+                        </div>
+                        <div className="purchaseBenefit">
+                            <div className="infoTitle">받은 혜택</div>
+                            <div className="infoValue royalblue">300원</div>
+                        </div>
+                        <div className="purchaseUsedCard">
+                            <div className="infoTitle">결제 카드</div>
+                            <div className="infoValue">삼성(3342)</div>
+                        </div>
+                        <div className="purchaseStatus">
+                            <div className="infoTitle">결제 상태</div>
+                            <div className="infoValue">승인 완료</div>
+                        </div>
+                        <div className="purchaseCardOwner">
+                            <div className="infoTitle">소지자</div>
+                            <div className="infoValue">본인</div>
+                        </div>
+                    </div>
+                    <Button text={'돌아가기'}> </Button>
+                </div>
+            </div>
+        </>
+    );
 };
 
-const styles = {
-  container: {
-    padding: '20px',
-    fontFamily: 'Arial, sans-serif',
-  },
-  title: {
-    fontSize: '24px',
-    marginBottom: '20px',
-  },
-  receipt: {
-    fontSize: '18px',
-  },
-};
-
-export default PaymentSuccess;
+export default Receipt;

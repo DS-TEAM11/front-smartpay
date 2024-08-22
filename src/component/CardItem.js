@@ -140,5 +140,4 @@ Main Banner END */}
         </>
     );
 }
-
 export default CardItem;

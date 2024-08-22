@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Button from '../component/Button';
@@ -23,9 +23,60 @@ function Register() {
     const [selectedCard, setSelectedCard] = useState(null);
     const [cards, setCards] = useState([]);
     const [cardCode, setCardCode] = useState('');
-    const [cardImage, setCardImage] = useState(''); // 이미지 URL 상태 추가
+    const [cardImage, setCardImage] = useState('');
+    const [memberNo, setMemberNo] = useState(null);
 
     const navigate = useNavigate();
+
+    // 1. memberNo를 가져오는 useEffect
+    useEffect(() => {
+        // 로컬스토리지에서 토큰 가져오기
+        const token = localStorage.getItem('accessToken');
+
+        if (token) {
+            // 백엔드로 memberNo 요청
+            axios
+                .get('http://localhost:8091/member/findMember', {
+                    headers: {
+                        Authorization: token, // Bearer 포함
+                    },
+                })
+                .then((response) => {
+                    setMemberNo(response.data); // 응답받은 memberNo 저장
+                })
+                .catch((error) => {
+                    console.error('memberNo 요청 에러', error);
+                });
+        }
+    }, []);
+
+    // 2. memberNo를 사용해 카드 데이터를 가져오는 useEffect
+    useEffect(() => {
+        if (memberNo) {
+            const token = localStorage.getItem('accessToken');
+
+            axios
+                .get('http://localhost:8091/api/cards/byMember', {
+                    params: { memberNo },
+                    headers: {
+                        Authorization: token, // Bearer 포함
+                    },
+                })
+                .then((response) => {
+                    // 카드 데이터를 regDate 기준으로 정렬
+                    const sortedCards = response.data.sort(
+                        (a, b) => new Date(a.regDate) - new Date(b.regDate),
+                    );
+                    setCards(sortedCards);
+                })
+                .catch((error) => {
+                    console.error(
+                        '카드 데이터를 가져오는 데 실패했습니다.',
+                        error,
+                    );
+                });
+        }
+    }, [memberNo]); // memberNo가 변경될 때만 이 useEffect가 실행됨
 
     const handleCardSelectClick = async () => {
         setIsModalOpen(true);
@@ -47,6 +98,11 @@ function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!memberNo) {
+            console.error('memberNo가 설정되지 않았습니다.');
+            return;
+        }
+
         const cardData = {
             cardNo: cardNo.replace(/\s/g, ''),
             cardNick,
@@ -55,7 +111,10 @@ function Register() {
             validPeriod,
             cardCode,
             cardImage,
+            memberNo,
         };
+
+        console.log('카드 등록 요청 데이터:', cardData);
 
         try {
             const response = await fetch('http://localhost:8091/api/cards', {
@@ -78,7 +137,7 @@ function Register() {
     };
 
     const handleCardNoChange = async (e) => {
-        const formattedCardNo = formatCardNo(e.target.value); // 입력된 카드 번호를 형식화
+        const formattedCardNo = formatCardNo(e.target.value);
         setCardNo(formattedCardNo);
 
         if (formattedCardNo.replace(/\s/g, '').length >= 6) {
@@ -95,7 +154,7 @@ function Register() {
 
                 setCategory(argName);
                 setIsCredit(isCredit);
-                setCardImage(Image); // 카드 이미지 URL을 상태에 설정
+                setCardImage(Image);
             } catch (error) {
                 setCategory('');
                 setIsCredit(null);

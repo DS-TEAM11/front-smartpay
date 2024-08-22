@@ -48,9 +48,6 @@
     transition: width 1s linear;
 }
 
-.timer-text {
-}
-
 #actionSheet {
     position: fixed;
     bottom: 0;

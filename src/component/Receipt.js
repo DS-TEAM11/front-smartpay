@@ -4,8 +4,7 @@ import axios from 'axios';
 import Button from './Button';
 import Header from './Header';
 // 로그인 정보 -> context 등에서 받아오기
-// 로그인 정보 + 쿼리스트링의 결제 순번
-// Spring Security에서 로그인 정보로 인가
+// 로그인 정보 + 쿼리스트링에 주문번호(UUID)
 // 쿼리스트링의 값에 따라서 axios 요청 -> 받아온 데이터를 리액트에서 표시
 // 받아온 데이터를 출력하기
 const Receipt = (props) => {

@@ -1,6 +1,13 @@
-.Loading{
-    width: 100%;
-    height: 100vh;
-    background-color: black;
-    opacity : 0.3;
+.loading {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1055;
+}
+
+.spinner-size {
+    width: 8vh;
+    height: 8vh;
+    text-align: center;
 }

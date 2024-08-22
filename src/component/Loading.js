@@ -14,12 +14,16 @@ function Loading({ text }) {
                 >
                     <span className="visually-hidden">Loading...</span>
                 </div>
-                <div className="text-light fs-6 fw-bolder text-center px-6 mt-7">
+                <div className="custom-text text-light fs-6 fw-bolder text-center mt-7">
                     {text}
                 </div>
                 <div className="text-light fs-6 fw-bolder text-center mt-3">
                     잠시만 기다려주세요.
                 </div>
+
+<div className='buttons'>
+                    
+</div>
             </div>
         </>
     );

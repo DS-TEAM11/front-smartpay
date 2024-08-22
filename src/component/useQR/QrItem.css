@@ -41,25 +41,11 @@
     text-align: center;
 }
 
-.timer {
-    width: 90%;
-}
-.timer-bar {
-    width: 100%;
-    height: 8px;
-    background-color: #efd0d0;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.timer-bar {
-    background-color: #6f42c1;
-    transition: width 1s linear;
-}
-
 .qrCode {
+    top: 0;
     width: 100%;
     margin-bottom: 15%;
+    margin-top: -1rem;
 }
 .qrCode > img {
     width: 150%;

@@ -3,11 +3,16 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1055;
+    z-index: 20001;
 }
 
 .spinner-size {
     width: 8vh;
     height: 8vh;
     text-align: center;
+}
+
+.loading > .custom-text {
+    width: 90%;
+    word-break: keep-all;
 }

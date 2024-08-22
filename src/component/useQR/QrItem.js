@@ -14,7 +14,7 @@ const QrItem = () => {
     const [isQrVisible, setIsQrVisible] = useState(false);
     const [isActionSheetVisible, setIsActionSheetVisible] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(180);
+const [timeLeft, setTimeLeft] = useState(180);
     const [isLoading, setIsLoading] = useState(false);
     // const [stompClient, setStompClient] = useState(
     //     Stomp.over(new SockJS('http://localhost:8091/ws')),

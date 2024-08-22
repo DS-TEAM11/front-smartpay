@@ -1,11 +1,12 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import './Timer.css';
 const Timer = ({ onRemove }) => {
     const [timeLeft, setTimeLeft] = useState(180);
 const timerWidth = (timeLeft / 180) * 100;
     let timer;
     useEffect(() => {
-        console.log(timeLeft);
+        // console.log(timeLeft);
         if (timeLeft > 0) {
             timer = setInterval(() => {
                 setTimeLeft((prevTime) => prevTime - 1);
@@ -26,10 +27,11 @@ const timerWidth = (timeLeft / 180) * 100;
 
     return (
         <div className="timer">
-            <div
-                className="timer-bar"
-                style={{ width: `${timerWidth}%` }}
-            ></div>{' '}
+            <div className="timer-bar-bg">
+                <div className="timer-bar" style={{ width: `${timerWidth}%` }}>
+                    ' '
+                </div>
+            </div>
             <p className="timer-text">
                 남은 유효 시간 : {formatTime(timeLeft)}
             </p>

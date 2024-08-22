@@ -6,6 +6,8 @@ import Timer from './Timer';
 import './QrItem.css';
 import qrUpBtn from '../../img/qrUpBtn.png';
 import $ from 'jquery';
+import { Stomp } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
 
 function Qrtest({ onRemove }) {
     const [qrCodeUrl, setQrCodeUrl] = useState('');
@@ -15,7 +17,47 @@ function Qrtest({ onRemove }) {
 
     const [boxHeight, setBoxHeight] = useState('60vh');
     const [boxTop, setBoxTop] = useState('40vh');
+    const [stompClient, setStompClient] = useState(
+        Stomp.over(new SockJS('http://localhost:8091/ws')),
+    );
+    const wsConnect = () => {
+        stompClient.connect({}, function (frame) {
+            // console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/sellinfo', function (message) {
+                const body = JSON.parse(message.body);
+                // console.log('message:', body);
+                if (body.message === 'seller enter') {
+                    console.log('판매자 접속');
+                    setIsLoading(true);
+                    setIsQrVisible(false);
+                }
+                if (body.message === 'purchase information') {
+                    console.log('구매 정보 입력 완료');
+                    //axios로 결제 정보를 담아서 ai 추천 요청
+                    //추천 결과 나오면 페이지 이동해서 받은 정보 보여주기
+                    //axios로 선택한 카드로 결제요청 보내기
+                    //결제 요청 결과에 따라 성공 시)
+                    //결제history DB내용으로 영수증 보여주기(이때 한번 더 웹소켓 접속해서 결제 완료 알림
+                    //-> 판매자도 결제 완료 페이지로 이동: 웹소켓 종료(결제 완료))
+                }
+            });
+            //TODO: sellinfo로 값 전달하고 서버에서 받는거 테스트 필요
+            //받은 값 기반으로 서버 로직 돌리고 리턴값 받는거 테스트 필요
+            //QR 생성에 성공하면 -> 웹소켓 연결
+        });
+    };
+    const handleRemove = () => {
+        // stompClient.disconnect()를 먼저 실행
+        if (stompClient && typeof stompClient.disconnect === 'function') {
+            stompClient.disconnect();
+            // console.log('pay logic disconnected');
+        }
 
+        // 이후에 onRemove 실행
+        if (onRemove && typeof onRemove === 'function') {
+            onRemove();
+        }
+    };
     const createQr = () => {
         if (qrCodeUrl != '') {
             setIsQrVisible(true);
@@ -27,7 +69,7 @@ function Qrtest({ onRemove }) {
             })
             .then((response) => {
                 setQrCodeUrl(URL.createObjectURL(response.data));
-                // wsConnect();
+                wsConnect();
             })
             .catch((error) => {
                 alert('QR 코드 생성에 문제가 발생했습니다.');
@@ -51,7 +93,7 @@ function Qrtest({ onRemove }) {
                 <div className="qrItem">
                     <BlackContainer
                         onClick={() => {
-                            onRemove();
+                            handleRemove();
                         }}
                     />
                     <div
@@ -84,7 +126,7 @@ function Qrtest({ onRemove }) {
                                 <img src={qrUpBtn} alt="qrUpBtn" />
                             </div>
                         )}
-<Timer onRemove={onRemove} />
+                        <Timer onRemove={handleRemove} />
                         <div className="qrCode">
                             <img
                                 src={qrCodeUrl}

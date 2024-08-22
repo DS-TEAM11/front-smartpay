@@ -3,6 +3,7 @@ import axios from 'axios';
 import Header from '../component/Header';
 import './Home.css';
 import CardInfo from '../component/CardInfo';
+import CardItem from '../component/CardItem';
 import BenefitsAndManagement from '../component/BenefitsAndManagement'; // 컴포넌트를 모듈화
 import image1 from '../img/home1.png';
 import image2 from '../img/home2.png';

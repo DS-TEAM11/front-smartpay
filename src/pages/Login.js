@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import Button from '../component/Button';
 
 const Login = () => {
     const [email, setEmail] = useState(
@@ -134,20 +135,20 @@ const Login = () => {
                         ID/PW 찾기
                     </a>
                 </div>
-                <button type="submit" className="btn btn-primary login-btn">
-                    로그인하기
-                </button>
+                <Button
+                    type="submit"
+                    className="login-btn"
+                    text={'로그인하기'}
+                ></Button>
             </form>
             <div className="register-link">
                 아직 회원이 아니신가요? <a href="/register">회원가입</a>
             </div>
             <div className="or-divider">Or</div>
             <button
-                className="btn btn-warning kakao-login-btn"
+                className="btn kakao-login-btn"
                 onClick={handleKakaoLogin}
-            >
-                카카오 로그인
-            </button>
+            ></button>
         </div>
     );
 };

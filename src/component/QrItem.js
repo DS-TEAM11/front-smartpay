@@ -14,9 +14,11 @@ const QrItem = forwardRef((props, ref) => {
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [timeLeft, setTimeLeft] = useState(180);
 
-    const createQr = (endpoint) => {
+    const createQr = () => {
         axios
-            .get(endpoint, { responseType: 'blob' })
+            .get('http://192.168.0.30:8091/qr/seller', {
+                responseType: 'blob',
+            })
             .then((response) => {
                 setQrCodeUrl(URL.createObjectURL(response.data));
                 //웹소켓 연결
@@ -54,7 +56,7 @@ const QrItem = forwardRef((props, ref) => {
 
     const showActionSheet = () => {
         setIsActionSheetVisible(true);
-        createQr('http://192.168.0.30:8091/qr/seller');
+        createQr();
     };
 
     const hideActionSheet = () => {

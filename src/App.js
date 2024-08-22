@@ -56,9 +56,9 @@ function App() {
                     <Route path="/pay/receipt" element={<Receipt />} />
                     <Route path="rank" element={<CardRank />} />
                     <Route path="test" element={<Test />} />
-                    <Route path="*" element={<NotFoundPage />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/afterkakao" element={<Afterkakao />} />
+                    <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </Router>
         </>

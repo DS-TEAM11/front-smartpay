@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import PaymentSuccess from '../component/Receipt';
@@ -6,16 +6,14 @@ import Button from '../component/Button';
 import Order from '../component/Order';
 import Header from '../component/Header';
 import RecoCard from '../component/RecoCard';
+import { useLocation } from 'react-router-dom';
 const Pay = () => {
-    const franchise = 'gs25';
-    const testprice = 150000;
-    const testsave = 300;
-    const testtype = '적립';
-
+    const location = useLocation();
+    const [recommendData, setRecommendData] = useState(location.state.aiData);
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [paymentData, setPaymentData] = useState(null);
     const navigate = useNavigate();
-
+    console.log(recommendData); //TODO: 240823 이제 이 데이터 잘라서 페이지에 그려주면 됨
     const handlePayment = async () => {
         //
         const paymentData = {

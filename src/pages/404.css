@@ -1,0 +1,20 @@
+.errorpage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+}
+.errorpage > h1 {
+    font-size: 3rem;
+}
+
+.errorpage > button {
+    font-size: 1rem;
+}
+.errorpage > * {
+    margin-bottom: 20%;
+}

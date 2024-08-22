@@ -20,6 +20,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import logo from './img/sp_logo.png';
 import './App.css';
 import WelcomePage from './pages/WelcomePage';
+import Button from './component/Button';
+import NotFoundPage from './pages/404';
+import Test from './pages/Test';
 const SplashScreen = () => {
     const navigate = useNavigate();
 
@@ -52,8 +55,10 @@ function App() {
                     <Route path="/pay" element={<Pay />} />
                     <Route path="/pay/receipt" element={<Receipt />} />
                     <Route path="rank" element={<CardRank />} />
+                    <Route path="test" element={<Test />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/afterkakao" element={<Afterkakao />} />
+                    <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </Router>
         </>

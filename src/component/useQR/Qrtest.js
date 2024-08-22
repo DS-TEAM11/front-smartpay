@@ -84,7 +84,7 @@ function Qrtest({ onRemove }) {
                                 <img src={qrUpBtn} alt="qrUpBtn" />
                             </div>
                         )}
-                        <Timer />
+<Timer onRemove={onRemove} />
                         <div className="qrCode">
                             <img
                                 src={qrCodeUrl}

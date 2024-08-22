@@ -22,6 +22,8 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    overflow-x: hidden;
+    overflow-y: scroll;
     z-index: 10000; /* 모달 내용이 최상단에 표시되도록 설정 */
 }
 .white-box > * {
@@ -56,8 +58,11 @@
 }
 
 .qrCode {
-    width: 140%;
+    width: 100%;
     margin-bottom: 15%;
+}
+.qrCode > img {
+    width: 150%;
 }
 
 .payInformation {

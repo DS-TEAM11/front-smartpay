@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import PaymentSuccess from '../component/Receipt';
-import Button from '../component/Button';
-import Order from '../component/Order';
-import Header from '../component/Header';
-import RecoCard from '../component/RecoCard';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Button from "../component/Button";
+import Order from "../component/Order";
+import Header from "../component/Header";
+import RecoCard from "../component/RecoCard";
+
+
 const Pay = () => {
     const franchise = 'gs25';
     const testprice = 150000;

@@ -8,10 +8,12 @@ import Pay from './pages/Pay';
 import Seller from './pages/Seller';
 import CardRank from './pages/CardRank';
 import Receipt from './component/Receipt';
-import 'bootstrap/dist/css/bootstrap.css';
 import logo from './img/sp_logo.png';
 import './App.css';
 import WelcomePage from './pages/WelcomePage';
+
+
+
 const SplashScreen = () => {
     const navigate = useNavigate();
 
@@ -33,6 +35,7 @@ const SplashScreen = () => {
 function App() {
     return (
         <>
+        
             <Router>
                 <Routes>
                     <Route path="/" element={<SplashScreen />} />

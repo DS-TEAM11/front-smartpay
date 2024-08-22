@@ -1,31 +1,55 @@
-import React from 'react';
-import './RankItem.css';
+import React,  { useState, useEffect } from "react";
+import axios from "axios";
+import "./RankItem.css";
 
 const RankItem = () => {
-    const cardImg = [
-        'https://d1c5n4ri2guedi.cloudfront.net/card/146/card_img/20372/146card.png',
-        'https://d1c5n4ri2guedi.cloudfront.net/card/580/card_img/21321/580card.png',
-        'https://d1c5n4ri2guedi.cloudfront.net/card/121/card_img/20353/121card.png',
-    ];
-    const cardPage = [
-        'https://card.kbcard.com/CRD/DVIEW/HCAMCXPRICAC0076?cooperationcode=09250&mainCC=a&solicitorcode=7030084000',
-        'https://card.kbcard.com/CRD/DVIEW/HCAMCXPRICAC0076?cooperationcode=09251&mainCC=a',
-        'https://card.kbcard.com/CRD/DVIEW/HCAMCXPRICAC0076?cooperationcode=09169&mainCC=a&solicitorcode=7030084000',
-    ];
-    const cardName = ['The Easy카드', 'Easy pick 티타늄 카드', '다담카드'];
-    const saveInfo = ['배달앱 + 간편 결제', '마트+교육비', '점심+교통'];
+    const [rankItems, setRankItems] = useState([]); 
+    const [category, setCategory] = useState("전체");
 
-    // Create an array of card objects
-    const cardList = cardImg.map((img, index) => ({
-        img: img,
-        page: cardPage[index],
-        name: cardName[index],
-        info: saveInfo[index],
-    }));
+     
+     const handleCategoryChange = (event) => {
+        setCategory(event.target.value); // 카테고리 상태 업데이트
+    };
+
+    const handleRank = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8091/api/payment/ranking",
+        {
+            params: {
+                category: category,
+            },
+        }
+      );
+      const requestData = response.data;
+      setRankItems(requestData); // 응답 데이터를 상태에 저장
+
+    } catch (error) { 
+        console.error("데이터를 가져오는 중 에러가 발생했습니다:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleRank(); // 컴포넌트 마운트 시 데이터 로드
+  }, [category]);
 
     return (
         <>
-            {cardList.map((card, index) => (
+        <div className="d-flx align-items-center col-5">
+        <select className="form-select " aria-label="Default select example" value={category}  onChange={handleCategoryChange}>
+            <option value="전체">전체</option>
+            <option value="마트+교육비">마트+교육비</option>
+            <option value="점심+교통">점심+교통</option>
+            <option value="여행 + 바우처">여행 + 바우처</option>
+            <option value="배달앱+간편결제">배달앱+간편결제</option>
+            <option value="해외직구">해외직구</option>
+            <option value="편의점+카페">편의점+카페</option>
+            <option value="쇼핑">쇼핑</option>
+            <option value="항공 마일리지">항공 마일리지</option>
+            <option value="주유 + 차량정비">주유 + 차량정비</option>
+        </select>
+    </div>
+            {rankItems.map((item, index) => (
                 <div
                     key={index}
                     className={`container  my-2  rounded-5 ${
@@ -35,26 +59,14 @@ const RankItem = () => {
                     <div className="row py-2 align-items-center mt-1">
                         <div className="col-1 fs-2 fw-bolder">{index + 1}</div>
                         <div className="col-3 d-flex justify-content-center pb-2">
-                            <img
-                                src={card.img}
-                                className="rankImg"
-                                alt="rankCard"
-                            />
+                            <img src={item[4]} className="rankImg" alt="rankCard" />
                         </div>
                         <div className="col-8 pt-2">
-                            <p className="fs-5 my-0 fw-medium">{card.name}</p>
-                            <p className="fs-7 my-0 fw-lighter">{card.info}</p>
+                            <p className="fs-5 my-0 fw-medium">{item[2]}</p>
+                            <p className="fs-7 my-0 fw-lighter">{item[3]}</p>
                             <div className="text-end">
-                                <a
-                                    href={card.page}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={`fs-7 ${
-                                        index === 0 ? 'text-light   ' : ''
-                                    } `}
-                                >
-                                    신청하기 &nbsp;
-                                    <i className="fa-solid fa-arrow-right"></i>
+                                <a href={item[5]} className={`icon-link icon-link-hover fs-7 ${index === 0 ? 'text-light   ' : ''} `}>
+                                    신청하기<i className="bi bi-arrow-right"></i>
                                 </a>
                             </div>
                         </div>

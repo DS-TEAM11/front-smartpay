@@ -1,7 +1,6 @@
 .benefits-management-container {
     width: 100%;
-    max-width: 430px;
-    height: 60%; /* 화면의 나머지 60%를 사용 */
+    height: 500px; /* 화면의 나머지 60%를 사용 */
     padding: 10px;
     background-color: #ffffff;
     display: flex;

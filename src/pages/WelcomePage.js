@@ -7,7 +7,7 @@ function WelcomePage() {
     const navigate = useNavigate(); // navigate 함수 초기화
 
     const handleStartClick = () => {
-        navigate('/home'); // 버튼 클릭 시 Home 화면으로 이동
+        navigate('/login'); // 버튼 클릭 시 Home 화면으로 이동
     };
 
     return (

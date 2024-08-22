@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import {BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Link,
+    useNavigate,
+} from 'react-router-dom';
 
 import Home from './pages/Home';
 import Register from './pages/Register';
@@ -7,6 +13,8 @@ import Chat from './component/Chat';
 import Pay from './pages/Pay';
 import Seller from './pages/Seller';
 import CardRank from './pages/CardRank';
+import Login from './pages/Login';
+import Afterkakao from './pages/Afterkakao'; // 경로 수정
 import Receipt from './component/Receipt';
 import 'bootstrap/dist/css/bootstrap.css';
 import logo from './img/sp_logo.png';
@@ -44,11 +52,12 @@ function App() {
                     <Route path="/pay" element={<Pay />} />
                     <Route path="/pay/receipt" element={<Receipt />} />
                     <Route path="rank" element={<CardRank />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/afterkakao" element={<Afterkakao />} />
                 </Routes>
             </Router>
         </>
     );
-  
 }
 
 export default App;

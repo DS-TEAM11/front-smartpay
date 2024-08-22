@@ -1,0 +1,64 @@
+.login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.logo img {
+    width: 70%; /* 이미지 크기를 조정하여 비율을 유지합니다 */
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.find-id-pw {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #6c63ff;
+    border: none;
+    color: white;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.register-link {
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.or-divider {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #888;
+}
+
+.kakao-login-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #ffeb3b;
+    border: none;
+    color: black;
+    font-size: 16px;
+}

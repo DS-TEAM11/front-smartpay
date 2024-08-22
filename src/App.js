@@ -6,7 +6,6 @@ import {
     Link,
     useNavigate,
 } from 'react-router-dom';
-
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Chat from './component/Chat';
@@ -20,6 +19,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import logo from './img/sp_logo.png';
 import './App.css';
 import WelcomePage from './pages/WelcomePage';
+import PayHistory from './pages/PayHistory';
 const SplashScreen = () => {
     const navigate = useNavigate();
 
@@ -54,6 +54,7 @@ function App() {
                     <Route path="rank" element={<CardRank />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/afterkakao" element={<Afterkakao />} />
+                    <Route path="/history" element={<PayHistory />} />
                 </Routes>
             </Router>
         </>

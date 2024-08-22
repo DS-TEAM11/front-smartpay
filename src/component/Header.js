@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Button from './Button';
+import QrItem from './QrItem';
 const Header = () => {
+    const qrItemRef = useRef(null);
+
+    const handleClick = () => {
+        if (qrItemRef.current) {
+            qrItemRef.current.showActionSheet();
+        }
+    };
     return (
         <>
             <header className="header-sticky header-absolute border-bottom">
@@ -57,8 +65,9 @@ const Header = () => {
                             <div className="me-3">
                                 <Button
                                     text={'결제 QR 생성'}
-                                    onClick={() => {}}
+                                    onClick={handleClick}
                                 />
+                                <QrItem ref={qrItemRef} />
                             </div>
                             {/* <!-- Responsive navbar toggler --> */}
                             <li className="nav-item">

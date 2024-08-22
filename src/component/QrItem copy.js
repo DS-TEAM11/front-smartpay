@@ -1,13 +1,13 @@
-import React, { // 훅 모음
-    useState, // 상태 관리
-    useEffect, // 생명주기 관리
-    forwardRef, // 컴포넌트 참조 관리
-    useImperativeHandle,
-} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './QrItem.css';
+import './QrItem.css'; // 외부 CSS 파일
 
-const QrItem = forwardRef((props, ref) => {
+function QrItem(props) {
+    console.log(props);
+    console.log(props.data);
+    // if (element) {
+    //     showActionSheet();
+    // }
     const [qrCodeUrl, setQrCodeUrl] = useState('');
     const [isQrVisible, setIsQrVisible] = useState(false);
     const [isActionSheetVisible, setIsActionSheetVisible] = useState(false);
@@ -19,7 +19,6 @@ const QrItem = forwardRef((props, ref) => {
             .get(endpoint, { responseType: 'blob' })
             .then((response) => {
                 setQrCodeUrl(URL.createObjectURL(response.data));
-                //웹소켓 연결
                 setIsQrVisible(true);
             })
             .catch((error) => {
@@ -39,10 +38,6 @@ const QrItem = forwardRef((props, ref) => {
         }
         return () => clearInterval(timer);
     }, [isQrVisible, timeLeft]);
-
-    useImperativeHandle(ref, () => ({
-        showActionSheet,
-    }));
 
     const formatTime = (seconds) => {
         const minutes = Math.floor(seconds / 60)
@@ -74,6 +69,9 @@ const QrItem = forwardRef((props, ref) => {
     return (
         <div className="qrItem">
             <div className="card-container">
+                <button className="btn" onClick={showActionSheet}>
+                    <i class="bi bi-pers on-circle"></i> 결제QR생성
+                </button>
                 <div
                     id="actionSheet"
                     className={`${isActionSheetVisible ? 'active' : ''} ${
@@ -109,7 +107,7 @@ const QrItem = forwardRef((props, ref) => {
                             className="fullscreen-toggle"
                             onClick={toggleFullScreen}
                         >
-                            <i className="bi bi-arrow-up-square"></i>
+                            <i class="bi bi-arrow-up-square"></i>
                         </div>
                         <div className="option close" onClick={hideActionSheet}>
                             ← 돌아가기
@@ -119,6 +117,6 @@ const QrItem = forwardRef((props, ref) => {
             </div>
         </div>
     );
-});
+}
 
 export default QrItem;

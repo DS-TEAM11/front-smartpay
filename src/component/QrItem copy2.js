@@ -1,7 +1,7 @@
-import React, { // 훅 모음
-    useState, // 상태 관리
-    useEffect, // 생명주기 관리
-    forwardRef, // 컴포넌트 참조 관리
+import React, {
+    useState,
+    useEffect,
+    forwardRef,
     useImperativeHandle,
 } from 'react';
 import axios from 'axios';
@@ -12,14 +12,13 @@ const QrItem = forwardRef((props, ref) => {
     const [isQrVisible, setIsQrVisible] = useState(false);
     const [isActionSheetVisible, setIsActionSheetVisible] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(180);
+    const [timeLeft, setTimeLeft] = useState(10);
 
     const createQr = (endpoint) => {
         axios
             .get(endpoint, { responseType: 'blob' })
             .then((response) => {
                 setQrCodeUrl(URL.createObjectURL(response.data));
-                //웹소켓 연결
                 setIsQrVisible(true);
             })
             .catch((error) => {

@@ -13,6 +13,8 @@ import Chat from './component/Chat';
 import Pay from './pages/Pay';
 import Seller from './pages/Seller';
 import CardRank from './pages/CardRank';
+import Login from './pages/Login';
+import Afterkakao from './pages/Afterkakao'; // 경로 수정
 import Receipt from './component/Receipt';
 import 'bootstrap/dist/css/bootstrap.css';
 import logo from './img/sp_logo.png';
@@ -55,6 +57,8 @@ function App() {
                     <Route path="rank" element={<CardRank />} />
                     <Route path="test" element={<Test />} />
                     <Route path="*" element={<NotFoundPage />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/afterkakao" element={<Afterkakao />} />
                 </Routes>
             </Router>
         </>

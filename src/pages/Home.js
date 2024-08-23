@@ -16,32 +16,42 @@ import { useMemberNo } from '../provider/MemberProvider';
 const Home = () => {
     const [cards, setCards] = useState([]);
     const memberNo = useMemberNo();
-    useEffect(() => {
-        if (memberNo) {
-            const token = localStorage.getItem('accessToken');
+    const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
-            axios
-                .get(`http://localhost:8091/api/cards/byMember`, {
-                    params: { memberNo },
-                    headers: {
-                        Authorization: token, // Bearer 포함
-                    },
-                })
-                .then((response) => {
+    useEffect(() => {
+        const fetchCards = async () => {
+            if (memberNo) {
+                const token = localStorage.getItem('accessToken');
+
+                try {
+                    const response = await axios.get(
+                        'http://localhost:8091/api/cards/byMember',
+                        {
+                            params: { memberNo },
+                            headers: {
+                                Authorization: token,
+                            },
+                        },
+                    );
+
                     // 카드 데이터를 regDate 기준으로 정렬
                     const sortedCards = response.data.sort(
                         (a, b) => new Date(a.regDate) - new Date(b.regDate),
                     );
                     setCards(sortedCards);
-                })
-                .catch((error) => {
+                } catch (error) {
                     console.error(
                         '카드 데이터를 가져오는 데 실패했습니다.',
                         error,
                     );
-                });
-        }
-    }, []);
+                } finally {
+                    setIsLoading(false); // 로딩 완료
+                }
+            }
+        };
+
+        fetchCards();
+    }, [memberNo]);
 
     return (
         <>

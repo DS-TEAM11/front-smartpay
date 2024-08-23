@@ -3,7 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Button from '../component/Button';
 import './Login.css';
-import img from '../img/logo4.png'
+import img from '../img/logo3.png';
+import Button from '../component/Button';
+
 const Login = () => {
     const [email, setEmail] = useState(
         localStorage.getItem('savedEmail') || '',
@@ -142,9 +144,9 @@ const Login = () => {
                 ></Button>
             </form>
             <div className="register-link">
-                아직 회원이 아니신가요? <a href="/register">회원가입</a>
+                아직 회원이 아니신가요? <a href="/signup">회원가입</a>
             </div>
-            <div className="or-divider">Or</div>
+            {/* <div className="or-divider">Or</div> */}
             <button
                 className="btn kakao-login-btn"
                 onClick={handleKakaoLogin}

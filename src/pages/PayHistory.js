@@ -12,14 +12,17 @@ function PayHistory() {
     const [payDate, setPayDate] = useState('');
 
     const paymentApi = () => {
+        console.log(memberNo);
         axios
-            .get('https://localhost:3000/api/payment/history', {
-                params: {
-                    memberNo: memberNo,
-                    payDate: payDate,
-                    cardNo: cardNo,
-                },
-            })
+            .get(
+                'http://localhost:8091/api/payment/history' +
+                    '?memberNo=' +
+                    memberNo +
+                    '&cardNo=' +
+                    cardNo +
+                    '&payDate=' +
+                    payDate,
+            )
             .then((res) => {
                 console.log(res.data);
                 setPaymentData(res.data); // 결제 데이터 저장
@@ -31,9 +34,9 @@ function PayHistory() {
 
     const cardListApi = () => {
         axios
-            .get('https://localhost:3000/api/cards/byMember', {
-                params: { memberNo: memberNo },
-            })
+            .get(
+                'http://localhost:8091/api/cards/byMember?memberNo=' + memberNo,
+            )
             .then((res) => {
                 console.log(res.data);
                 setCardListData(res.data); // 보유카드 리스트
@@ -53,14 +56,14 @@ function PayHistory() {
 
     useEffect(() => {
         cardListApi(); // 컴포넌트 마운트 시 카드 목록을 불러옵니다.
-    }, []); // 빈 배열로 useEffect를 한 번만 실행
+    }, [memberNo]); // 빈 배열로 useEffect를 한 번만 실행
 
     useEffect(() => {
         paymentApi(); // payDate 또는 cardNo가 변경될 때 결제 데이터를 불러옵니다.
     }, [payDate, cardNo]); // payDate, cardNo가 변경될 때마다 실행
 
     return (
-        <div className="main-container">
+        <div className="payhistory">
             <div className="header">
                 <Header />
             </div>
@@ -82,7 +85,7 @@ function PayHistory() {
                         value={cardNo}
                         onChange={onChangeCardNo}
                     >
-                        <option value="">카드를 선택하세요</option>
+                        <option value="">카드를 선택</option>
                         {cardListData.map((card) => (
                             <option key={card.cardNo} value={card.cardNo}>
                                 {card.cardName}
@@ -91,9 +94,34 @@ function PayHistory() {
                     </select>
                 </div>
             </div>
-            <div className="data"></div>
-            <div>
-                <pre>{JSON.stringify(paymentData, null, 2)}</pre>
+            <div className="data">
+                {paymentData && paymentData.length > 0 ? (
+                    <div table-container>
+                        {paymentData.map((payment) => (
+                            <div className="table-row" key={payment.orderNo}>
+                                <div>
+                                    <img
+                                        className="card-image"
+                                        src={payment.cardImage}
+                                        alt="카드이미지"
+                                    />
+                                </div>
+                                <div>{payment.franchiseName}</div>
+                                <div>{payment.savePrice}</div>
+                                <div>{payment.price} 원</div>
+                                {/* <td>{payment.payDate}</td>
+                                <td>{payment.product}</td>
+                                <td>{payment.cardNo}</td>
+                                <td>{payment.savePrice}</td>
+                                <td>{payment.price}원</td> */}
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div>결제 내역이 없습니다.</div>
+                )}
+
+                {/* <pre>{JSON.stringify(paymentData, null, 2)}</pre> */}
             </div>
         </div>
     );

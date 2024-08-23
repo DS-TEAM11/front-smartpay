@@ -55,7 +55,7 @@ const Receipt = () => {
     return (
         <>
             <Header />
-            <div className="receipt">
+            <div className="receipt p-2 px-4">
                 {/* Top Info */}
                 <div className="topInfo">
                     <div className="title">결제 완료</div>

@@ -17,7 +17,8 @@ import CardRank from './pages/CardRank';
 import Login from './pages/Login';
 import Afterkakao from './pages/Afterkakao'; // 경로 수정
 import Receipt from './component/Receipt';
-import logo from './img/sp_logo.png';
+import 'bootstrap/dist/css/bootstrap.css';
+import logo from './img/logo3.png';
 import './App.css';
 import WelcomePage from './pages/WelcomePage';
 import Button from './component/Button';

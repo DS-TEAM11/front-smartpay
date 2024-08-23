@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Login.css';
 import Button from '../component/Button';
-
+import './Login.css';
+import img from '../img/logo4.png'
 const Login = () => {
     const [email, setEmail] = useState(
         localStorage.getItem('savedEmail') || '',
@@ -91,7 +91,7 @@ const Login = () => {
     return (
         <div className="login-container">
             <div className="logo">
-                <img src="assets/images/logo.png" alt="SP Logo" />
+                <img src={img} alt="SP Logo" />
             </div>
             <form onSubmit={handleLogin}>
                 <div className="form-group">

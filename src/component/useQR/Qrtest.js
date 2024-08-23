@@ -53,7 +53,7 @@ function Qrtest({ onRemove }) {
     const cardRecommend = () => {
         const url = 'http://localhost:8091/api/payment/ai';
         const data = {
-            memberNo: 'dd7ae501-0bbe-41d0-b4b7-c3cbded39a2a', //토큰으로 memberNo 요청해서 받아와야함
+            memberNo: 'test', //토큰으로 memberNo 요청해서 받아와야함
             franchiseCode: '10003',
             franchiseType: '편의점',
             franchiseName: 'GS25 - 동교점',
@@ -61,7 +61,7 @@ function Qrtest({ onRemove }) {
             purchasePrice: 39000,
         };
         const params = {
-            memberNo: 'dd7ae501-0bbe-41d0-b4b7-c3cbded39a2a', //토큰으로 memberNo 요청해서 받아와야함
+            memberNo: 'test', //토큰으로 memberNo 요청해서 받아와야함
         };
         axios
             .post(url, data, {

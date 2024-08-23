@@ -9,12 +9,37 @@ import RecoCard from '../component/RecoCard';
 import { useLocation } from 'react-router-dom';
 const Pay = () => {
     const location = useLocation();
-    // const [recommendData, setRecommendData] = useState(location.state.aiData);
+    const [recommendData, setRecommendData] = useState(location.state.aiData);
+
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [paymentData, setPaymentData] = useState(null);
-    const navigate = useNavigate();
-    // console.log(recommendData); //TODO: 240823 이제 이 데이터 잘라서 페이지에 그려주면 됨
 
+    const navigate = useNavigate();
+    console.log(recommendData); //TODO: 240823 이제 이 데이터 잘라서 페이지에 그려주면 됨
+
+    const getBenefit = { 
+        maximumBenefits: recommendData.maximumBenefits,
+        benefitType: recommendData.benefitType
+    }
+    console.log(typeof(recommendData));
+
+    //카드 정보 가져옴
+    const getCardInfo = async () => {
+        try {
+            const url = 'http://localhost:8091/api/payment/card';
+            const data = {
+                cardCode: '03060049', //recommenData 추출 해서 넣기(근데 AI 카드가 아닌 경우에는 선택한 카드코드 줘야 함)
+                memberNo: 'test'
+            };
+            const response = await axios.post(url, data, {
+                responseType: 'json',
+            });
+            return response.data;
+        } catch (error) {
+            console.error('에러', error);
+            return {};
+        }
+    };
 
 
     const handlePayment = async () => {
@@ -74,19 +99,18 @@ const Pay = () => {
         }
     };
     //컴포넌트 확인용 데이터?
-    let getIsAi = true;
+    let getIsAi = false;
     return (
         <div>
             <Header />
-            {/* <Order /> */}
+            <Order getCardInfo={getCardInfo} getBenefit={getBenefit}/>
 
             <div className="d-flex justify-content-center">
                 <div className="col-10 row">
                     {getIsAi && (
                         <div className="p-2 px-4 aiInfo">
                             <p>
-                                ※ 이 카드는 편의점 이용금액 1,000원당 2마일리지
-                                특별적립 혜택을 받을 수 있어요.
+                                {recommendData.detailExplanation}
                             </p>
                         </div>
                     )}
@@ -104,7 +128,7 @@ const Pay = () => {
                 </div>
             </div>
 
-            {!getIsAi && <RecoCard />}
+            {!getIsAi && <RecoCard recommendData={recommendData}/>}
         </div>
     );
 };

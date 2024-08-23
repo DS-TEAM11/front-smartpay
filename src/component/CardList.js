@@ -30,7 +30,7 @@ const CardList = ({
                         />
                     ))}
                 </ul>
-                <Button onClick={closeModal}>카드 선택 완료</Button>
+                <Button onClick={closeModal} text={'카드 선택 완료'}></Button>
             </div>
         </div>
     );

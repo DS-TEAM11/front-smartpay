@@ -1,160 +1,193 @@
-import React, { // 훅 모음
-    useState, // 상태 관리
-    useEffect, // 생명주기 관리
-} from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import './QrItem.css';
-import SockJS from 'sockjs-client';
-import { Stomp } from '@stomp/stompjs';
-
 import Loading from '../Loading';
+import BlackContainer from '../BlackContainer';
+import Timer from './Timer';
+import './QrItem.css';
+import qrUpBtn from '../../img/qrUpBtn.png';
+import $ from 'jquery';
+import { Stomp } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+import { useNavigate } from 'react-router-dom';
+import { useMemberNo } from '../../provider/MemberProvider';
 
-const QrItem = () => {
+function QrItem({ onRemove }) {
+    const navigate = useNavigate();
+    const memberNo = useMemberNo();
     const [qrCodeUrl, setQrCodeUrl] = useState('');
-    const [isQrVisible, setIsQrVisible] = useState(false);
-    const [isActionSheetVisible, setIsActionSheetVisible] = useState(false);
+    const [isQrVisible, setIsQrVisible] = useState(true);
     const [isFullScreen, setIsFullScreen] = useState(false);
-const [timeLeft, setTimeLeft] = useState(180);
     const [isLoading, setIsLoading] = useState(false);
-    // const [stompClient, setStompClient] = useState(
-    //     Stomp.over(new SockJS('http://localhost:8091/ws')),
-    // );
-    // const wsConnect = () => {
-    //     stompClient.connect({}, function (frame) {
-    //         console.log('Connected: ' + frame);
-    //         stompClient.subscribe('/topic/sellinfo', function (message) {
-    //             const body = JSON.parse(message.body);
-    //             console.log('message:', body);
-    //             if (body.message === '거래요청') {
-    //                 alert('거래요청 들어옴');
-    //                 setIsLoading(true);
-    //             }
-    //             if (body.message === '정보입력완료') {
-    //                 alert('결제 ㄱ');
-    //                 //axios로 결제 정보를 담아서 ai 추천 요청
-    //                 //추천 결과 나오면 페이지 이동해서 받은 정보 보여주기
-    //                 //axios로 선택한 카드로 결제요청 보내기
-    //                 //결제 요청 결과에 따라 성공 시)
-    //                 //결제history DB내용으로 영수증 보여주기(이때 한번 더 웹소켓 접속해서 결제 완료 알림
-    //                 //-> 판매자도 결제 완료 페이지로 이동: 웹소켓 종료(결제 완료))
-    //             }
-    //         });
-    //         //TODO: sellinfo로 값 전달하고 서버에서 받는거 테스트 필요
-    //         //받은 값 기반으로 서버 로직 돌리고 리턴값 받는거 테스트 필요
-    //         //QR 생성에 성공하면 -> 웹소켓 연결
-    //     });
-    // };
-
-    const createQr = () => {
+    const [isAIiLoading, setIsAIiLoading] = useState(false);
+    const [boxHeight, setBoxHeight] = useState('60vh');
+    const [boxTop, setBoxTop] = useState('40vh');
+    const [stompClient, setStompClient] = useState(
+        Stomp.over(new SockJS('http://localhost:8091/ws')),
+    );
+    const wsConnect = () => {
+        stompClient.connect({}, function (frame) {
+            // console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/sellinfo', function (message) {
+                const body = JSON.parse(message.body);
+                // console.log('message:', body);
+                if (body.message === 'seller enter') {
+                    // console.log('판매자 접속');
+                    setIsLoading(true);
+                    setIsQrVisible(false);
+                }
+                if (body.message === 'purchase information') {
+                    // console.log('구매 정보 입력 완료');
+                    console.log(body.data);
+                    setIsAIiLoading(true);
+                    cardRecommend(body.data);
+                    //axios로 결제 정보를 담아서 ai 추천 요청
+                    //추천 결과 나오면 페이지 이동해서 받은 정보 보여주기
+                    //axios로 선택한 카드로 결제요청 보내기
+                    //결제 요청 결과에 따라 성공 시)
+                    //결제history DB내용으로 영수증 보여주기(이때 한번 더 웹소켓 접속해서 결제 완료 알림
+                    //-> 판매자도 결제 완료 페이지로 이동: 웹소켓 종료(결제 완료))
+                }
+            });
+            //TODO: sellinfo로 값 전달하고 서버에서 받는거 테스트 필요
+            //받은 값 기반으로 서버 로직 돌리고 리턴값 받는거 테스트 필요
+            //QR 생성에 성공하면 -> 웹소켓 연결
+        });
+    };
+    const cardRecommend = (data) => {
+        const url = 'http://localhost:8091/api/payment/ai';
+        const params = {
+            memberNo: memberNo,
+        };
         axios
-            .get('http://localhost:8091/qr/seller', {
+            .post(url, data, {
+                params: params,
+                responseType: 'json',
+                timeout: 5000,
+            })
+            .then((response) => {
+                // console.log('추천 결과:', response.data);
+                navigate('/pay', {
+                    state: { aiData: response.data },
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+    const handleRemove = () => {
+        // stompClient.disconnect()를 먼저 실행
+        if (stompClient && typeof stompClient.disconnect === 'function') {
+            stompClient.disconnect();
+            // console.log('pay logic disconnected');
+        }
+
+        // 이후에 onRemove 실행
+        if (onRemove && typeof onRemove === 'function') {
+            onRemove();
+        }
+    };
+    const createQr = () => {
+        if (qrCodeUrl != '') {
+            setIsQrVisible(true);
+            return;
+        }
+        axios
+            .get('http://localhost:8091/qr/seller?memberNo=' + memberNo, {
                 responseType: 'blob',
             })
             .then((response) => {
                 setQrCodeUrl(URL.createObjectURL(response.data));
-                // wsConnect();
-                setIsQrVisible(true);
+                wsConnect();
             })
             .catch((error) => {
                 alert('QR 코드 생성에 문제가 발생했습니다.');
                 console.error(error);
             });
     };
-
     useEffect(() => {
-        let timer;
-        if (isQrVisible && timeLeft > 0) {
-            timer = setInterval(() => {
-                setTimeLeft((prevTime) => prevTime - 1);
-            }, 1000);
-        } else if (timeLeft <= 0) {
-            hideActionSheet(); // 시간이 다 되면 액션 시트 숨김
-        }
-        return () => clearInterval(timer);
-    }, [isQrVisible, timeLeft]);
-
-    const formatTime = (seconds) => {
-        const minutes = Math.floor(seconds / 60)
-            .toString()
-            .padStart(2, '0');
-        const remainingSeconds = (seconds % 60).toString().padStart(2, '0');
-        return `${minutes}분 ${remainingSeconds}초`;
-    };
-
-    const showActionSheet = () => {
-        setIsActionSheetVisible(true);
+        setBoxHeight(isFullScreen ? '100vh' : '60vh');
+        setBoxTop(isFullScreen ? '0' : '40vh');
+    }, [isFullScreen]);
+    //QR 생성 버튼 처음 눌렀을 때만 생김
+    useEffect(() => {
         createQr();
-    };
-
-    const hideActionSheet = () => {
-        setIsActionSheetVisible(false);
-        setQrCodeUrl('');
-        setIsQrVisible(false);
-        setTimeLeft(180);
-        setIsFullScreen(false);
-        // stompClient.disconnect();
-    };
-
-    const toggleFullScreen = () => {
-        setIsFullScreen(!isFullScreen);
-    };
-
-    const timerWidth = (timeLeft / 180) * 100;
-
+    }, []);
     return (
         <>
-            {isLoading && <Loading text={'판매자가 정보 입력 중 입니다.'} />}
-            <div className="qrItem">
-                <div className="card-container">
+            {/* //웹소켓 접속해서 판매자가 정보 입력 중일 때 */}
+            {isLoading && !isAIiLoading && (
+                <Loading text={'사장님이 결제 정보를 입력하고 있어요.'} />
+            )}
+            {isLoading && isAIiLoading && (
+                <Loading
+                    text={
+                        'AI가 이번 결제에 가장 큰 혜택을 받을 카드를 선택하고 있어요.'
+                    }
+                />
+            )}
+
+            {/* //QR 코드가 보이는 상태일 때 */}
+            {isQrVisible && (
+                <div className="qrItem">
+                    <BlackContainer
+                        onClick={() => {
+                            handleRemove();
+                        }}
+                    />
                     <div
-                        id="actionSheet"
-                        className={`${isActionSheetVisible ? 'active' : ''} ${
-                            isFullScreen ? 'fullscreen' : ''
-                        }`}
+                        className="white-box"
+                        style={{
+                            height: boxHeight,
+                            top: boxTop,
+                            transition: 'height 0.3s ease',
+                        }} // 상태를 기반으로 높이를 동적으로 설정
                     >
-                        <div className="action-options">
-                            {qrCodeUrl && (
-                                <div className="qr-code-container">
-                                    <div className="timer-bar-container">
-                                        <div
-                                            className="timer-bar"
-                                            style={{ width: `${timerWidth}%` }}
-                                        ></div>
-                                    </div>
-                                    <p className="timer-text">
-                                        남은 유효 시간 : {formatTime(timeLeft)}
-                                    </p>
-                                    <img
-                                        src={qrCodeUrl}
-                                        alt="QR Code"
-                                        className="qr-code"
-                                    />
-                                    <p className="instruction-text">
-                                        위 QR 코드를 가게 사장님께 보여주세요.
-                                        <br />
-                                        가게 정보를 인식해 AI가 최대 혜택을
-                                        추천해드릴게요.
-                                    </p>
-                                </div>
-                            )}
+                        {isFullScreen && (
                             <div
-                                className="fullscreen-toggle"
-                                onClick={toggleFullScreen}
+                                className="backBtn"
+                                style={{ left: 0 }}
+                                onClick={() => {
+                                    setIsFullScreen(false);
+                                }}
                             >
-                                <i className="bi bi-arrow-up-square"></i>
+                                &lt; 돌아가기
                             </div>
+                        )}
+                        {!isFullScreen && (
                             <div
-                                className="option close"
-                                onClick={hideActionSheet}
+                                className="upBtn"
+                                onClick={() => {
+                                    setIsFullScreen(true);
+                                    setBoxHeight('100vh');
+                                }}
                             >
-                                ← 돌아가기
+                                <img src={qrUpBtn} alt="qrUpBtn" />
                             </div>
+                        )}
+                        <Timer onRemove={handleRemove} />
+                        <div className="qrCode">
+                            <img
+                                src={qrCodeUrl}
+                                alt="QR Code"
+                                className="qr-code"
+                            />
                         </div>
+                        {isFullScreen && (
+                            <div className="payInformation">
+                                <div className="title">
+                                    위 QR 코드를 가게 사장님께 보여주세요.
+                                </div>
+                                <div className="subtitle">
+                                    가게 정보를 인식해 AI가 최대 혜택 결제를
+                                    도와드립니다.
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
-            </div>
+            )}
         </>
     );
-};
+}
 
 export default QrItem;

@@ -1,40 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../component/Header';
 import SockJS from 'sockjs-client';
 import { Client, Stomp } from '@stomp/stompjs';
 import Button from '../component/Button';
 import axios from 'axios';
-import { useState } from 'react';
-
-const purchase_data = {
-    memberNo: 'dd7ae501-0bbe-41d0-b4b7-c3cbded39a2a', //테스트맨
-    franchiseCode: '10003', //편의점 계열
-    franchiseType: '편의점',
-    franchiseName: 'GS25 - 동교점',
-    purchaseItems: '스타벅스 스탠리 텀블러',
-    purchasePrice: 39000,
-};
+import { useLocation } from 'react-router-dom';
 
 const Test = () => {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const memberNo = queryParams.get('memberNo');
+    const purchase_data = {
+        franchiseCode: '10003', //편의점 계열
+        franchiseType: '편의점',
+        franchiseName: 'GS25 - 동교점',
+        purchaseItems: '스타벅스 스탠리 텀블러',
+        purchasePrice: 39000,
+        memberNo: memberNo,
+    };
+
     const socket = new SockJS('http://localhost:8091/ws');
     const stompClient = Stomp.over(socket);
-function send_enter() {
-    stompClient.send(
-        '/topic/sellinfo',
-        {},
-        JSON.stringify({ message: 'seller enter' }),
-    );
-}
-function send_information() {
-    stompClient.send(
-        '/topic/sellinfo',
-        {},
-        JSON.stringify({
-            message: 'purchase information',
-            data: purchase_data,
-        }),
-    );
-}
+    function send_enter() {
+        stompClient.send(
+            '/topic/sellinfo',
+            {},
+            JSON.stringify({ message: 'seller enter' }),
+        );
+    }
+    function send_information() {
+        stompClient.send(
+            '/topic/sellinfo',
+            {},
+            JSON.stringify({
+                message: 'purchase information',
+                data: purchase_data,
+            }),
+        );
+    }
     //판매자 사이트 접속으로 침
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);

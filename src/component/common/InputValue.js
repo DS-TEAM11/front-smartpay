@@ -8,7 +8,7 @@ const InputValue = ({ title, ...props }) => {
         id,
         type: type || 'text',
         className: 'inputValue form-control',
-        value,
+        value: value,
         placeholder,
         onChange,
         ...(readOnly ? { readOnly: true } : {}), // readOnly가 true일 때만 추가
@@ -17,9 +17,13 @@ const InputValue = ({ title, ...props }) => {
 
     return (
         <div className="form-group">
-            <label className="form-label" htmlFor={id}>
-                {title}
-            </label>
+            {title ? (
+                <label className="form-label" htmlFor={id}>
+                    {title}
+                </label>
+            ) : (
+                ''
+            )}
             <br />
             <input {...inputProps} />
         </div>
@@ -51,5 +55,5 @@ const InputValueWithBtn = ({ title, onClick, ...props }) => {
         </div>
     );
 };
-
-export { InputValue, InputValueWithBtn };
+// , React.memo(InputValueWithBtn) };
+export default React.memo(InputValue);

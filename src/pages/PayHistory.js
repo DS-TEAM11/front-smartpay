@@ -2,46 +2,48 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './PayHistory.css';
 import Header from '../component/Header';
+import { useMemberNo } from '../provider/MemberProvider';
 
 function PayHistory() {
-    const [data, setData] = useState(null);
-    const [memberNo, setMemberNo] = useState(null);
+    const [paymentData, setPaymentData] = useState(null);
+    const [cardListData, setCardListData] = useState(null);
+    const memberNo = useMemberNo();
     const [cardNo, setCardNo] = useState(null);
-    const [payDate, setPayDate] = useState(null);
+    const [payDate, setPayDate] = useState('');
 
-    useEffect(() => {
-        // 로컬스토리지에서 토큰 가져오기
-        const token = localStorage.getItem('accessToken');
+    const paymentApi = () => {
+        axios
+            .get('https://localhost:3000/api/payment/history', {
+                memberNo: memberNo,
+                payDate: payDate,
+                cardNo: cardNo,
+            })
+            .then((res) => {
+                console.log(res.data);
+                setPaymentData(res.data); // 결제 데이터 저장
+            })
+            .catch((e) => {
+                console.error('결제 데이터 요청 에러', e);
+            });
+    };
 
-        if (token) {
-            // 백엔드로 memberNo 요청
-            axios
-                .get('http://localhost:8091/member/findMember', {
-                    headers: {
-                        Authorization: token, // Bearer 포함
-                    },
-                })
-                .then((response) => {
-                    setMemberNo(response.data); // 응답받은 memberNo 저장
-                })
-                .catch((error) => {
-                    console.error('memberNo 요청 에러', error);
-                });
-        }
-    }, []);
+    const cardListApi = () => {
+        axios
+            .get('https://localhost:3000/api/cards/byMember', {
+                mameberNo: memberNo,
+            })
+            .then((res) => {
+                console.log(res.data);
+                setCardListData(res.data); // 보유카드 리스트
+            })
+            .catch((e) => {
+                console.error('보유카드 요청 에러', e);
+            });
+    };
 
-    useEffect(() => {
-        if (memberNo) {
-            const token = localStorage.getItem('accessToken');
+    const onChangePayDate = (e) => {};
 
-            axios
-                .get('http://localhost:8091/api/payment/history')
-                .then((response) => {
-                    console(response.data);
-                    setData(response.data);
-                });
-        }
-    });
+    const onChangeCardNo = () => {};
 
     return (
         <div className="main-container">
@@ -53,33 +55,22 @@ function PayHistory() {
             </div>
             <div className="condition-box">
                 <div className="condition-date">
-                    <input type="date" />
+                    <input
+                        type="date"
+                        name="payDate"
+                        value={payDate}
+                        onChange={onChangePayDate}
+                    />
                 </div>
                 <div className="condition-cardList">
-                    <select>
+                    <select name="cardNo">
                         <option></option>
                     </select>
                 </div>
             </div>
-            <div className="data">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>1</th>
-                            <th>1</th>
-                            <th>1</th>
-                            <th>1</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th>1</th>
-                            <th>1</th>
-                            <th>1</th>
-                            <th>1</th>
-                        </tr>
-                    </tbody>
-                </table>
+            <div className="data"></div>
+            <div>
+                <pre>{JSON.stringify(paymentData, null)}</pre>
             </div>
         </div>
     );

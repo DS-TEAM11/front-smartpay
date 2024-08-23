@@ -90,7 +90,7 @@
     z-index: 9999; /* 모달이 최상단에 오도록 설정 */
 }
 
-.modal-content {
+.modal-content2 {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
@@ -103,11 +103,11 @@
     width: 100%;
 }
 
-.modal-content h3 {
+.modal-content2 h3 {
     margin-bottom: 15px;
 }
 
-.modal-content p {
+.modal-content2 p {
     margin-bottom: 10px;
     font-size: 14px;
     line-height: 1.5;

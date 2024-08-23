@@ -11,7 +11,7 @@ function PayHistory() {
     const [cardNo, setCardNo] = useState('');
     const [payDate, setPayDate] = useState('');
 
-    const paymentApi = () => {
+    const paymentApi = (payDate, cardNo) => {
         console.log(memberNo);
         axios
             .get(
@@ -59,7 +59,7 @@ function PayHistory() {
     }, [memberNo]); // 빈 배열로 useEffect를 한 번만 실행
 
     useEffect(() => {
-        paymentApi(); // payDate 또는 cardNo가 변경될 때 결제 데이터를 불러옵니다.
+        paymentApi(payDate, cardNo); // payDate 또는 cardNo가 변경될 때 결제 데이터를 불러옵니다.
     }, [payDate, cardNo]); // payDate, cardNo가 변경될 때마다 실행
 
     return (

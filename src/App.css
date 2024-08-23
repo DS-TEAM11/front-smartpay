@@ -1,15 +1,23 @@
-.fixed-container {
+html,
+body,
+#root {
     width: 100%;
-    height: 844px;
-    margin: 0 auto; /* 화면 중앙에 위치 */
-    display: flex;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.MainLogo {
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* 선택사항: 내용이 넘치는 경우 숨김 */
-    background-color: #ffffff; /* 선택사항: 배경색 추가 */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    overflow: hidden;
+    background-color: #ffffff;
 }
 
 .MainLogo img {
-    width: 300px;
-    height: auto; /* 높이를 자동으로 맞춰 로고 비율 유지 */
+    width: 200px;
+    height: auto; /* 로고 비율 유지 */
 }

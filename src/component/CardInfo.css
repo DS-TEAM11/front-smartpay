@@ -1,5 +1,5 @@
 .header-right {
-    padding-right: 10%;
+    padding-right: 0%;
     display: flex;
     justify-content: flex-end;
     align-items: center; /* 세로 정렬을 위해 추가 */
@@ -19,6 +19,8 @@
 }
 
 .card-info-container {
+    padding-left: 10%;
+    padding-right: 10%;
     margin-top: 45px;
     width: 100%;
     height: 370px;
@@ -32,6 +34,17 @@
     position: relative;
 }
 
+/* 애니메이션 슬라이드와 회전을 함께 적용 */
+@keyframes slideUpDown {
+    0% {
+        transform: translateY(10px); /* 초기 위치 */
+    }
+    100% {
+        transform: translateY(-10px); /* 위로 20px 이동 */
+    }
+}
+
+/* card-main-container 클래스 */
 .card-main-container {
     position: relative;
     width: 250px;
@@ -41,34 +54,42 @@
     align-items: center;
     border-radius: 10px;
     overflow: hidden;
+    animation: slideUpDown 1s ease-in-out infinite alternate;
+}
+.card-img {
+    width: 100%;
+    height: 100%;
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
 }
 
+/* 가로 이미지 */
+.horizontal-image2 {
+    transform: rotate(0deg); /* 회전 없음 */
+}
+
+/* 세로 이미지 */
+.vertical-image2 {
+    /* 회전을 div로 따로 시ㅣ고 난 후에 애니메이션 효과 부여 */
+    /* animation: slideUpDown 1s ease-in-out infinite alternate; */
+    transform: rotate(270deg); /* 270도 회전 후 슬라이드 */
+}
+
 .owned-cards-list {
-    width: 80%;
+    width: 100%;
     height: 30%;
     display: flex;
     justify-content: center;
     position: relative;
-    flex-direction: row; /* 카드들을 가로로 배치 */
+    flex-direction: row;
+    overflow: hidden;
 }
 
 /* 공통 스타일 정의 */
 .card-image {
     transform: rotate(0deg); /* 기본 회전 각도 */
     transition: transform 0.3s ease-in-out;
-}
-
-/* 가로 이미지 */
-.horizontal-image2 {
-    transform: rotate(0deg);
-}
-
-/* 세로 이미지 */
-.vertical-image2 {
-    transform: rotate(90deg); /* 세로 이미지는 90도 회전 */
 }
 
 /* 카드의 위치 조정 (y축 고정, x축 이동) */
@@ -79,78 +100,100 @@
     overflow: hidden;
     background-size: cover;
     background-repeat: no-repeat;
-    top: 65%; /* y축 고정 */
-    transform: translateY(-50%);
+    top: 30%; /* y축 고정 */
 }
 
-/* 카드 리스트의 위치 조정 */
-.owned-card-list:nth-child(1) {
-    left: 0;
+.owned-card-list.vertical-image3 {
+    transform: rotate(270deg) translateY(30px); /* 회전 후 50px 오른쪽으로 이동 */
+    width: 105px;
+    height: 165px;
+    overflow: hidden;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: -4px;
 }
 
-.owned-card-list:nth-child(2) {
-    left: 10%;
+/* Horizontal 이미지의 카드 리스트 위치 조정 */
+.owned-card-list.horizontal-image3:nth-of-type(1) {
+    left: 0px;
 }
-.owned-card-list:nth-child(3) {
-    left: 20%;
-}
-
-/* 다른 카드들의 위치도 이어서 지정 */
-
-.owned-card-list:nth-child(4) {
-    left: 30%;
+.owned-card-list.horizontal-image3:nth-of-type(2) {
+    left: 20px;
 }
 
-.owned-card-list:nth-child(5) {
-    left: 40%;
+.owned-card-list.horizontal-image3:nth-of-type(3) {
+    left: 60px;
 }
 
-.owned-card-list:nth-child(6) {
-    left: 50%;
-}
-.owned-card-list:nth-child(7) {
-    left: 60%;
-}
-.owned-card-list:nth-child(8) {
-    left: 70%;
+.owned-card-list.horizontal-image3:nth-of-type(4) {
+    left: 80px;
 }
 
-.owned-card-list:nth-child(9) {
-    left: 80%;
+.owned-card-list.horizontal-image3:nth-of-type(5) {
+    left: 100px;
 }
 
-.owned-card-list:nth-child(10) {
-    left: 85%;
+.owned-card-list.horizontal-image3:nth-of-type(6) {
+    left: 140px;
 }
 
-.owned-card-list:nth-child(11) {
-    left: 88%;
+.owned-card-list.horizontal-image3:nth-of-type(7) {
+    left: 160px;
 }
 
-.owned-card-list:nth-child(12) {
-    left: 90%;
+.owned-card-list.horizontal-image3:nth-of-type(8) {
+    left: 260px;
 }
 
-.owned-card-list:nth-child(13) {
-    left: 92%;
+.owned-card-list.horizontal-image3:nth-of-type(9) {
+    left: 300px;
 }
 
-.owned-card-list:nth-child(14) {
-    left: 94%;
+.owned-card-list.horizontal-image3:nth-of-type(10) {
+    left: 340px;
 }
 
-.owned-card-list:nth-child(15) {
-    left: 96%;
+/* Vertical 이미지의 카드 리스트 위치 조정 */
+.owned-card-list.vertical-image3:nth-of-type(1) {
+    left: 0px;
 }
 
-.owned-card-list:nth-child(16) {
-    left: 98%;
+.owned-card-list.vertical-image3:nth-of-type(2) {
+    left: 40px;
 }
 
-.owned-card-list:nth-child(17) {
-    left: 100%;
+.owned-card-list.vertical-image3:nth-of-type(3) {
+    left: 60px;
 }
 
+.owned-card-list.vertical-image3:nth-of-type(4) {
+    left: 80px;
+}
+
+.owned-card-list.vertical-image3:nth-of-type(5) {
+    left: 100px;
+}
+
+.owned-card-list.vertical-image3:nth-of-type(6) {
+    left: 120px;
+}
+
+.owned-card-list.vertical-image3:nth-of-type(7) {
+    left: 140px;
+}
+
+.owned-card-list.vertical-image3:nth-of-type(8) {
+    left: 280px;
+}
+
+.owned-card-list.vertical-image3:nth-of-type(9) {
+    left: 320px;
+}
+
+.owned-card-list.vertical-image3:nth-of-type(10) {
+    left: 360px;
+}
 .card-info-text {
     font-size: 18px;
     color: #666;

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
-import Button from '../component/Button';
 
 const Login = () => {
     const [email, setEmail] = useState(
@@ -91,7 +90,7 @@ const Login = () => {
     return (
         <div className="login-container">
             <div className="logo">
-                <img src="assets/images/logo.png" alt="SP Logo" />
+                <img src={img} alt="SP Logo" />
             </div>
             <form onSubmit={handleLogin}>
                 <div className="form-group">

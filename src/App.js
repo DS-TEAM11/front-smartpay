@@ -7,7 +7,6 @@ import {
     useNavigate,
 } from 'react-router-dom';
 import { MemberProvider } from './provider/MemberProvider';
-
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Chat from './component/Chat';
@@ -15,15 +14,18 @@ import Pay from './pages/Pay';
 import Seller from './pages/Seller';
 import CardRank from './pages/CardRank';
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 import Afterkakao from './pages/Afterkakao'; // 경로 수정
 import Receipt from './component/Receipt';
 import 'bootstrap/dist/css/bootstrap.css';
-import logo from './img/sp_logo.png';
+import logo from './img/logo3.png';
 import './App.css';
 import WelcomePage from './pages/WelcomePage';
 import Button from './component/Button';
 import NotFoundPage from './pages/404';
 import Test from './pages/Test';
+import PayHistory from './pages/PayHistory';
+
 const SplashScreen = () => {
     const navigate = useNavigate();
 
@@ -59,8 +61,10 @@ function App() {
                         <Route path="rank" element={<CardRank />} />
                         <Route path="test" element={<Test />} />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/signup" element={<Signup />} />
                         <Route path="/afterkakao" element={<Afterkakao />} />
                         <Route path="*" element={<NotFoundPage />} />
+                        <Route path="/history" element={<PayHistory />} />
                     </Routes>
                 </MemberProvider>
             </Router>

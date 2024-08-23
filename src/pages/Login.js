@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Login.css';
 import Button from '../component/Button';
+import './Login.css';
+import img from '../img/logo3.png';
 
 const Login = () => {
     const [email, setEmail] = useState(
@@ -91,7 +92,7 @@ const Login = () => {
     return (
         <div className="login-container">
             <div className="logo">
-                <img src="assets/images/logo.png" alt="SP Logo" />
+                <img src={img} alt="SP Logo" />
             </div>
             <form onSubmit={handleLogin}>
                 <div className="form-group">
@@ -142,9 +143,9 @@ const Login = () => {
                 ></Button>
             </form>
             <div className="register-link">
-                아직 회원이 아니신가요? <a href="/register">회원가입</a>
+                아직 회원이 아니신가요? <a href="/signup">회원가입</a>
             </div>
-            <div className="or-divider">Or</div>
+            {/* <div className="or-divider">Or</div> */}
             <button
                 className="btn kakao-login-btn"
                 onClick={handleKakaoLogin}

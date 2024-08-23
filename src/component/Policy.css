@@ -1,0 +1,32 @@
+.policy-container {
+    /* position: fixed; */
+    bottom: 0;
+    width: 100vw;
+    height: 40vh;
+    background-color: white;
+    border-radius: 15px 15px 0 0;
+    z-index: 10001; /* 모달이 최상단에 오도록 설정 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: height 0.3s ease;
+}
+
+.policy-container.fullscreen {
+    height: 100vh;
+}
+
+.white-box {
+    overflow-y: auto;
+    border-radius: 1rem 1rem 1rem 1rem;
+    width: 92vw;
+    margin-left: 15px;
+}
+
+.policy-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}

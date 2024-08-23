@@ -1,0 +1,14 @@
+.LongButton {
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%; /* 버튼의 길이를 80%로 설정 */
+    max-width: 380px; /* 최대 길이 설정 */
+    background-color: #4f46e5;
+    color: white;
+    margin: 0 auto; /* 가운데 정렬 */
+    display: block;
+    text-align: center;
+}

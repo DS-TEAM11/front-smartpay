@@ -10,7 +10,14 @@ export const MemberProvider = ({ children }) => {
     const [memberNo, setMemberNo] = useState(null);
     const location = useLocation();
     useEffect(() => {
-        const excludedPaths = ['/', '/login', '/register', '/welcome', '/test'];
+        const excludedPaths = [
+            '/',
+            '/login',
+            '/register',
+            '/welcome',
+            '/seller',
+            '/test',
+        ];
         if (!excludedPaths.includes(location.pathname.toLowerCase())) {
             const token = localStorage.getItem('accessToken');
 

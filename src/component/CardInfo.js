@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CardInfo.css';
 import Button from '../component/Button';
 import axios from 'axios';
 import CardListItem2 from '../component/CardListItem2'; // CardListItem2 컴포넌트 import
+import QrItem from '../component/useQR/QrItem'; // QrItem 컴포넌트 import
 
 const CardInfo = () => {
     const navigate = useNavigate();
+    const qrItemRef = useRef(null); // QrItem 컴포넌트 참조 생성
     const [isMainRotated, setIsMainRotated] = useState(false);
     const [rotatedCards, setRotatedCards] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
     const [selectedCard, setSelectedCard] = useState(null); // 선택된 카드 상태 추가
     const [memberNo, setMemberNo] = useState(null); // memberNo 상태 정의
     const [fetchedCards, setFetchedCards] = useState([]); // API에서 가져온 카드 목록 상태
+    const [isDragging, setIsDragging] = useState(false); // 드래그 상태 추가
+    const [startY, setStartY] = useState(0); // 드래그 시작 위치
 
     // memberNo를 가져오는 useEffect
     useEffect(() => {
@@ -118,6 +122,28 @@ const CardInfo = () => {
         setSelectedCard(null); // 선택된 카드 초기화
     };
 
+    const handleMouseDown = (e) => {
+        setIsDragging(true);
+        setStartY(e.clientY); // 드래그 시작 위치 저장
+    };
+
+    const handleMouseMove = (e) => {
+        if (isDragging) {
+            const dragDistance = startY - e.clientY; // 드래그된 거리 계산
+            if (dragDistance > 20) {
+                // 20px 이상 드래그된 경우
+                if (qrItemRef.current) {
+                    qrItemRef.current.showActionSheet(); // QrItem의 showActionSheet 메서드 호출
+                }
+                setIsDragging(false); // 드래그 상태 해제
+            }
+        }
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false); // 드래그 상태 해제
+    };
+
     if (!fetchedCards || fetchedCards.length === 0) {
         return (
             <div className="card-info-container">
@@ -150,6 +176,9 @@ const CardInfo = () => {
                         isMainRotated ? 'vertical-image2' : 'horizontal-image2'
                     }`}
                     style={{ backgroundImage: `url(${mainCard.cardImage})` }}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
                 />
             </div>
             <div className="owned-cards-list">
@@ -185,7 +214,10 @@ const CardInfo = () => {
                                 />
                             ))}
                         </ul>
-                        <Button onClick={closeModal} text="닫기" />
+                        <Button
+                            onClick={closeModal}
+                            text="결제할 카드 선택하기"
+                        />
                     </div>
                 </div>
             )}

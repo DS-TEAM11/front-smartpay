@@ -8,9 +8,18 @@
     font-family: 'Pretendard Variable';
 }
 
-.logo img {
-    width: 70%; /* 이미지 크기를 조정하여 비율을 유지합니다 */
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     margin-bottom: 20px;
+}
+
+.logo img {
+    width: 100%; /* 부모의 너비에 맞추기 */
+    max-width: 200px; /* 이미지의 최대 너비 제한 */
+    height: auto; /* 이미지 비율 유지 */
 }
 
 .form-group {
@@ -58,11 +67,6 @@
     color: white;
     font-size: 16px;
     margin-bottom: 20px;
-}
-
-.register-link {
-    margin-bottom: 20px;
-    font-size: 14px;
 }
 
 .or-divider {

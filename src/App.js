@@ -14,6 +14,7 @@ import Pay from './pages/Pay';
 import Seller from './pages/Seller';
 import CardRank from './pages/CardRank';
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 import Afterkakao from './pages/Afterkakao'; // 경로 수정
 import Receipt from './component/Receipt';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -60,6 +61,7 @@ function App() {
                         <Route path="rank" element={<CardRank />} />
                         <Route path="test" element={<Test />} />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/signup" element={<Signup />} />
                         <Route path="/afterkakao" element={<Afterkakao />} />
                         <Route path="*" element={<NotFoundPage />} />
                         <Route path="/history" element={<PayHistory />} />

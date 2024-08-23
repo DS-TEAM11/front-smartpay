@@ -92,7 +92,7 @@ function QrItem({ onRemove }) {
             return;
         }
         axios
-            .get('http://localhost:8091/qr/seller', {
+            .get('http://localhost:8091/qr/seller?memberNo=' + memberNo, {
                 responseType: 'blob',
             })
             .then((response) => {

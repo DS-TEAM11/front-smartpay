@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Button from './Button';
-import Qrtest from './useQR/Qrtest';
+import QrItem from './useQR/QrItem';
 const Header = () => {
     const [showQr, setShowQr] = useState(false); // 상태를 추가하여 QR 코드를 표시할지 여부를 관리합니다.
 
@@ -14,7 +14,7 @@ const Header = () => {
     return (
         <>
             <div className="qrshow">
-                {showQr && <Qrtest onRemove={removeQrItem} />}
+                {showQr && <QrItem onRemove={removeQrItem} />}
             </div>
             <header className="header-sticky header-absolute border-bottom">
                 {/* <!-- Logo Nav START --> */}

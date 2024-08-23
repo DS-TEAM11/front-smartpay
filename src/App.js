@@ -46,8 +46,8 @@ const SplashScreen = () => {
 function App() {
     return (
         <>
-            <MemberProvider>
-                <Router>
+            <Router>
+                <MemberProvider>
                     <Routes>
                         <Route path="/" element={<SplashScreen />} />
                         <Route path="/welcome" element={<WelcomePage />} />
@@ -64,8 +64,8 @@ function App() {
                         <Route path="/afterkakao" element={<Afterkakao />} />
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
-                </Router>
-            </MemberProvider>
+                </MemberProvider>
+            </Router>
         </>
     );
 }

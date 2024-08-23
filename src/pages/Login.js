@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Button from '../component/Button';
 import './Login.css';
 import img from '../img/logo3.png';
-import Button from '../component/Button';
 
 const Login = () => {
     const [email, setEmail] = useState(

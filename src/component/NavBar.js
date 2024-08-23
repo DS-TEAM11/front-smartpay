@@ -3,7 +3,7 @@ import QrItem from './QrItem';
 
 function NavBar() {
     return (
-        <div>
+        <div className="navBar">
             {/* Nav START */}
             <nav className="navbar navbar-expand-xl">
                 <div className="container">
@@ -1005,7 +1005,6 @@ function NavBar() {
                     {/* Main navbar END */}
                     {/* Buttons */}
                     <ul className="nav align-items-center dropdown-hover ms-2">
-                        
                         {/* Get application button */}
                         <li className="nav-item ms-2">
                             <QrItem />

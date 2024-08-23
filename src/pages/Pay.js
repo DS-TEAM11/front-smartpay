@@ -8,28 +8,25 @@ import RecoCard from "../component/RecoCard";
 
 
 const Pay = () => {
-    const franchise = 'gs25';
-    const testprice = 150000;
-    const testsave = 300;
-    const testtype = '적립';
+    
 
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [paymentData, setPaymentData] = useState(null);
     const navigate = useNavigate();
 
     const handlePayment = async () => {
-        //
         const paymentData = {
-            orderNo: 'TEST',
-            price: 150000,
-            product: '결제로그확인용',
+            orderNo: '리액트테스트입니다3',
+            price: 7777,
+            product: '리액트테스트2',
             cardNo: '2222-2222-2222-2222',
-            cardCode: 1,
+            cardCode: "10003",
             getIsAi: true,
             payDate: '20240101',
             saveType: 1,
             savePrice: 200,
-            franchiseNo: 1,
+            franchiseName: "GS25-동교점",
+            franchiseCode: "10003",
             memberNo: 'ce6e2639-3dda-46d2-8d14-1da870ff61e8',
         };
 
@@ -47,14 +44,15 @@ const Pay = () => {
 
             console.log(paymentStatus);
 
+            const orderNo = paymentData.orderNo;
             if (paymentStatus === 0) {
                 // 결제 성공
                 alert('결제가 완료되었습니다.');
                 setPaymentSuccess(true);
                 setPaymentData(response.data);
-                navigate('/pay/success', {
-                    state: { paymentData: paymentData },
-                }); //결제 요청 값? 데이터 그대로 보내주기
+                navigate(`/pay/receipt?orderNo=${orderNo}`);
+                 //결제 요청 값? 데이터 그대로 보내줘? 아님 쿼리파라미터로 달아서 페이지 이동? -> receipt에서는 파라미터 값 가져와서 API 호출?
+
             } else if (paymentStatus === 1) {
                 // 카드 불일치
                 alert('결제 실패: 카드 정보 불일치');
@@ -63,20 +61,13 @@ const Pay = () => {
                 alert('결제 실패:  유효기간 만료');
             } else if (paymentStatus === 3) {
                 // 한도 초과
-                alert('결제 실패: 카드 한도');
+                alert('결제 실패: 카드 한도 초과');
             } else {
                 // 예외 에러
-                alert('결제 실패: 서버 에러');
+                alert('결제 실패: 서버 에러 발생');
             }
         } catch (error) {
-            //?????
-            if (error.response) {
-                console.error('결제 실패:', error.response.data);
-            } else if (error.request) {
-                console.error('응답 없음:', error.request);
-            } else {
-                console.error('요청 에러:', error.message);
-            }
+            console.log('에러');
         }
     };
     //컴포넌트 확인용 데이터?

@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import {BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Link,
+    useNavigate,
+} from 'react-router-dom';
 
 import Home from './pages/Home';
 import Register from './pages/Register';
@@ -7,13 +13,15 @@ import Chat from './component/Chat';
 import Pay from './pages/Pay';
 import Seller from './pages/Seller';
 import CardRank from './pages/CardRank';
+import Login from './pages/Login';
+import Afterkakao from './pages/Afterkakao'; // 경로 수정
 import Receipt from './component/Receipt';
 import logo from './img/sp_logo.png';
 import './App.css';
 import WelcomePage from './pages/WelcomePage';
-
-
-
+import Button from './component/Button';
+import NotFoundPage from './pages/404';
+import Test from './pages/Test';
 const SplashScreen = () => {
     const navigate = useNavigate();
 
@@ -47,11 +55,14 @@ function App() {
                     <Route path="/pay" element={<Pay />} />
                     <Route path="/pay/receipt" element={<Receipt />} />
                     <Route path="rank" element={<CardRank />} />
+                    <Route path="test" element={<Test />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/afterkakao" element={<Afterkakao />} />
+                    <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </Router>
         </>
     );
-  
 }
 
 export default App;

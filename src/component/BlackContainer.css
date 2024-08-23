@@ -1,0 +1,10 @@
+.black-container {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    margin: 0 auto;
+    z-index: 1050;
+    left: 0;
+    overflow: hidden;
+}

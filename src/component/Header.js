@@ -1,8 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import Button from './Button';
+import Qrtest from './useQR/Qrtest';
 const Header = () => {
+    const [showQr, setShowQr] = useState(false); // 상태를 추가하여 QR 코드를 표시할지 여부를 관리합니다.
+
+    const handleClick = () => {
+        setShowQr(true);
+    };
+    const removeQrItem = () => {
+        setShowQr(false);
+    };
     return (
         <>
+            <div className="qrshow">
+                {showQr && <Qrtest onRemove={removeQrItem} />}
+            </div>
             <header className="header-sticky header-absolute border-bottom">
                 {/* <!-- Logo Nav START --> */}
                 <nav className="navbar navbar-expand-xl">
@@ -27,9 +40,9 @@ const Header = () => {
                                 {/* <!-- Nav item --> */}
                                 <li className="nav-item">
                                     {' '}
-                                    <a className="nav-link" href="/">
+                                    <Link className="nav-link" to="/">
                                         메인 홈{' '}
-                                    </a>{' '}
+                                    </Link>
                                 </li>
                                 <li className="nav-item">
                                     {' '}
@@ -44,7 +57,6 @@ const Header = () => {
                                     </a>{' '}
                                 </li>
                                 <li className="nav-item">
-                                    {' '}
                                     <a className="nav-link" href="/mypage">
                                         마이페이지
                                     </a>{' '}
@@ -58,7 +70,7 @@ const Header = () => {
                             <div className="me-3">
                                 <Button
                                     text={'결제 QR 생성'}
-                                    onClick={() => {}}
+                                    onClick={handleClick}
                                 />
                             </div>
                             {/* <!-- Responsive navbar toggler --> */}

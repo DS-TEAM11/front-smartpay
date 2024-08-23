@@ -12,7 +12,7 @@ const Pay = () => {
     const [recommendData, setRecommendData] = useState(location.state.aiData);
 
     const [paymentSuccess, setPaymentSuccess] = useState(false);
-    const [paymentData, setPaymentData] = useState(null);
+    const [paymentData, setPaymentData] = useState(null); //결제요청할 데이터 해야함
 
     const navigate = useNavigate();
     console.log(recommendData); //TODO: 240823 이제 이 데이터 잘라서 페이지에 그려주면 됨
@@ -44,18 +44,18 @@ const Pay = () => {
 
     const handlePayment = async () => {
         const paymentData = {
-            orderNo: '리액트테스트입니다3',
-            price: 7777,
-            product: '리액트테스트2',
-            cardNo: '2222-2222-2222-2222',
-            cardCode: "10003",
-            getIsAi: true,
-            payDate: '20240101',
-            saveType: 1,
-            savePrice: 200,
-            franchiseName: "GS25-동교점",
-            franchiseCode: "10003",
-            memberNo: 'ce6e2639-3dda-46d2-8d14-1da870ff61e8',
+            orderNo: '리액트테스트입니다3', //이전에서 받아와야 함? 
+            price: 7777,  //이것도 판매자
+            product: '리액트테스트2', //판매자
+            cardNo: '2222-2222-2222-2222',  //cardInfo 받아올때 card_no를 풀로 받아와야 하는 듯
+            cardCode: "10003",  //cardInfo에서
+            getIsAi: true, //이전 구매자 QR 생성부터 들고 와야 함
+            payDate: '20240101', //판매자 쪽에서
+            saveType: 1,  //여기서 AI 결과 값에 따라 자바스트립트로 처리 해야 할 듯
+            savePrice: 200, //AI 정보
+            franchiseName: "GS25-동교점", //판매자
+            franchiseCode: "10003", //판매자
+            memberNo: 'ce6e2639-3dda-46d2-8d14-1da870ff61e8', 
         };
 
         try {
@@ -99,7 +99,7 @@ const Pay = () => {
         }
     };
     //컴포넌트 확인용 데이터?
-    let getIsAi = false;
+    let getIsAi = true;
     return (
         <div>
             <Header />

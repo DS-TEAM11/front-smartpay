@@ -31,14 +31,15 @@ function QrItem({ onRemove }) {
                 const body = JSON.parse(message.body);
                 // console.log('message:', body);
                 if (body.message === 'seller enter') {
-                    console.log('판매자 접속');
+                    // console.log('판매자 접속');
                     setIsLoading(true);
                     setIsQrVisible(false);
                 }
                 if (body.message === 'purchase information') {
-                    console.log('구매 정보 입력 완료');
+                    // console.log('구매 정보 입력 완료');
+                    console.log(body.data);
                     setIsAIiLoading(true);
-                    cardRecommend(body.data.purchase_data);
+                    cardRecommend(body.data);
                     //axios로 결제 정보를 담아서 ai 추천 요청
                     //추천 결과 나오면 페이지 이동해서 받은 정보 보여주기
                     //axios로 선택한 카드로 결제요청 보내기
@@ -52,11 +53,8 @@ function QrItem({ onRemove }) {
             //QR 생성에 성공하면 -> 웹소켓 연결
         });
     };
-    const cardRecommend = (purchase_data) => {
+    const cardRecommend = (data) => {
         const url = 'http://localhost:8091/api/payment/ai';
-        const data = {
-            memberNo: memberNo,
-        };
         const params = {
             memberNo: memberNo,
         };

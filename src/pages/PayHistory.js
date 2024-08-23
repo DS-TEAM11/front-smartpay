@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './PayHistory.css';
 import Header from '../component/Header';
@@ -6,17 +6,19 @@ import { useMemberNo } from '../provider/MemberProvider';
 
 function PayHistory() {
     const [paymentData, setPaymentData] = useState(null);
-    const [cardListData, setCardListData] = useState(null);
+    const [cardListData, setCardListData] = useState([]);
     const memberNo = useMemberNo();
-    const [cardNo, setCardNo] = useState(null);
+    const [cardNo, setCardNo] = useState('');
     const [payDate, setPayDate] = useState('');
 
     const paymentApi = () => {
         axios
             .get('https://localhost:3000/api/payment/history', {
-                memberNo: memberNo,
-                payDate: payDate,
-                cardNo: cardNo,
+                params: {
+                    memberNo: memberNo,
+                    payDate: payDate,
+                    cardNo: cardNo,
+                },
             })
             .then((res) => {
                 console.log(res.data);
@@ -30,7 +32,7 @@ function PayHistory() {
     const cardListApi = () => {
         axios
             .get('https://localhost:3000/api/cards/byMember', {
-                mameberNo: memberNo,
+                params: { memberNo: memberNo },
             })
             .then((res) => {
                 console.log(res.data);
@@ -50,8 +52,12 @@ function PayHistory() {
     };
 
     useEffect(() => {
-        paymentApi();
-    });
+        cardListApi(); // 컴포넌트 마운트 시 카드 목록을 불러옵니다.
+    }, []); // 빈 배열로 useEffect를 한 번만 실행
+
+    useEffect(() => {
+        paymentApi(); // payDate 또는 cardNo가 변경될 때 결제 데이터를 불러옵니다.
+    }, [payDate, cardNo]); // payDate, cardNo가 변경될 때마다 실행
 
     return (
         <div className="main-container">
@@ -71,14 +77,23 @@ function PayHistory() {
                     />
                 </div>
                 <div className="condition-cardList">
-                    <select name="cardNo">
-                        <option></option>
+                    <select
+                        name="cardNo"
+                        value={cardNo}
+                        onChange={onChangeCardNo}
+                    >
+                        <option value="">카드를 선택하세요</option>
+                        {cardListData.map((card) => (
+                            <option key={card.cardNo} value={card.cardNo}>
+                                {card.cardName}
+                            </option>
+                        ))}
                     </select>
                 </div>
             </div>
             <div className="data"></div>
             <div>
-                <pre>{JSON.stringify(paymentData, null)}</pre>
+                <pre>{JSON.stringify(paymentData, null, 2)}</pre>
             </div>
         </div>
     );

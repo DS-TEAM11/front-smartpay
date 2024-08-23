@@ -7,7 +7,6 @@ import {
     useNavigate,
 } from 'react-router-dom';
 import { MemberProvider } from './provider/MemberProvider';
-
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Chat from './component/Chat';
@@ -25,6 +24,8 @@ import WelcomePage from './pages/WelcomePage';
 import Button from './component/Button';
 import NotFoundPage from './pages/404';
 import Test from './pages/Test';
+import PayHistory from './pages/PayHistory';
+
 const SplashScreen = () => {
     const navigate = useNavigate();
 
@@ -63,6 +64,7 @@ function App() {
                         <Route path="/signup" element={<Signup />} />
                         <Route path="/afterkakao" element={<Afterkakao />} />
                         <Route path="*" element={<NotFoundPage />} />
+                        <Route path="/history" element={<PayHistory />} />
                     </Routes>
                 </MemberProvider>
             </Router>

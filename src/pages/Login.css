@@ -11,6 +11,9 @@
 .logo img {
     width: 70%; /* 이미지 크기를 조정하여 비율을 유지합니다 */
     margin-bottom: 20px;
+    margin-left: 70%;
+    transform: scale(1.25); /* 이미지 125% 확대 */
+    transform-origin: center;
 }
 
 .form-group {

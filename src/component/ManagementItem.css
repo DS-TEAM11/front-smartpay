@@ -3,23 +3,24 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 70px; /* 아이템 크기를 고정 */
-    height: 70px;
+    width: 15%; /* 아이템 크기를 %로 조정 */
+    height: auto; /* 높이를 자동으로 설정하여 유연하게 만듦 */
+    padding: 10%; /* 내부 여백 추가로 크기를 조정 */
     background-color: #f0f4f8;
-    border-radius: 10px;
+    border-radius: 10%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin: 5px; /* 아이템 간의 간격을 위해 여백 추가 */
+    margin: 2%; /* 아이템 간의 간격을 위해 여백 추가 */
     text-align: center;
 }
 
 .management-item img {
-    width: 40px; /* 이미지 크기 조정 */
-    height: 40px;
-    margin-bottom: 5px; /* 이미지와 텍스트 사이 여백 */
+    width: 60%; /* 이미지 크기를 %로 조정 */
+    height: auto; /* 자동으로 비율 유지 */
+    margin-bottom: 5%; /* 이미지와 텍스트 사이 여백 */
 }
 
 .management-item p {
-    font-size: 12px;
+    font-size: 1em; /* 텍스트 크기를 상대 단위로 조정 */
     color: #333;
     margin: 0;
     text-align: center;

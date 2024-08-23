@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import './Receipt.css';
 import axios from 'axios';
 import Button from './Button';
@@ -8,43 +9,21 @@ import { useLocation } from 'react-router-dom';
 // 로그인 정보 + 쿼리스트링에 주문번호(UUID)
 // 쿼리스트링의 값에 따라서 axios 요청 -> 받아온 데이터를 리액트에서 표시
 // 받아온 데이터를 출력하기
-const Receipt = (props) => {
+const Receipt = (state) => {
     const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const orderNo = queryParams.get('orderNo');
+    const [formData, setFormData] = useState(location.state.aiData);
 
-    const [orderData, setOrderData] = useState({
-        regDate: '',
-        orderNo: '',
-        product: '',
-        price: 0,
-        cardNo: '',
-        cardCode: '',
-        isAi: false,
-        payDate: '',
-        savePrice: 0,
-        saveType: 0,
-        franchiseCode: '',
-        franchiseName: '',
-        memberNo: ''
-    });
-
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
     useEffect(() => {
-        const fetchOrderData = async () => {
-            if (orderNo) {
-                try {
-                    const response = await axios.get('http://localhost:8091/api/payment/completed', {
-                        params: { orderNo }
-                    });
-                    setOrderData(response.data);
-                } catch (error) {
-                    console.error('에러');
-                }
-            }
-        };
-        fetchOrderData();
-    }, [orderNo]);
-
+        handleChange(formData);
+    }, [formData]);
+    console.log('영수증 페이지에 정보 전달됨', formData);
+    console.log('영수증 페이지에 정보 전달됨', JSON.stringify(formData));
     return (
         <>
             <Header />

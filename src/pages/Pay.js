@@ -10,24 +10,52 @@ import { useLocation } from 'react-router-dom';
 const Pay = () => {
     const location = useLocation();
     const [recommendData, setRecommendData] = useState(location.state.aiData);
+
     const [paymentSuccess, setPaymentSuccess] = useState(false);
-    const [paymentData, setPaymentData] = useState(null);
+    const [paymentData, setPaymentData] = useState(null); //결제요청할 데이터 해야함
+
     const navigate = useNavigate();
     console.log(recommendData); //TODO: 240823 이제 이 데이터 잘라서 페이지에 그려주면 됨
+
+    const getBenefit = { 
+        maximumBenefits: recommendData.maximumBenefits,
+        benefitType: recommendData.benefitType
+    }
+    console.log(typeof(recommendData));
+
+    //카드 정보 가져옴
+    const getCardInfo = async () => {
+        try {
+            const url = 'http://localhost:8091/api/payment/card';
+            const data = {
+                cardCode: '03060049', //recommenData 추출 해서 넣기(근데 AI 카드가 아닌 경우에는 선택한 카드코드 줘야 함)
+                memberNo: 'test'
+            };
+            const response = await axios.post(url, data, {
+                responseType: 'json',
+            });
+            return response.data;
+        } catch (error) {
+            console.error('에러', error);
+            return {};
+        }
+    };
+
+
     const handlePayment = async () => {
-        //
         const paymentData = {
-            orderNo: 'TEST',
-            price: 150000,
-            product: '결제로그확인용',
-            cardNo: '2222-2222-2222-2222',
-            cardCode: 1,
-            getIsAi: true,
-            payDate: '20240101',
-            saveType: 1,
-            savePrice: 200,
-            franchiseNo: 1,
-            memberNo: 'ce6e2639-3dda-46d2-8d14-1da870ff61e8',
+            orderNo: '리액트테스트입니다3', //이전에서 받아와야 함? 
+            price: 7777,  //이것도 판매자
+            product: '리액트테스트2', //판매자
+            cardNo: '2222-2222-2222-2222',  //cardInfo 받아올때 card_no를 풀로 받아와야 하는 듯
+            cardCode: "10003",  //cardInfo에서
+            getIsAi: true, //이전 구매자 QR 생성부터 들고 와야 함
+            payDate: '20240101', //판매자 쪽에서
+            saveType: 1,  //여기서 AI 결과 값에 따라 자바스트립트로 처리 해야 할 듯
+            savePrice: 200, //AI 정보
+            franchiseName: "GS25-동교점", //판매자
+            franchiseCode: "10003", //판매자
+            memberNo: 'ce6e2639-3dda-46d2-8d14-1da870ff61e8', 
         };
 
         try {
@@ -44,14 +72,15 @@ const Pay = () => {
 
             console.log(paymentStatus);
 
+            const orderNo = paymentData.orderNo;
             if (paymentStatus === 0) {
                 // 결제 성공
                 alert('결제가 완료되었습니다.');
                 setPaymentSuccess(true);
                 setPaymentData(response.data);
-                navigate('/pay/success', {
-                    state: { paymentData: paymentData },
-                }); //결제 요청 값? 데이터 그대로 보내주기
+                navigate(`/pay/receipt?orderNo=${orderNo}`);
+                 //결제 요청 값? 데이터 그대로 보내줘? 아님 쿼리파라미터로 달아서 페이지 이동? -> receipt에서는 파라미터 값 가져와서 API 호출?
+
             } else if (paymentStatus === 1) {
                 // 카드 불일치
                 alert('결제 실패: 카드 정보 불일치');
@@ -60,20 +89,13 @@ const Pay = () => {
                 alert('결제 실패:  유효기간 만료');
             } else if (paymentStatus === 3) {
                 // 한도 초과
-                alert('결제 실패: 카드 한도');
+                alert('결제 실패: 카드 한도 초과');
             } else {
                 // 예외 에러
-                alert('결제 실패: 서버 에러');
+                alert('결제 실패: 서버 에러 발생');
             }
         } catch (error) {
-            //?????
-            if (error.response) {
-                console.error('결제 실패:', error.response.data);
-            } else if (error.request) {
-                console.error('응답 없음:', error.request);
-            } else {
-                console.error('요청 에러:', error.message);
-            }
+            console.log('에러');
         }
     };
     //컴포넌트 확인용 데이터?
@@ -81,15 +103,14 @@ const Pay = () => {
     return (
         <div>
             <Header />
-            <Order />
+            <Order getCardInfo={getCardInfo} getBenefit={getBenefit}/>
 
             <div className="d-flex justify-content-center">
                 <div className="col-10 row">
                     {getIsAi && (
                         <div className="p-2 px-4 aiInfo">
                             <p>
-                                ※ 이 카드는 편의점 이용금액 1,000원당 2마일리지
-                                특별적립 혜택을 받을 수 있어요.
+                                {recommendData.detailExplanation}
                             </p>
                         </div>
                     )}
@@ -107,7 +128,7 @@ const Pay = () => {
                 </div>
             </div>
 
-            {!getIsAi && <RecoCard />}
+            {!getIsAi && <RecoCard recommendData={recommendData}/>}
         </div>
     );
 };

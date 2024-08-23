@@ -11,3 +11,9 @@
     justify-content: flex-start; /* 상단에서 시작 */
     align-items: center;
 }
+
+.condition-box {
+    display: flex;
+    justify-content: space-between; /* 요소를 양 끝으로 배치 */
+    align-items: center; /* 수직 정렬 */
+}

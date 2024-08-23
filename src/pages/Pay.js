@@ -9,14 +9,14 @@ import RecoCard from '../component/RecoCard';
 import { useLocation } from 'react-router-dom';
 const Pay = () => {
     const location = useLocation();
-    const [recommendData, setRecommendData] = useState(location.state.aiData);
+    // const [recommendData, setRecommendData] = useState(location.state.aiData);
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [paymentData, setPaymentData] = useState(null);
     const navigate = useNavigate();
-    console.log(recommendData); //TODO: 240823 이제 이 데이터 잘라서 페이지에 그려주면 됨
+    // console.log(recommendData); //TODO: 240823 이제 이 데이터 잘라서 페이지에 그려주면 됨
 
 
-    
+
     const handlePayment = async () => {
         const paymentData = {
             orderNo: '리액트테스트입니다3',
@@ -78,7 +78,7 @@ const Pay = () => {
     return (
         <div>
             <Header />
-            <Order />
+            {/* <Order /> */}
 
             <div className="d-flex justify-content-center">
                 <div className="col-10 row">

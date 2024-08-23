@@ -12,31 +12,10 @@ import image4 from '../img/home4.png';
 import image5 from '../img/home5.png';
 import image6 from '../img/home6.png';
 
+import { useMemberNo } from '../provider/MemberProvider';
 const Home = () => {
     const [cards, setCards] = useState([]);
-    const [memberNo, setMemberNo] = useState(null);
-
-    useEffect(() => {
-        // 로컬스토리지에서 토큰 가져오기
-        const token = localStorage.getItem('accessToken');
-
-        if (token) {
-            // 백엔드로 memberNo 요청
-            axios
-                .get('http://localhost:8091/member/findMember', {
-                    headers: {
-                        Authorization: token, // Bearer 포함
-                    },
-                })
-                .then((response) => {
-                    setMemberNo(response.data); // 응답받은 memberNo 저장
-                })
-                .catch((error) => {
-                    console.error('memberNo 요청 에러', error);
-                });
-        }
-    }, []);
-
+    const memberNo = useMemberNo();
     useEffect(() => {
         if (memberNo) {
             const token = localStorage.getItem('accessToken');
@@ -62,7 +41,7 @@ const Home = () => {
                     );
                 });
         }
-    }, [memberNo]);
+    }, []);
 
     return (
         <>

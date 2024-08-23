@@ -6,6 +6,7 @@ import {
     Link,
     useNavigate,
 } from 'react-router-dom';
+import { MemberProvider } from './provider/MemberProvider';
 
 import Home from './pages/Home';
 import Register from './pages/Register';
@@ -43,24 +44,25 @@ const SplashScreen = () => {
 function App() {
     return (
         <>
-        
-            <Router>
-                <Routes>
-                    <Route path="/" element={<SplashScreen />} />
-                    <Route path="/welcome" element={<WelcomePage />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/seller" element={<Seller />} />
-                    <Route path="/chat" element={<Chat />} />
-                    <Route path="/pay" element={<Pay />} />
-                    <Route path="/pay/receipt" element={<Receipt />} />
-                    <Route path="rank" element={<CardRank />} />
-                    <Route path="test" element={<Test />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/afterkakao" element={<Afterkakao />} />
-                    <Route path="*" element={<NotFoundPage />} />
-                </Routes>
-            </Router>
+            <MemberProvider>
+                <Router>
+                    <Routes>
+                        <Route path="/" element={<SplashScreen />} />
+                        <Route path="/welcome" element={<WelcomePage />} />
+                        <Route path="/home" element={<Home />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/seller" element={<Seller />} />
+                        <Route path="/chat" element={<Chat />} />
+                        <Route path="/pay" element={<Pay />} />
+                        <Route path="/pay/receipt" element={<Receipt />} />
+                        <Route path="rank" element={<CardRank />} />
+                        <Route path="test" element={<Test />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/afterkakao" element={<Afterkakao />} />
+                        <Route path="*" element={<NotFoundPage />} />
+                    </Routes>
+                </Router>
+            </MemberProvider>
         </>
     );
 }

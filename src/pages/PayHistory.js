@@ -41,9 +41,17 @@ function PayHistory() {
             });
     };
 
-    const onChangePayDate = (e) => {};
+    const onChangePayDate = (e) => {
+        setPayDate(e.target.value);
+    };
 
-    const onChangeCardNo = () => {};
+    const onChangeCardNo = (e) => {
+        setCardNo(e.target.value);
+    };
+
+    useEffect(() => {
+        paymentApi();
+    });
 
     return (
         <div className="main-container">

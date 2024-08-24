@@ -6,18 +6,18 @@ import MyCalendar from '../component/MyCalendar';
 import { useMemberNo } from '../provider/MemberProvider';
 
 function PayHistory() {
-    const [paymentData, setPaymentData] = useState(null);
+    const [paymentData, setPaymentData] = useState([]);
     const [cardListData, setCardListData] = useState([]);
     const memberNo = useMemberNo();
     const [cardNo, setCardNo] = useState('');
     const [payDate, setPayDate] = useState(''); // 초기값을 빈 문자열로 설정
 
-    // Date 객체를 'YYYY-MM-DD' 문자열로 변환하는 함수
+    // Date 객체를 'YYYYMMDD' 문자열로 변환하는 함수
     const formatDate = (date) => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        return `${year}${month}${day}`; // 변경된 형식
+        return `${year}${month}${day}`; // YYYYMMDD 형식
     };
 
     // yyyymmdd 형식의 날짜 문자열을 Date 객체로 변환
@@ -48,6 +48,18 @@ function PayHistory() {
         return `${amount.toLocaleString()}원`;
     };
 
+    // 결제 데이터를 날짜별로 그룹화하는 함수
+    const groupByDayName = (data) => {
+        return data.reduce((acc, payment) => {
+            const dayName = formatDayName(payment.payDate);
+            if (!acc[dayName]) {
+                acc[dayName] = [];
+            }
+            acc[dayName].push(payment);
+            return acc;
+        }, {});
+    };
+
     // 컴포넌트 로드 시 결제 내역을 초기화하는 새로운 useEffect
     useEffect(() => {
         if (memberNo) {
@@ -66,7 +78,7 @@ function PayHistory() {
                     '&cardNo=' +
                     cardNo +
                     '&payDate=' +
-                    formattedDate, // 포매팅 날짜 입력
+                    formattedDate, // 포맷팅된 날짜 입력
             )
             .then((res) => {
                 console.log(res.data);
@@ -109,6 +121,8 @@ function PayHistory() {
         }
     }, [payDate, cardNo]); // payDate, cardNo가 변경될 때마다 실행
 
+    const groupedData = groupByDayName(paymentData);
+
     return (
         <div className="payhistory">
             <div className="header">
@@ -127,7 +141,7 @@ function PayHistory() {
                         value={cardNo}
                         onChange={onChangeCardNo}
                     >
-                        <option value="">카드를 선택</option>
+                        <option value="">카드 선택</option>
                         {cardListData.map((card) => (
                             <option key={card.cardNo} value={card.cardNo}>
                                 {card.cardNick}
@@ -137,31 +151,29 @@ function PayHistory() {
                 </div>
             </div>
             <div className="data">
-                
-                {paymentData && paymentData.length > 0 ? (
+                {Object.keys(groupedData).length > 0 ? (
                     <div className="table-container">
-                        {paymentData.map((payment) => (                            
-                            
-                            <div key={payment.orderNo}>
-                                <div className='dayName'>
-                                    {formatDayName(payment.payDate)}
-                                </div>
-                                <div className="table-row cssportal-grid">
-                                    <div className='div1'>
-                                        <img
-                                            className="card-image"
-                                            src={payment.cardImage}
-                                            alt="카드이미지"
-                                        />
+                        {Object.keys(groupedData).map((dayName) => (
+                            <div key={dayName}>
+                                <div className='dayName'>{dayName}</div>
+                                {groupedData[dayName].map((payment) => (
+                                    <div key={payment.orderNo} className="table-row cssportal-grid">
+                                        <div className='div1'>
+                                            <img
+                                                className="card-image"
+                                                src={payment.cardImage}
+                                                alt="카드이미지"
+                                            />
+                                        </div>
+                                        <div className='div2'>{payment.franchiseName}</div>
+                                        <div className='div3'>
+                                            {payment.save_type === 0
+                                                ? `${formatCurrency(payment.savePrice)} 적립`
+                                                : `${formatCurrency(payment.savePrice)} 할인`}
+                                        </div>
+                                        <div className='div4'>{formatCurrency(payment.price)}</div>
                                     </div>
-                                    <div className='div2'>{payment.franchiseName}</div>
-                                    <div className='div3'>
-                                        {payment.save_type === 0
-                                            ? `${formatCurrency(payment.savePrice)} 적립`
-                                            : `${formatCurrency(payment.savePrice)} 할인`}
-                                    </div>
-                                    <div className='div4'>{formatCurrency(payment.price)}</div>
-                                </div>
+                                ))}
                             </div>
                         ))}
                     </div>

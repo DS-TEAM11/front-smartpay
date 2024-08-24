@@ -1,0 +1,14 @@
+.mycalendar {
+    position: relative; /* 버튼과 달력 컨테이너의 위치를 상대적으로 설정 */
+}
+
+.mycalendar .calendar-container {
+    position: absolute; /* 달력을 버튼에 대해 절대 위치로 설정 */
+    top: 100%; /* 버튼 바로 아래에 위치하도록 설정 */
+    left: 0; /* 버튼과 맞닿게 왼쪽 정렬 */
+    z-index: 10; /* 달력을 다른 요소들 위로 올리기 위해 높은 z-index 설정 */
+    background-color: white; /* 배경색을 흰색으로 설정하여 다른 요소와 겹칠 때 잘 보이도록 */
+    border: 1px solid #ddd; /* 달력 테두리 추가 */
+    border-radius: 4px; /* 둥근 모서리 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+}

@@ -30,7 +30,7 @@ function MyCalendar({ value, onChange }) {
     };
 
     return (
-        <div className="my-calendar-container">
+        <div className="mycalendar">
             <button className="btn" onClick={toggleCalendar}>
                 <i class="bi bi-calendar4"></i>{' '}
                 {selectedDate ? formatDate(selectedDate) : '최근 일주일'}

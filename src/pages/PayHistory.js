@@ -154,7 +154,7 @@ function PayHistory() {
                 {Object.keys(groupedData).length > 0 ? (
                     <div className="table-container">
                         {Object.keys(groupedData).map((dayName) => (
-                            <div className='' key={dayName}>
+                            <div className='dayTable'  key={dayName}>
                                 <div className="dayName">{dayName}</div>
                                 {groupedData[dayName].map((payment) => (
                                     <div

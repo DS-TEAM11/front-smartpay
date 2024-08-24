@@ -1,8 +1,8 @@
-.my-calendar-container {
+.mycalendar {
     position: relative; /* 버튼과 달력 컨테이너의 위치를 상대적으로 설정 */
 }
 
-.calendar-container {
+.mycalendar .calendar-container {
     position: absolute; /* 달력을 버튼에 대해 절대 위치로 설정 */
     top: 100%; /* 버튼 바로 아래에 위치하도록 설정 */
     left: 0; /* 버튼과 맞닿게 왼쪽 정렬 */

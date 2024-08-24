@@ -9,6 +9,7 @@ const MemberContext = createContext(null);
 export const MemberProvider = ({ children }) => {
     const [memberNo, setMemberNo] = useState(null);
     const location = useLocation();
+
     useEffect(() => {
         const excludedPaths = [
             '/',
@@ -18,6 +19,7 @@ export const MemberProvider = ({ children }) => {
             '/seller',
             '/test',
         ];
+
         if (!excludedPaths.includes(location.pathname.toLowerCase())) {
             const token = localStorage.getItem('accessToken');
 
@@ -45,7 +47,9 @@ export const MemberProvider = ({ children }) => {
     );
 };
 
-// Custom Hook
-export const useMemberNo = () => {
-    return useContext(MemberContext);
+// Custom Hook for accessing memberNo
+const useMemberNo = () => {
+return useContext(MemberContext);
 };
+
+export { useMemberNo };

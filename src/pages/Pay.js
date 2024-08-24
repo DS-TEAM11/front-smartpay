@@ -7,12 +7,17 @@ import Order from '../component/Order';
 import Header from '../component/Header';
 import RecoCard from '../component/RecoCard';
 import { useLocation } from 'react-router-dom';
+import { useMemberNo } from '../provider/MemberProvider';
+
 const Pay = () => {
     const location = useLocation();
     const [recommendData, setRecommendData] = useState(location.state.aiData);
-
+    const [purchaseData, setPurchaseData] = useState(location.state.purchaseData); //구매 정보 데이터
+    console.log(purchaseData);
+    
+    const memberNo = useMemberNo();
     const [paymentSuccess, setPaymentSuccess] = useState(false);
-    const [paymentData, setPaymentData] = useState(null); //결제요청할 데이터 해야함
+    const [paymentData, setPaymentData] = useState({}); //결제요청할 데이터 해야함
 
     const navigate = useNavigate();
     console.log(recommendData); //TODO: 240823 이제 이 데이터 잘라서 페이지에 그려주면 됨
@@ -21,14 +26,21 @@ const Pay = () => {
         maximumBenefits: recommendData.maximumBenefits,
         benefitType: recommendData.benefitType
     }
-    console.log(typeof(recommendData));
+
+    const getPurchase = {
+        franchiseName: purchaseData.franchiseName,
+        price: purchaseData.purchasePrice,
+        product: purchaseData.purchaseItems
+    }
+    
+    // console.log(typeof(recommendData));
 
     //카드 정보 가져옴
     const getCardInfo = async () => {
         try {
             const url = 'http://localhost:8091/api/payment/card';
             const data = {
-                cardCode: '03060049', //recommenData 추출 해서 넣기(근데 AI 카드가 아닌 경우에는 선택한 카드코드 줘야 함)
+                cardCode: recommendData.recommendCard, //recommenData 추출 해서 넣기(근데 AI 카드가 아닌 경우에는 선택한 카드코드 줘야 함)
                 memberNo: 'test'
             };
             const response = await axios.post(url, data, {
@@ -36,26 +48,27 @@ const Pay = () => {
             });
             return response.data;
         } catch (error) {
-            console.error('에러', error);
+            console.error(error);
             return {};
         }
     };
+    //TODO: 다른 카드 선택하기 하면 카드 리스트 컴포넌트 불러오고 화면도 바꿔야하고 데이터 값도 바꿔야 하고 OMG~~
 
-
+    //TODO: 실제 결제 요청 정보 담아야 함
     const handlePayment = async () => {
         const paymentData = {
             orderNo: '리액트테스트입니다3', //이전에서 받아와야 함? 
-            price: 7777,  //이것도 판매자
-            product: '리액트테스트2', //판매자
-            cardNo: '2222-2222-2222-2222',  //cardInfo 받아올때 card_no를 풀로 받아와야 하는 듯
-            cardCode: "10003",  //cardInfo에서
+            price: purchaseData.purchasePrice,  //이것도 판매자
+            product: purchaseData.purchaseItems, //판매자
+            cardNo: '2222-2222-2222-2222',  //cardInfo 받아올때 card_no를 풀로 받아와야 할 듯
+            cardCode: recommendData.recommendCard,  //cardInfo에서
             getIsAi: true, //이전 구매자 QR 생성부터 들고 와야 함
             payDate: '20240101', //판매자 쪽에서
             saveType: 1,  //여기서 AI 결과 값에 따라 자바스트립트로 처리 해야 할 듯
-            savePrice: 200, //AI 정보
-            franchiseName: "GS25-동교점", //판매자
-            franchiseCode: "10003", //판매자
-            memberNo: 'ce6e2639-3dda-46d2-8d14-1da870ff61e8', 
+            savePrice: recommendData.maximumBenefits, //AI 정보
+            franchiseName: purchaseData.franchiseName, //판매자
+            franchiseCode: purchaseData.franchiseCode, //판매자
+            memberNo: memberNo, 
         };
 
         try {
@@ -100,10 +113,11 @@ const Pay = () => {
     };
     //컴포넌트 확인용 데이터?
     let getIsAi = true;
+
     return (
         <div>
             <Header />
-            <Order getCardInfo={getCardInfo} getBenefit={getBenefit}/>
+            <Order getCardInfo={getCardInfo} getBenefit={getBenefit} getPurchase={getPurchase}/>
 
             <div className="d-flex justify-content-center">
                 <div className="col-10 row">

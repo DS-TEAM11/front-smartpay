@@ -21,6 +21,8 @@ function QrItem({ onRemove }) {
     const [isAIiLoading, setIsAIiLoading] = useState(false);
     const [boxHeight, setBoxHeight] = useState('60vh');
     const [boxTop, setBoxTop] = useState('40vh');
+    // const [sellerData, setSellerData] = useState({});
+
     const [stompClient, setStompClient] = useState(
         Stomp.over(new SockJS('http://localhost:8091/ws')),
     );
@@ -40,6 +42,7 @@ function QrItem({ onRemove }) {
                     console.log(body.data);
                     setIsAIiLoading(true);
                     cardRecommend(body.data);
+                    // setSellerData(body.data); //판매자 정보 담아서 구매자 전달
                     //axios로 결제 정보를 담아서 ai 추천 요청
                     //추천 결과 나오면 페이지 이동해서 받은 정보 보여주기
                     //axios로 선택한 카드로 결제요청 보내기
@@ -67,7 +70,7 @@ function QrItem({ onRemove }) {
             .then((response) => {
                 // console.log('추천 결과:', response.data);
                 navigate('/pay', {
-                    state: { aiData: response.data },
+                    state: { aiData: response.data, purchaseData: data },
                 });
             })
             .catch((error) => {

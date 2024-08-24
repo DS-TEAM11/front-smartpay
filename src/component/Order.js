@@ -1,8 +1,7 @@
-import axios from 'axios';
 import './Order.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-const Order = ({getCardInfo, getBenefit }) => {
+const Order = ({getCardInfo, getBenefit, getPurchase }) => {
 
     const [cardInfoData, setCardInfoData] = useState({
         card_name: "",
@@ -10,10 +9,13 @@ const Order = ({getCardInfo, getBenefit }) => {
         card_code: "",
         card_company: "",
         lastNums: "",
-        card_img:0,
+        card_img: 0,
     });
+
+    const imgRef = useRef(null);
+    const containerRef = useRef(null);
+
     useEffect(() => {
-        // 컴포넌트가 마운트될 때 getCardInfo 호출
         const fetchCardInfo = async () => {
             const data = await getCardInfo();
             setCardInfoData(data);
@@ -21,13 +23,23 @@ const Order = ({getCardInfo, getBenefit }) => {
         fetchCardInfo();
     }, [getCardInfo]);
 
-    
+    //이미지 가져올 때 크기 판별해서 회전시키는데  아니면 결제 카드는 그냥 카드 이미지에 따라 가로 세로 상관 없이?
+    useEffect(() => {
+        if (imgRef.current && containerRef.current) {
+            const imgElement = imgRef.current;
+            const containerElement = containerRef.current;
+            const { Width, Height } = imgElement;
 
-    const franchise = 'GS25';
-    const testprice = 150000;
+            if ( Width > Height) { //가로로된 카드이면
+                imgElement.classList.add('rotate-image');
+                imgElement.classList.remove('img-size');
+                containerElement.style.width = `${Height +15}px`;
+                containerElement.style.height = `${Width + 15}px`;
+            } 
+        }
+    }, [cardInfoData.card_img]);
 
-
-    const isAIRecommended = false; // AI 추천 여부를 나타내는 변수인데 어디서 받아할까,,,
+    const isAIRecommended = true; // AI 추천 여부를 나타내는 변수인데 어디서 받아할까,,,
 
     let FirstMessage;
     let SecondMessage;
@@ -37,9 +49,9 @@ const Order = ({getCardInfo, getBenefit }) => {
         FirstMessage = <>AI 추천 카드로</>;
         SecondMessage = (
             <>
-                <span className="blue-text"> {franchise}</span>
+                <span className="blue-text"> {getPurchase.franchiseName}</span>
                 에서
-                <span className="blue-text"> {testprice}원</span>
+                <span className="blue-text"> {getPurchase.price}원</span>
             </>
         );
         ThirdMessage = (
@@ -54,9 +66,9 @@ const Order = ({getCardInfo, getBenefit }) => {
         FirstMessage = <>선택한 카드로</>;
         SecondMessage = (
             <>
-                <span className="blue-text"> {franchise}</span>
+                <span className="blue-text"> {getPurchase.franchiseName}</span>
                 에서
-                <span className="blue-text"> {testprice}원</span>
+                <span className="blue-text"> {getPurchase.price}원</span>
             </>
         );
         ThirdMessage = <>결제할게요.</>;
@@ -68,8 +80,8 @@ const Order = ({getCardInfo, getBenefit }) => {
                 <div className="Order">
                     <h4>{isAIRecommended ? 'AI 추천 카드로' : '선택한 카드로'}</h4>
                     <h4>
-                        <span className="blue-text"> {franchise}</span>에서
-                        <span className="blue-text"> {testprice}원</span>
+                        <span className="blue-text"> {getPurchase.franchiseName}</span>에서
+                        <span className="blue-text"> {getPurchase.price}원</span>
                     </h4>
                     <h4>
                         결제하고
@@ -78,14 +90,17 @@ const Order = ({getCardInfo, getBenefit }) => {
                         받을게요.
                     </h4>
                     <div className="d-flex flex-column align-items-center mt-4">
-                        <img
-                            src={cardInfoData.card_img}
-                            alt="CardImg"
-                            className="img-fluid "
-                        />
+                        <div ref={containerRef} className='card-info-container1'>
+                            <img
+                                ref={imgRef}
+                                src={cardInfoData.card_img}
+                                alt="CardImg"
+                                className="img-size"
+                            />
+                        </div>
                         <div className="card-info-container2">
-                            <span>{cardInfoData.card_nick}</span>
-                            <span>
+                            <span className='col-6 text-truncate'>{cardInfoData.card_nick}</span>
+                            <span className='col-6 text-end'>
                                 {cardInfoData.card_company} ({cardInfoData.lastNums})
                             </span>
                         </div>

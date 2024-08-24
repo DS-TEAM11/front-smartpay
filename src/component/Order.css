@@ -2,9 +2,30 @@
     width: 95%;
     margin: auto;
 }
+
 img {
-    width: 65%;
+    width: 100%;
+    height: auto;
+    border-radius: 7%;
 }
+
+.img-size{
+    width: 65%;
+    height: auto;
+}
+
+.rotate-image {
+    transform: rotate(90deg) scale(1.5);
+    object-fit: contain ;
+}
+
+.card-info-container1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
 .card-info-container2 {
     display: flex;
     justify-content: space-between;

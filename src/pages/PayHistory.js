@@ -20,6 +20,30 @@ function PayHistory() {
         return `${year}${month}${day}`; // 변경된 형식
     };
 
+    // yyyymmdd 형식의 날짜 문자열을 Date 객체로 변환
+    const parseDateString = (dateString) => {
+        const year = parseInt(dateString.slice(0, 4), 10);
+        const month = parseInt(dateString.slice(4, 6), 10) - 1; // 월은 0부터 시작
+        const day = parseInt(dateString.slice(6, 8), 10);
+        return new Date(year, month, day);
+    };
+
+    // yyyymmdd 형식의 날짜 문자열을 요일을 포함한 형식으로 변환
+    const formatDayName = (dateString) => {
+        const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+        const date = parseDateString(dateString);
+
+        if (isNaN(date.getTime())) {
+            return '잘못된 날짜';
+        }
+
+        const dayName = daysOfWeek[date.getDay()]; // 요일
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        return `${month}월 ${day}일 ${dayName}요일`;
+    };
+
     const formatCurrency = (amount) => {
         return `${amount.toLocaleString()}원`;
     };
@@ -106,7 +130,7 @@ function PayHistory() {
                         <option value="">카드를 선택</option>
                         {cardListData.map((card) => (
                             <option key={card.cardNo} value={card.cardNo}>
-                                {card.cardName}
+                                {card.cardNick}
                             </option>
                         ))}
                     </select>
@@ -117,24 +141,27 @@ function PayHistory() {
                 {paymentData && paymentData.length > 0 ? (
                     <div className="table-container">
                         {paymentData.map((payment) => (                            
-                            <div className="table-row" key={payment.orderNo}>
-                                <div>
-                                    {payment.payDate}
+                            
+                            <div key={payment.orderNo}>
+                                <div className='dayName'>
+                                    {formatDayName(payment.payDate)}
                                 </div>
-                                <div>
-                                    <img
-                                        className="card-image"
-                                        src={payment.cardImage}
-                                        alt="카드이미지"
-                                    />
+                                <div className="table-row cssportal-grid">
+                                    <div className='div1'>
+                                        <img
+                                            className="card-image"
+                                            src={payment.cardImage}
+                                            alt="카드이미지"
+                                        />
+                                    </div>
+                                    <div className='div2'>{payment.franchiseName}</div>
+                                    <div className='div3'>
+                                        {payment.save_type === 0
+                                            ? `${formatCurrency(payment.savePrice)} 적립`
+                                            : `${formatCurrency(payment.savePrice)} 할인`}
+                                    </div>
+                                    <div className='div4'>{formatCurrency(payment.price)}</div>
                                 </div>
-                                <div>{payment.franchiseName}</div>
-                                <div>
-                                    {payment.save_type === 0
-                                        ? `${formatCurrency(payment.savePrice)} 적립`
-                                        : `${formatCurrency(payment.savePrice)} 할인`}
-                                </div>
-                                <div>{formatCurrency(payment.price)}</div>
                             </div>
                         ))}
                     </div>

@@ -31,14 +31,19 @@ function MyCalendar({ value, onChange }) {
 
     return (
         <div className="my-calendar-container">
-            <button className='btn' onClick={toggleCalendar}>
-                <i class="bi bi-calendar4"></i> {selectedDate ? formatDate(selectedDate) : '최근 일주일'}
+            <button className="btn" onClick={toggleCalendar}>
+                <i class="bi bi-calendar4"></i>{' '}
+                {selectedDate ? formatDate(selectedDate) : '최근 일주일'}
             </button>
             {showCalendar && (
                 <div className="calendar-container">
-                    <Calendar 
-                        onChange={handleDateChange} 
-                        value={selectedDate instanceof Date ? selectedDate : new Date()} 
+                    <Calendar
+                        onChange={handleDateChange}
+                        value={
+                            selectedDate instanceof Date
+                                ? selectedDate
+                                : new Date()
+                        }
                     />
                 </div>
             )}

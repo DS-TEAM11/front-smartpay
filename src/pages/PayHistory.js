@@ -69,7 +69,7 @@ function PayHistory() {
 
     const paymentApi = (payDate, cardNo) => {
         console.log(memberNo);
-        const formattedDate = payDate ? formatDate(new Date(payDate)) : '';  // 날짜가 있는 경우에만 포맷팅
+        const formattedDate = payDate ? formatDate(new Date(payDate)) : ''; // 날짜가 있는 경우에만 포맷팅
         axios
             .get(
                 'http://localhost:8091/api/payment/history' +
@@ -104,7 +104,7 @@ function PayHistory() {
     };
 
     const onChangePayDate = (date) => {
-        setPayDate(date);  // MyCalendar로부터 날짜를 받아서 상태 업데이트
+        setPayDate(date); // MyCalendar로부터 날짜를 받아서 상태 업데이트
     };
 
     const onChangeCardNo = (e) => {
@@ -132,7 +132,7 @@ function PayHistory() {
                 <p>결제내역</p>
             </div>
             <div className="condition-box">
-                <div className='condition-calendar'>
+                <div className="condition-calendar">
                     <MyCalendar value={payDate} onChange={onChangePayDate} />
                 </div>
                 <div className="condition-cardList">
@@ -154,24 +154,35 @@ function PayHistory() {
                 {Object.keys(groupedData).length > 0 ? (
                     <div className="table-container">
                         {Object.keys(groupedData).map((dayName) => (
-                            <div key={dayName}>
-                                <div className='dayName'>{dayName}</div>
+                            <div className='' key={dayName}>
+                                <div className="dayName">{dayName}</div>
                                 {groupedData[dayName].map((payment) => (
-                                    <div key={payment.orderNo} className="table-row cssportal-grid">
-                                        <div className='div1'>
+                                    <div
+                                        key={payment.orderNo}
+                                        className="table-row cssportal-grid"
+                                    >
+                                        <div className="div1">
                                             <img
                                                 className="card-image"
                                                 src={payment.cardImage}
                                                 alt="카드이미지"
                                             />
                                         </div>
-                                        <div className='div2'>{payment.franchiseName}</div>
-                                        <div className='div3'>
-                                            {payment.save_type === 0
-                                                ? `${formatCurrency(payment.savePrice)} 적립`
-                                                : `${formatCurrency(payment.savePrice)} 할인`}
+                                        <div className="div2">
+                                            {payment.franchiseName}
                                         </div>
-                                        <div className='div4'>{formatCurrency(payment.price)}</div>
+                                        <div className="div3">
+                                            {payment.save_type === 0
+                                                ? `${formatCurrency(
+                                                      payment.savePrice,
+                                                  )} 적립`
+                                                : `${formatCurrency(
+                                                      payment.savePrice,
+                                                  )} 할인`}
+                                        </div>
+                                        <div className="div4">
+                                            {formatCurrency(payment.price)}
+                                        </div>
                                     </div>
                                 ))}
                             </div>

@@ -10,14 +10,18 @@ function PayHistory() {
     const [cardListData, setCardListData] = useState([]);
     const memberNo = useMemberNo();
     const [cardNo, setCardNo] = useState('');
-    const [payDate, setPayDate] = useState(new Date());
+    const [payDate, setPayDate] = useState(''); // 초기값을 빈 문자열로 설정
 
     // Date 객체를 'YYYY-MM-DD' 문자열로 변환하는 함수
     const formatDate = (date) => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        return `${year}${month}${day}`;
+        return `${year}${month}${day}`; // 변경된 형식
+    };
+
+    const formatCurrency = (amount) => {
+        return `${amount.toLocaleString()}원`;
     };
 
     // 컴포넌트 로드 시 결제 내역을 초기화하는 새로운 useEffect
@@ -29,7 +33,7 @@ function PayHistory() {
 
     const paymentApi = (payDate, cardNo) => {
         console.log(memberNo);
-        const formattedDate = formatDate(payDate);  // 날짜를 포맷팅
+        const formattedDate = payDate ? formatDate(new Date(payDate)) : '';  // 날짜가 있는 경우에만 포맷팅
         axios
             .get(
                 'http://localhost:8091/api/payment/history' +
@@ -63,8 +67,8 @@ function PayHistory() {
             });
     };
 
-    const onChangePayDate = (e) => {
-        setPayDate(e.target.value);
+    const onChangePayDate = (date) => {
+        setPayDate(date);  // MyCalendar로부터 날짜를 받아서 상태 업데이트
     };
 
     const onChangeCardNo = (e) => {
@@ -91,16 +95,8 @@ function PayHistory() {
             </div>
             <div className="condition-box">
                 <div className='condition-calendar'>
-                    <MyCalendar value={payDate} onChange={setPayDate} />
+                    <MyCalendar value={payDate} onChange={onChangePayDate} />
                 </div>
-                {/* <div className="condition-date">
-                    <input
-                        type="date"
-                        name="payDate"
-                        value={payDate}
-                        onChange={onChangePayDate}
-                    />
-                </div> */}
                 <div className="condition-cardList">
                     <select
                         name="cardNo"
@@ -117,10 +113,14 @@ function PayHistory() {
                 </div>
             </div>
             <div className="data">
+                
                 {paymentData && paymentData.length > 0 ? (
                     <div className="table-container">
-                        {paymentData.map((payment) => (
+                        {paymentData.map((payment) => (                            
                             <div className="table-row" key={payment.orderNo}>
+                                <div>
+                                    {payment.payDate}
+                                </div>
                                 <div>
                                     <img
                                         className="card-image"
@@ -129,8 +129,12 @@ function PayHistory() {
                                     />
                                 </div>
                                 <div>{payment.franchiseName}</div>
-                                <div>{payment.savePrice}</div>
-                                <div>{payment.price} 원</div>
+                                <div>
+                                    {payment.save_type === 0
+                                        ? `${formatCurrency(payment.savePrice)} 적립`
+                                        : `${formatCurrency(payment.savePrice)} 할인`}
+                                </div>
+                                <div>{formatCurrency(payment.price)}</div>
                             </div>
                         ))}
                     </div>

@@ -13,14 +13,37 @@
 }
 
 .condition-box {
-    display: flex;
-    justify-content: space-between; /* 요소를 양 끝으로 배치 */
-    align-items: center; /* 수직 정렬 */
+    display: flex; /* Flexbox를 사용하여 수평으로 배치 */
+    justify-content: space-between; /* 두 요소를 양 옆으로 떨어뜨림 */
+    align-items: center; /* 세로 방향으로 중앙 정렬 */
+}
+
+.condition-calendar {
+    flex: 1; /* 나머지 공간을 차지하도록 설정 */
+    margin-right: 20px; /* 날짜 버튼과 카드 선택 버튼 사이에 간격 추가 */
+}
+
+.condition-cardList {
+    flex: 1; /* 나머지 공간을 차지하도록 설정 */
+}
+
+.data {
+    margin-top: 20px;
+}
+
+.table-container {
+    border-collapse: collapse;
+    width: 100%;
 }
 
 .table-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
 }
 
 .card-image {
-    width: 15%;
+    width: 50px;
+    height: auto;
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './PayHistory.css';
 import Header from '../component/Header';
+import MyCalendar from '../component/MyCalendar';
 import { useMemberNo } from '../provider/MemberProvider';
 
 function PayHistory() {
@@ -9,10 +10,26 @@ function PayHistory() {
     const [cardListData, setCardListData] = useState([]);
     const memberNo = useMemberNo();
     const [cardNo, setCardNo] = useState('');
-    const [payDate, setPayDate] = useState('');
+    const [payDate, setPayDate] = useState(new Date());
+
+    // Date 객체를 'YYYY-MM-DD' 문자열로 변환하는 함수
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}${month}${day}`;
+    };
+
+    // 컴포넌트 로드 시 결제 내역을 초기화하는 새로운 useEffect
+    useEffect(() => {
+        if (memberNo) {
+            paymentApi(payDate, cardNo); // 초기 렌더링 시 결제 내역 호출
+        }
+    }, [memberNo]); // memberNo가 변경될 때마다 실행
 
     const paymentApi = (payDate, cardNo) => {
         console.log(memberNo);
+        const formattedDate = formatDate(payDate);  // 날짜를 포맷팅
         axios
             .get(
                 'http://localhost:8091/api/payment/history' +
@@ -21,7 +38,7 @@ function PayHistory() {
                     '&cardNo=' +
                     cardNo +
                     '&payDate=' +
-                    payDate,
+                    formattedDate, // 포매팅 날짜 입력
             )
             .then((res) => {
                 console.log(res.data);
@@ -39,7 +56,7 @@ function PayHistory() {
             )
             .then((res) => {
                 console.log(res.data);
-                setCardListData(res.data); // 보유카드 리스트
+                setCardListData(res.data); // 보유카드 리스트 저장
             })
             .catch((e) => {
                 console.error('보유카드 요청 에러', e);
@@ -59,7 +76,9 @@ function PayHistory() {
     }, [memberNo]); // 빈 배열로 useEffect를 한 번만 실행
 
     useEffect(() => {
-        paymentApi(payDate, cardNo); // payDate 또는 cardNo가 변경될 때 결제 데이터를 불러옵니다.
+        if (payDate || cardNo) {
+            paymentApi(payDate, cardNo); // payDate 또는 cardNo가 변경될 때 결제 데이터를 불러옵니다.
+        }
     }, [payDate, cardNo]); // payDate, cardNo가 변경될 때마다 실행
 
     return (
@@ -71,14 +90,17 @@ function PayHistory() {
                 <p>결제내역</p>
             </div>
             <div className="condition-box">
-                <div className="condition-date">
+                <div className='condition-calendar'>
+                    <MyCalendar value={payDate} onChange={setPayDate} />
+                </div>
+                {/* <div className="condition-date">
                     <input
                         type="date"
                         name="payDate"
                         value={payDate}
                         onChange={onChangePayDate}
                     />
-                </div>
+                </div> */}
                 <div className="condition-cardList">
                     <select
                         name="cardNo"
@@ -96,7 +118,7 @@ function PayHistory() {
             </div>
             <div className="data">
                 {paymentData && paymentData.length > 0 ? (
-                    <div table-container>
+                    <div className="table-container">
                         {paymentData.map((payment) => (
                             <div className="table-row" key={payment.orderNo}>
                                 <div>
@@ -109,19 +131,12 @@ function PayHistory() {
                                 <div>{payment.franchiseName}</div>
                                 <div>{payment.savePrice}</div>
                                 <div>{payment.price} 원</div>
-                                {/* <td>{payment.payDate}</td>
-                                <td>{payment.product}</td>
-                                <td>{payment.cardNo}</td>
-                                <td>{payment.savePrice}</td>
-                                <td>{payment.price}원</td> */}
                             </div>
                         ))}
                     </div>
                 ) : (
                     <div>결제 내역이 없습니다.</div>
                 )}
-
-                {/* <pre>{JSON.stringify(paymentData, null, 2)}</pre> */}
             </div>
         </div>
     );

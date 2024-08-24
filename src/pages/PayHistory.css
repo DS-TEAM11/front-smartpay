@@ -23,7 +23,12 @@
 
 }
 
-/* cssportal-grid 구조 정의 */
+.payhistory .data .table-container .dayTable .dayName {
+    margin: 0 8% ;
+    text-align: left;
+}
+
+/* cssportal-grid 구조  */
 .payhistory .data .table-container .dayTable .table-row {
     display: grid;
     grid-template-rows: repeat(2, 1fr);
@@ -45,6 +50,7 @@
 
 .payhistory .data .table-container .dayTable .table-row .div3 {
     grid-area: 2/2/3/3;
+    COLOR: RED;
 }
 
 .payhistory .data .table-container .dayTable .table-row .div4 {

@@ -15,8 +15,6 @@ const CardInfo = () => {
     const [selectedCard, setSelectedCard] = useState(null); // 선택된 카드 상태 추가
     const [memberNo, setMemberNo] = useState(null); // memberNo 상태 정의
     const [fetchedCards, setFetchedCards] = useState([]); // API에서 가져온 카드 목록 상태
-    const [isDragging, setIsDragging] = useState(false); // 드래그 상태 추가
-    const [startY, setStartY] = useState(0); // 드래그 시작 위치
 
     // memberNo를 가져오는 useEffect
     useEffect(() => {
@@ -122,28 +120,6 @@ const CardInfo = () => {
         setSelectedCard(null); // 선택된 카드 초기화
     };
 
-    const handleMouseDown = (e) => {
-        setIsDragging(true);
-        setStartY(e.clientY); // 드래그 시작 위치 저장
-    };
-
-    const handleMouseMove = (e) => {
-        if (isDragging) {
-            const dragDistance = startY - e.clientY; // 드래그된 거리 계산
-            if (dragDistance > 20) {
-                // 20px 이상 드래그된 경우
-                if (qrItemRef.current) {
-                    qrItemRef.current.showActionSheet(); // QrItem의 showActionSheet 메서드 호출
-                }
-                setIsDragging(false); // 드래그 상태 해제
-            }
-        }
-    };
-
-    const handleMouseUp = () => {
-        setIsDragging(false); // 드래그 상태 해제
-    };
-
     if (!fetchedCards || fetchedCards.length === 0) {
         return (
             <div className="card-info-container">
@@ -176,9 +152,6 @@ const CardInfo = () => {
                         isMainRotated ? 'vertical-image2' : 'horizontal-image2'
                     }`}
                     style={{ backgroundImage: `url(${mainCard.cardImage})` }}
-                    onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={handleMouseUp}
                 />
             </div>
             <div className="owned-cards-list">

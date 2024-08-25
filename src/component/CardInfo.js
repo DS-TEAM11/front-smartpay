@@ -5,19 +5,24 @@ import Button from '../component/Button';
 import axios from 'axios';
 import CardListItem2 from '../component/CardListItem2'; // CardListItem2 컴포넌트 import
 import QrItem from '../component/useQR/QrItem'; // QrItem 컴포넌트 import
-
+import SlidingYComponent from './common/SlidingYComponent';
+import { useShowQr, useSelectedCard } from '../provider/PayProvider';
 const CardInfo = () => {
     const navigate = useNavigate();
-    const qrItemRef = useRef(null); // QrItem 컴포넌트 참조 생성
     const [isMainRotated, setIsMainRotated] = useState(false);
     const [rotatedCards, setRotatedCards] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
-    const [selectedCard, setSelectedCard] = useState(null); // 선택된 카드 상태 추가
     const [memberNo, setMemberNo] = useState(null); // memberNo 상태 정의
     const [fetchedCards, setFetchedCards] = useState([]); // API에서 가져온 카드 목록 상태
-    const [isDragging, setIsDragging] = useState(false); // 드래그 상태 추가
-    const [startY, setStartY] = useState(0); // 드래그 시작 위치
+    const { selectedCard, setSelectedCard } = useSelectedCard(); // 선택된 카드 상태 추가
+    const { showQr, setShowQr } = useShowQr(); // 상태를 추가하여 QR 코드를 표시할지 여부를 관리합니다.
 
+    const handleDrag = () => {
+        setShowQr(true);
+    };
+    const removeQrItem = () => {
+        setShowQr(false);
+    };
     // memberNo를 가져오는 useEffect
     useEffect(() => {
         const fetchMemberNo = async () => {
@@ -88,6 +93,8 @@ const CardInfo = () => {
                     resolve({
                         ...card,
                         isRotated: cardImg.height > cardImg.width,
+                        height: cardImg.height,
+                        width: cardImg.width,
                     });
                 };
             });
@@ -122,28 +129,6 @@ const CardInfo = () => {
         setSelectedCard(null); // 선택된 카드 초기화
     };
 
-    const handleMouseDown = (e) => {
-        setIsDragging(true);
-        setStartY(e.clientY); // 드래그 시작 위치 저장
-    };
-
-    const handleMouseMove = (e) => {
-        if (isDragging) {
-            const dragDistance = startY - e.clientY; // 드래그된 거리 계산
-            if (dragDistance > 20) {
-                // 20px 이상 드래그된 경우
-                if (qrItemRef.current) {
-                    qrItemRef.current.showActionSheet(); // QrItem의 showActionSheet 메서드 호출
-                }
-                setIsDragging(false); // 드래그 상태 해제
-            }
-        }
-    };
-
-    const handleMouseUp = () => {
-        setIsDragging(false); // 드래그 상태 해제
-    };
-
     if (!fetchedCards || fetchedCards.length === 0) {
         return (
             <div className="card-info-container">
@@ -164,64 +149,72 @@ const CardInfo = () => {
     const mainCard = selectedCard || rotatedCards[0]; // 선택된 카드 또는 첫 번째 카드 사용
 
     return (
-        <div className="card-info-container">
-            <div className="header-right">
-                <span className="add-card-link" onClick={handleCardRegister}>
-                    카드 추가하기 &gt;&gt;
-                </span>
-            </div>
-            <div className="card-main-container">
-                <div
-                    className={`card-img ${
-                        isMainRotated ? 'vertical-image2' : 'horizontal-image2'
-                    }`}
-                    style={{ backgroundImage: `url(${mainCard.cardImage})` }}
-                    onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={handleMouseUp}
-                />
-            </div>
-            <div className="owned-cards-list">
-                {rotatedCards.map((card, index) => (
-                    <div
-                        key={index}
-                        className={`owned-card-list ${
-                            card.isRotated
-                                ? 'vertical-image3'
-                                : 'horizontal-image3'
-                        }`}
-                        style={{
-                            backgroundImage: `url(${card.cardImage})`,
-                            zIndex: rotatedCards.length - index - 1,
-                        }}
-                        onClick={() => handleCardClick(card)} // 카드 클릭 시 모달 열기
-                    ></div>
-                ))}
-            </div>
-            {isModalOpen && (
-                <div className="modal-overlay" onClick={closeModal}>
-                    <div
-                        className="modal-content"
-                        onClick={(e) => e.stopPropagation()}
+        <>
+            {showQr && <QrItem onRemove={removeQrItem} />}
+
+            <div className="card-info-container">
+                <div className="header-right">
+                    <span
+                        className="add-card-link"
+                        onClick={handleCardRegister}
                     >
-                        <ul className="ul-check">
-                            {rotatedCards.map((card) => (
-                                <CardListItem2
-                                    key={card.cardCode}
-                                    card={card}
-                                    selectedCard={selectedCard}
-                                    onSelect={handleSelectCard} // 카드 선택 처리
-                                />
-                            ))}
-                        </ul>
-                        <Button
-                            onClick={closeModal}
-                            text="결제할 카드 선택하기"
+                        카드 추가하기 &gt;&gt;
+                    </span>
+                </div>
+                <SlidingYComponent setShowQr={handleDrag}>
+                    <div className="card-main-container">
+                        <img
+                            className={`card-img ${
+                                isMainRotated
+                                    ? 'vertical-image2'
+                                    : 'horizontal-image2'
+                            }`}
+                            src={mainCard.cardImage}
                         />
                     </div>
+                </SlidingYComponent>
+                <div className="owned-cards-list">
+                    {rotatedCards.map((card, index) => (
+                        <div
+                            key={index}
+                            className={`owned-card-list ${
+                                card.isRotated
+                                    ? 'vertical-image3'
+                                    : 'horizontal-image3'
+                            }`}
+                            style={{
+                                backgroundImage: `url(${card.cardImage})`,
+                                zIndex: rotatedCards.length - index - 1,
+                            }}
+                            onClick={() => handleCardClick(card)} // 카드 클릭 시 모달 열기
+                        ></div>
+                    ))}
                 </div>
-            )}
-        </div>
+                {isModalOpen && (
+                    <div className="modal-overlay" onClick={closeModal}>
+                        <div
+                            className="modal-content"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <ul className="ul-check">
+                                {rotatedCards.map((card) => (
+                                    <CardListItem2
+                                        key={card.cardCode}
+                                        card={card}
+                                        selectedCard={selectedCard}
+                                        onSelect={handleSelectCard} // 카드 선택 처리
+                                    />
+                                ))}
+                            </ul>
+                            <Button
+                                onClick={closeModal}
+                                text="결제할 카드 선택하기"
+                            />
+                        </div>
+                    </div>
+                )}
+            </div>
+        </>
     );
 };
 

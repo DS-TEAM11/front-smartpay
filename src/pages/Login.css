@@ -6,6 +6,7 @@
     padding: 20px;
     text-align: center;
     font-family: 'Pretendard Variable';
+    padding-top: 0%;
 }
 
 .logo {
@@ -18,7 +19,21 @@
 
 .logo img {
     width: 100%; /* 부모의 너비에 맞추기 */
-    max-width: 200px; /* 이미지의 최대 너비 제한 */
+    max-width: 150px !important; /* 이미지의 최대 너비 제한 */
+    height: auto; /* 이미지 비율 유지 */
+}
+
+.login-logo-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.login-logo {
+    width: 100%; /* 부모의 너비에 맞추기 */
+    max-width: 150px; /* 이미지의 최대 너비를 150px로 제한 */
     height: auto; /* 이미지 비율 유지 */
 }
 
@@ -62,7 +77,6 @@
 .login-btn {
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
     border: none;
     color: white;
     font-size: 16px;
@@ -77,9 +91,35 @@
 
 .kakao-login-btn {
     width: 100%;
-    height: 50px;
     padding: 10px;
-    background-image: url('../img/kako_login.png');
+    margin-top: 10px !important;
+    background-color: #fadf4b; /* 카카오 로그인 버튼의 노란색 배경 */
+    border: none;
+    color: #3c1e1e; /* 카카오 텍스트 컬러 */
+    font-size: 16px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url('../img/kakao_invisible_small.png'); /* 카카오 로고를 배경으로 추가 */
     background-repeat: no-repeat;
-    background-position: center center;
+    background-position: 10px center; /* 버튼의 왼쪽 중앙에 배치 */
+    background-size: 24px 24px; /* 로고의 크기를 적절히 조절 */
+}
+
+.kakao-logo {
+    position: absolute;
+    left: 10px;
+    height: 24px; /* 로고 이미지 높이 */
+    z-index: 2; /* 로고가 버튼 텍스트 위에 위치하도록 */
+}
+
+.register-link {
+    margin-top: 20px;
+}
+
+.or-divider {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #888;
 }

@@ -42,7 +42,7 @@ const CardInfo = () => {
     };
     const handleShowBenefit = () => {
         setShowBenefit(showBenefit ? false : true);
-        console.log('카드 혜택 보여주기', selectedCard);
+        // console.log('카드 혜택 보여주기', selectedCard);
     };
 
     // memberNo가 있을 때 카드 데이터를 가져오는 useEffect
@@ -98,7 +98,12 @@ const CardInfo = () => {
 
     return (
         <>
-            {showQr && <QrItem onRemove={removeQrItem} />}
+            {showQr && (
+                <QrItem
+                    onRemove={removeQrItem}
+                    cardCode={selectedCard.cardCode}
+                />
+            )}
             {cardPicker && (
                 <CardPicker onRemove={removerCardPicker} cards={fetchedCards} />
             )}

@@ -124,11 +124,10 @@ function PayHistory() {
     const groupedData = groupByDayName(paymentData);
 
     return (
-        <div>
-            <div className="header">
-                <Header />
-            </div>
+        <>
+            <Header />
             <div className="payhistory">
+                <div className="header"></div>
                 <div className="title">
                     <p>결제내역</p>
                 </div>
@@ -197,7 +196,7 @@ function PayHistory() {
                     )}
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

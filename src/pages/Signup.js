@@ -6,7 +6,9 @@ import GrayButton from '../component/GrayButton';
 import LongButton from '../component/LongButton';
 import BlackContainer from '../component/BlackContainer';
 import { useNavigate } from 'react-router-dom';
+import { InputValue } from '../component/common/InputValue'; // InputValue 컴포넌트 임포트
 import './Signup.css';
+import logoImage from '../img/logo3.png'; // 로고 이미지 임포트
 
 const Signup = () => {
     const [email, setEmail] = useState('');
@@ -148,14 +150,6 @@ const Signup = () => {
             });
     };
 
-    // const openModal = () => {
-    //     setIsModalOpen(true);
-    // };
-
-    // const closeModal = () => {
-    //     setIsModalOpen(false);
-    // };
-
     const togglePolicyVisibility = () => {
         setIsPolicyVisible(!isPolicyVisible);
     };
@@ -168,99 +162,87 @@ const Signup = () => {
                     <Policy onClose={togglePolicyVisibility} />
                 </>
             )}
-            <img src="assets/images/logo.png" alt="SP Logo" className="logo" />
+            <img src={logoImage} alt="SP Logo" className="signup-logo" />
             <h2 className="signup-title">회원가입하고 똑똑하게 혜택 챙기기</h2>
             <form onSubmit={handleSignup}>
-                <div className="form-group">
-                    <label>이메일</label>
-                    <input
-                        type="email"
-                        className="form-control"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => {
-                            setEmail(e.target.value);
-                            if (!validateEmail(e.target.value)) {
-                                setEmailError(
-                                    '올바른 이메일 형식을 입력해주세요.',
-                                );
-                            } else {
-                                setEmailError('');
-                            }
-                        }}
-                        required
-                    />
-                    {emailError && (
-                        <p className="error-message">{emailError}</p>
-                    )}
-                </div>
-                <div className="form-group">
-                    <label>비밀번호(영어 소문자 + 숫자 8자리 이상)</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                            if (!validatePassword(e.target.value)) {
-                                setPasswordError(
-                                    '비밀번호는 영어 소문자와 숫자 조합의 8자리 이상이어야 합니다.',
-                                );
-                            } else {
-                                setPasswordError('');
-                            }
-                        }}
-                        required
-                    />
-                    {passwordError && (
-                        <p className="error-message">{passwordError}</p>
-                    )}
-                </div>
-                <div className="form-group">
-                    <label>비밀번호 확인</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        placeholder="Password Check"
-                        value={confirmPassword}
-                        onChange={(e) => {
-                            setConfirmPassword(e.target.value);
-                            if (e.target.value !== password) {
-                                setConfirmPasswordError(
-                                    '비밀번호가 일치하지 않습니다.',
-                                );
-                            } else {
-                                setConfirmPasswordError('');
-                            }
-                        }}
-                        required
-                    />
-                    {confirmPasswordError && (
-                        <p className="error-message">{confirmPasswordError}</p>
-                    )}
-                </div>
-                <div className="form-group">
-                    <label>이름</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Name"
-                        value={name}
-                        onChange={(e) => {
-                            setName(e.target.value);
-                            if (!validateName(e.target.value)) {
-                                setNameError(
-                                    '이름은 한글 또는 영어만 입력 가능합니다.',
-                                );
-                            } else {
-                                setNameError('');
-                            }
-                        }}
-                        required
-                    />
-                    {nameError && <p className="error-message">{nameError}</p>}
-                </div>
+                <InputValue
+                    type="email"
+                    placeholder="Email"
+                    title="이메일"
+                    value={email}
+                    onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (!validateEmail(e.target.value)) {
+                            setEmailError('올바른 이메일 형식을 입력해주세요.');
+                        } else {
+                            setEmailError('');
+                        }
+                    }}
+                    required
+                />
+                {emailError && <p className="error-message">{emailError}</p>}
+
+                <InputValue
+                    type="password"
+                    placeholder="Password"
+                    title="비밀번호(영어 소문자 + 숫자 8자리 이상)"
+                    value={password}
+                    onChange={(e) => {
+                        setPassword(e.target.value);
+                        if (!validatePassword(e.target.value)) {
+                            setPasswordError(
+                                '비밀번호는 영어 소문자와 숫자 조합의 8자리 이상이어야 합니다.',
+                            );
+                        } else {
+                            setPasswordError('');
+                        }
+                    }}
+                    required
+                />
+                {passwordError && (
+                    <p className="error-message">{passwordError}</p>
+                )}
+
+                <InputValue
+                    type="password"
+                    placeholder="Password Check"
+                    title="비밀번호 확인"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                        if (e.target.value !== password) {
+                            setConfirmPasswordError(
+                                '비밀번호가 일치하지 않습니다.',
+                            );
+                        } else {
+                            setConfirmPasswordError('');
+                        }
+                    }}
+                    required
+                />
+                {confirmPasswordError && (
+                    <p className="error-message">{confirmPasswordError}</p>
+                )}
+
+                <InputValue
+                    type="text"
+                    placeholder="Name"
+                    title="이름"
+                    value={name}
+                    onChange={(e) => {
+                        setName(e.target.value);
+                        if (!validateName(e.target.value)) {
+                            setNameError(
+                                '이름은 한글 또는 영어만 입력 가능합니다.',
+                            );
+                        } else {
+                            setNameError('');
+                        }
+                    }}
+                    required
+                />
+                {nameError && <p className="error-message">{nameError}</p>}
+
                 <div className="form-group">
                     <label>전화번호</label>
                     <div className="phone-group">
@@ -269,8 +251,7 @@ const Signup = () => {
                             className="form-control"
                             placeholder="Phone Number"
                             value={phone}
-                            onChange={handlePhoneChange}
-                            // onChange={(e) => setPhone(e.target.value)}
+                            onChange={(e) => setPhone(e.target.value)}
                             required
                         />
                         {isVerified ? (
@@ -284,6 +265,7 @@ const Signup = () => {
                         )}
                     </div>
                 </div>
+
                 <div className="form-group">
                     <label>인증번호 입력</label>
                     <div className="verification-group">
@@ -306,6 +288,7 @@ const Signup = () => {
                         )}
                     </div>
                 </div>
+
                 <div className="form-group terms-group">
                     <div className="d-flex">
                         <input
@@ -328,6 +311,7 @@ const Signup = () => {
                         약관 확인하기
                     </span>
                 </div>
+
                 <LongButton
                     text="회원가입"
                     onClick={handleSignup}

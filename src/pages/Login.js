@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Button from '../component/Button';
+import { InputValue } from '../component/common/InputValue';
 import './Login.css';
-import img from '../img/logo3.png';
+import logoImage from '../img/logo3.png';
+import kakaoLogoSmall from '../img/kakao_login_small.png'; // 카카오 로고 이미지 import
 
 const Login = () => {
     const [email, setEmail] = useState(
@@ -15,14 +17,6 @@ const Login = () => {
     );
     const [autoLogin, setAutoLogin] = useState(false);
     const navigate = useNavigate();
-
-    // 초기 상태 로깅
-    console.log('Initial State:', {
-        email,
-        password,
-        rememberMe,
-        autoLogin,
-    });
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -36,43 +30,30 @@ const Login = () => {
         console.log('이메일,비번 입력받은 값:', loginData);
 
         try {
-            //axios.defaults.withCredentials = true;
             const response = await axios.post(
                 'http://localhost:8091/login',
                 loginData,
             );
 
-            console.log(response.headers);
-
             const accessToken = response.headers.authorization;
             const refreshToken = response.headers['authorization-refresh'];
 
-            console.log('Tokens:', { accessToken, refreshToken });
-
             if (accessToken) {
-                console.log('AccessToken exists, 로컬스토리지에 저장');
                 localStorage.setItem('accessToken', accessToken);
 
                 if (rememberMe) {
-                    console.log('아이디 기억, 로컬스토리지에 이메일저장');
                     localStorage.setItem('savedEmail', email);
                 } else {
-                    console.log(
-                        '아이디 기억 해제, 로컬스토리지에서 이메일삭제 ',
-                    );
                     localStorage.removeItem('savedEmail');
                 }
 
                 if (autoLogin) {
-                    console.log('자동로그인, 리프레시토큰을 쿠키에 저장 ');
                     document.cookie = `refreshToken=${refreshToken}; path=/; httpOnly`;
                 }
 
-                console.log('로그인 성공, 메인으로 리다이렉트');
                 alert('로그인 성공');
                 navigate('/home');
             } else {
-                console.error('액세스토큰 없음, 로그인 실패');
                 alert('로그인에 실패했습니다.');
             }
         } catch (error) {
@@ -91,30 +72,26 @@ const Login = () => {
 
     return (
         <div className="login-container">
-            <div className="logo">
-                <img src={img} alt="SP Logo" />
+            <div className="login-logo-wrapper">
+                <img src={logoImage} alt="SP Logo" className="login-logo" />
             </div>
             <form onSubmit={handleLogin}>
-                <div className="form-group">
-                    <input
-                        type="email"
-                        className="form-control"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <input
-                        type="password"
-                        className="form-control"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
+                <InputValue
+                    type="email"
+                    placeholder="Email"
+                    title="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <InputValue
+                    type="password"
+                    placeholder="Password"
+                    title="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
                 <div className="options">
                     <label>
                         <input
@@ -140,16 +117,22 @@ const Login = () => {
                     type="submit"
                     className="login-btn"
                     text={'로그인하기'}
-                ></Button>
+                />
             </form>
             <div className="register-link">
                 아직 회원이 아니신가요? <a href="/signup">회원가입</a>
             </div>
-            {/* <div className="or-divider">Or</div> */}
-            <button
-                className="btn kakao-login-btn"
+            <Button
+                className="kakao-login-btn"
+                text={'카카오 로그인'}
                 onClick={handleKakaoLogin}
-            ></button>
+            >
+                <img
+                    src={kakaoLogoSmall}
+                    alt="Kakao Logo"
+                    className="kakao-logo"
+                />
+            </Button>
         </div>
     );
 };

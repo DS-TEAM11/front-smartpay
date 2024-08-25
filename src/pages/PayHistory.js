@@ -124,75 +124,79 @@ function PayHistory() {
     const groupedData = groupByDayName(paymentData);
 
     return (
-        <div className="payhistory">
-            <div className="header">
-                <Header />
-            </div>
-            <div className="title">
-                <p>결제내역</p>
-            </div>
-            <div className="condition-box">
-                <div className="condition-calendar">
-                    <MyCalendar value={payDate} onChange={onChangePayDate} />
+        <>
+            <Header />
+            <div className="payhistory">
+                <div className="header"></div>
+                <div className="title">
+                    <p>결제내역</p>
                 </div>
-                <div className="condition-cardList">
-                    <select
-                        name="cardNo"
-                        value={cardNo}
-                        onChange={onChangeCardNo}
-                    >
-                        <option value="">카드 선택</option>
-                        {cardListData.map((card) => (
-                            <option key={card.cardNo} value={card.cardNo}>
-                                {card.cardNick}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            </div>
-            <div className="data">
-                {Object.keys(groupedData).length > 0 ? (
-                    <div className="table-container">
-                        {Object.keys(groupedData).map((dayName) => (
-                            <div className='dayTable'  key={dayName}>
-                                <div className="dayName">{dayName}</div>
-                                {groupedData[dayName].map((payment) => (
-                                    <div
-                                        key={payment.orderNo}
-                                        className="table-row cssportal-grid"
-                                    >
-                                        <div className="div1">
-                                            <img
-                                                className="card-image"
-                                                src={payment.cardImage}
-                                                alt="카드이미지"
-                                            />
-                                        </div>
-                                        <div className="div2">
-                                            {payment.franchiseName}
-                                        </div>
-                                        <div className="div3">
-                                            {payment.save_type === 0
-                                                ? `${formatCurrency(
-                                                      payment.savePrice,
-                                                  )} 적립`
-                                                : `${formatCurrency(
-                                                      payment.savePrice,
-                                                  )} 할인`}
-                                        </div>
-                                        <div className="div4">
-                                            {formatCurrency(payment.price)}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
+                <div className="condition-box">
+                    <div className="condition-calendar">
+                        <MyCalendar
+                            value={payDate}
+                            onChange={onChangePayDate}
+                        />
                     </div>
-                ) : (
-                    <div>결제 내역이 없습니다.</div>
-                )}
+                    <div className="condition-cardList">
+                        <select
+                            name="cardNo"
+                            value={cardNo}
+                            onChange={onChangeCardNo}
+                        >
+                            <option value="">카드 선택</option>
+                            {cardListData.map((card) => (
+                                <option key={card.cardNo} value={card.cardNo}>
+                                    {card.cardNick}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+                <div className="data">
+                    {Object.keys(groupedData).length > 0 ? (
+                        <div className="table-container">
+                            {Object.keys(groupedData).map((dayName) => (
+                                <div className="dayTable" key={dayName}>
+                                    <div className="dayName">{dayName}</div>
+                                    {groupedData[dayName].map((payment) => (
+                                        <div
+                                            key={payment.orderNo}
+                                            className="table-row cssportal-grid"
+                                        >
+                                            <div className="div1">
+                                                <img
+                                                    className="card-image"
+                                                    src={payment.cardImage}
+                                                    alt="카드이미지"
+                                                />
+                                            </div>
+                                            <div className="div2">
+                                                {payment.franchiseName}
+                                            </div>
+                                            <div className="div3">
+                                                {payment.save_type === 0
+                                                    ? `${formatCurrency(
+                                                          payment.savePrice,
+                                                      )} 적립`
+                                                    : `${formatCurrency(
+                                                          payment.savePrice,
+                                                      )} 할인`}
+                                            </div>
+                                            <div className="div4">
+                                                {formatCurrency(payment.price)}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div>결제 내역이 없습니다.</div>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

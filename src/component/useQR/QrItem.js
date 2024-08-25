@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { useMemberNo } from '../../provider/PayProvider';
 
 function QrItem({ onRemove, cardCode }) {
+    // console.log(cardCode, 'QrItem으로 받아온 카드코드');
+
     const navigate = useNavigate();
     const memberNo = useMemberNo();
     const [qrCodeUrl, setQrCodeUrl] = useState('');

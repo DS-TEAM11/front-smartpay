@@ -99,7 +99,10 @@ const CardInfo = () => {
     return (
         <>
             {showQr && (
-                <QrItem onRemove={removeQrItem} cardCode={selectedCard} />
+                <QrItem
+                    onRemove={removeQrItem}
+                    cardCode={selectedCard.cardCode}
+                />
             )}
             {cardPicker && (
                 <CardPicker onRemove={removerCardPicker} cards={fetchedCards} />

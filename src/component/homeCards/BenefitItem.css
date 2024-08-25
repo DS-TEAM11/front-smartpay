@@ -1,0 +1,15 @@
+.benefit-container {
+    position: absolute;
+    width: 70vw;
+    max-height: 20vh;
+    height: -webkit-fill-available;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    overflow: hidden;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1rem;
+}

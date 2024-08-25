@@ -1,0 +1,19 @@
+.owned-cards-list {
+    position: relative;
+    width: 100vw;
+    height: fit-content;
+}
+
+.spread_cards {
+    position: relative;
+    width: 90%;
+    margin: auto;
+}
+
+.spread_cards img {
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    object-fit: contain;
+    border-radius: 8px;
+}

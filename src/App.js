@@ -4,9 +4,9 @@ import {
     Routes,
     Route,
     Link,
-    useNavigate,
+useNavigate,
 } from 'react-router-dom';
-import { MemberProvider } from './provider/MemberProvider';
+import { PayProvider } from './provider/PayProvider';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Chat from './component/Chat';
@@ -48,7 +48,7 @@ function App() {
     return (
         <>
             <Router>
-                <MemberProvider>
+                <PayProvider>
                     <Routes>
                         <Route path="/" element={<SplashScreen />} />
                         <Route path="/welcome" element={<WelcomePage />} />
@@ -66,7 +66,7 @@ function App() {
                         <Route path="*" element={<NotFoundPage />} />
                         <Route path="/history" element={<PayHistory />} />
                     </Routes>
-                </MemberProvider>
+                </PayProvider>
             </Router>
         </>
     );

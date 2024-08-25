@@ -9,7 +9,7 @@ import $ from 'jquery';
 import { Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useNavigate } from 'react-router-dom';
-import { useMemberNo } from '../../provider/MemberProvider';
+import { useMemberNo } from '../../provider/PayProvider';
 
 function QrItem({ onRemove, cardCode }) {
     const navigate = useNavigate();

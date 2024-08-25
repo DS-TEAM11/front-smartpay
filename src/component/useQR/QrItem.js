@@ -21,6 +21,8 @@ function QrItem({ onRemove, cardCode }) {
     const [isAIiLoading, setIsAIiLoading] = useState(false);
     const [boxHeight, setBoxHeight] = useState('60vh');
     const [boxTop, setBoxTop] = useState('40vh');
+
+    
     const [stompClient, setStompClient] = useState(
         Stomp.over(new SockJS('http://localhost:8091/ws')),
     );
@@ -41,7 +43,7 @@ function QrItem({ onRemove, cardCode }) {
                     // console.log(body.data);
                     //cardCode 받았는지에 따라 ai 추천 로직
                     //카드코드 없어서 테스트 진행
-                    cardCode = 'test카드임';
+                    cardCode = '';
                     if (!cardCode) {
                         setIsAIiLoading(true);
                         cardRecommend(body.data);

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./RecoCard.css";
 import axios from "axios";
 
 const RecoCard = ({ recommendData }) => {
     const [cardInfo, setCardInfo] = useState({});
+    const imgRef = useRef(null);
 
     const getCardInfo = async () => {
         try {
@@ -15,21 +16,20 @@ const RecoCard = ({ recommendData }) => {
             const response = await axios.post(url, data, {
                 responseType: 'json',
             });
-            console.log('API 응답:', response.data);
             setCardInfo(response.data); 
         } catch (error) {
             console.error('에러', error);
         }
     };
 
-    // 컴포넌트가 마운트될 때 API 호출
     useEffect(() => {
         getCardInfo();
     }, [recommendData]);
 
+
     return (
         <div className="RecoCard">
-            <div className="row justify-content-center mt-3">
+            <div className="row justify-content-center mt-2">
                 <div className="col-6">
                     <p className="fs-5 blue-text fw-bold m-0">AI 추천카드</p>
                 </div>
@@ -38,10 +38,11 @@ const RecoCard = ({ recommendData }) => {
                 </div>
             </div>
 
-            <div className="row AiCardImg mx-1 mb-2">
-                <div className="col-4 justify-content-center align-items-center">
+            <div className="row AiCardImg mx-1 mb-3">
+                <div className="col-4 justify-content-center align-items-center fixed-container pt-1">
                     {cardInfo.card_img && (
                         <img
+                            ref={imgRef}
                             src={cardInfo.card_img}
                             className="aiimg text-center"
                             alt="AI 추천 카드"

@@ -16,7 +16,7 @@ const Header = () => {
             <div className="qrshow">
                 {showQr && <QrItem onRemove={removeQrItem} />}
             </div>
-            <header className="header-sticky header-absolute border-bottom">
+            <header className="header border-bottom">
                 {/* <!-- Logo Nav START --> */}
                 <nav className="navbar navbar-expand-xl">
                     <div className="container">

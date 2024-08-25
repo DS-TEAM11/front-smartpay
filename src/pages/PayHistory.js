@@ -3,7 +3,7 @@ import axios from 'axios';
 import './PayHistory.css';
 import Header from '../component/Header';
 import MyCalendar from '../component/MyCalendar';
-import { useMemberNo } from '../provider/MemberProvider';
+import { useMemberNo } from '../provider/PayProvider';
 
 function PayHistory() {
     const [paymentData, setPaymentData] = useState([]);

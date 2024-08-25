@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from '../component/Header';
 import './Home.css';
-import CardInfo from '../component/CardInfo';
+import CardInfo from '../component/homeCards/CardInfo2';
 // import CardItem from '../component/CardItem';
 import BenefitsAndManagement from '../component/BenefitsAndManagement'; // 컴포넌트를 모듈화
 import image1 from '../img/home1.png';
@@ -12,53 +12,16 @@ import image4 from '../img/home4.png';
 import image5 from '../img/home5.png';
 import image6 from '../img/home6.png';
 
-import { useMemberNo } from '../provider/MemberProvider';
+import { useMemberNo } from '../provider/PayProvider';
 const Home = () => {
-    const [cards, setCards] = useState([]);
     const memberNo = useMemberNo();
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
-
-    useEffect(() => {
-        const fetchCards = async () => {
-            if (memberNo) {
-                const token = localStorage.getItem('accessToken');
-
-                try {
-                    const response = await axios.get(
-                        'http://localhost:8091/api/cards/byMember',
-                        {
-                            params: { memberNo },
-                            headers: {
-                                Authorization: token,
-                            },
-                        },
-                    );
-
-                    // 카드 데이터를 regDate 기준으로 정렬
-                    const sortedCards = response.data.sort(
-                        (a, b) => new Date(a.regDate) - new Date(b.regDate),
-                    );
-                    setCards(sortedCards);
-                } catch (error) {
-                    console.error(
-                        '카드 데이터를 가져오는 데 실패했습니다.',
-                        error,
-                    );
-                } finally {
-                    setIsLoading(false); // 로딩 완료
-                }
-            }
-        };
-
-        fetchCards();
-    }, [memberNo]);
 
     return (
         <>
             <Header />
             <div className="main-container">
-                {/* 카드가 있는 경우 카드 정보를 보여주고, 없는 경우 카드 등록 버튼을 보여줌 */}
-                <CardInfo cards={cards} />
+                <CardInfo />
                 <BenefitsAndManagement
                     benefits={[
                         {

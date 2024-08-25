@@ -176,7 +176,7 @@ function PayHistory() {
                                                 {payment.franchiseName}
                                             </div>
                                             <div className="div3">
-                                                {payment.save_type === 0
+                                                {payment.saveType === 0
                                                     ? `${formatCurrency(
                                                           payment.savePrice,
                                                       )} 적립`

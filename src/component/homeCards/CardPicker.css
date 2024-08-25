@@ -1,0 +1,23 @@
+.card-picker .white-box {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    box-sizing: border-box;
+    width: 90vw;
+    height: 60vh;
+    background-color: #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    z-index: 10000; /* 모달 내용이 최상단에 표시되도록 설정 */
+}
+.card-picker .white-box > * {
+    margin: 1rem 0;
+}

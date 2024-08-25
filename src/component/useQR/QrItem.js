@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { useMemberNo } from '../../provider/PayProvider';
 
 function QrItem({ onRemove, cardCode }) {
+    // console.log(cardCode, 'QrItem으로 받아온 카드코드');
+
     const navigate = useNavigate();
     const memberNo = useMemberNo();
     const [qrCodeUrl, setQrCodeUrl] = useState('');
@@ -37,22 +39,9 @@ function QrItem({ onRemove, cardCode }) {
                     setIsQrVisible(false);
                 }
                 if (body.message === 'purchase information') {
-                    // console.log('구매 정보 입력 완료');
-                    // console.log(body.data);
-                    //cardCode 받았는지에 따라 ai 추천 로직
-                    //카드코드 없어서 테스트 진행
-                    cardCode = 'test카드임';
-                    if (!cardCode) {
-                        setIsAIiLoading(true);
-                        cardRecommend(body.data);
-                    } else {
-                        navigate('/pay', {
-                            state: {
-                                purchaseData: body.data,
-                                cardCode: cardCode,
-                            },
-                        });
-                    }
+                    //일단 AI 전송
+                    setIsAIiLoading(true);
+                    cardRecommend(body.data);
                 }
             });
         });
@@ -70,8 +59,13 @@ function QrItem({ onRemove, cardCode }) {
             })
             .then((response) => {
                 // console.log('추천 결과:', response.data);
+                // cardCode도 같이 보내게 수정
                 navigate('/pay', {
-                    state: { purchaseData: data, aiData: response.data },
+                    state: {
+                        purchaseData: data,
+                        aiData: response.data,
+                        cardCode: cardCode,
+                    },
                 });
             })
             .catch((error) => {

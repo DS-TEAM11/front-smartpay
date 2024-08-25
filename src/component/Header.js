@@ -14,21 +14,21 @@ const Header = () => {
     return (
         <>
             <div className="qrshow">
-                {showQr && <QrItem onRemove={removeQrItem} />}
+                {showQr && <QrItem onRemove={removeQrItem} cardCode={null} />}
             </div>
             <header className="header border-bottom">
                 {/* <!-- Logo Nav START --> */}
                 <nav className="navbar navbar-expand-xl">
                     <div className="container">
                         {/* <!-- Logo START --> */}
-                        <a className="navbar-brand col-5 py-0" href="/">
+                        <Link className="navbar-brand col-5 py-0" to="/home">
                             <img
                                 className="light-mode-item navbar-brand-item"
                                 src="/assets/images/splogo2.png"
                                 alt="logo"
                                 style={{ width: '40px', height: 'auto' }}
                             />
-                        </a>
+                        </Link>
                         {/* <!-- Logo END --> */}
 
                         {/* <!-- Main navbar START --> */}
@@ -40,7 +40,7 @@ const Header = () => {
                                 {/* <!-- Nav item --> */}
                                 <li className="nav-item">
                                     {' '}
-                                    <Link className="nav-link" to="/">
+                                    <Link className="nav-link" to="/home">
                                         메인 홈{' '}
                                     </Link>
                                 </li>

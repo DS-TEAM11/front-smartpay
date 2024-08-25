@@ -6,7 +6,7 @@
     padding-right: 70%;
 }
 
-.white-box {
+.qrItem .white-box {
     position: absolute;
     /* top: 40vh; */
     left: 0;
@@ -26,28 +26,28 @@
     overflow-y: scroll;
     z-index: 10000; /* 모달 내용이 최상단에 표시되도록 설정 */
 }
-.white-box > * {
+.qrItem .white-box > * {
     margin: 1rem 0;
 }
 
-.white-box > .upBtn {
+.qrItem .white-box > .upBtn {
     padding-bottom: 1.5rem;
     width: 100%;
     display: flex;
     justify-content: center;
 }
-.white-box > .upBtn > img {
+.qrItem .white-box > .upBtn > img {
     width: 5rem;
     text-align: center;
 }
 
-.qrCode {
+.qrItem .qrCode {
     top: 0;
     width: 100%;
     margin-bottom: 15%;
     margin-top: -1rem;
 }
-.qrCode > img {
+.qrItem .qrCode > img {
     width: 150%;
 }
 

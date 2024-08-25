@@ -107,7 +107,7 @@ const Seller = () => {
         },
         [formData],
     );
-    //입력 폼 핸들링 끝 -------------
+    //입력 폼 데이터 핸들링 끝 ------------------
     return (
         <div className="App">
             <div className="my-content-box">

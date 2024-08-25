@@ -11,7 +11,7 @@ import SockJS from 'sockjs-client';
 import { useNavigate } from 'react-router-dom';
 import { useMemberNo } from '../../provider/MemberProvider';
 
-function QrItem({ onRemove }) {
+function QrItem({ onRemove, cardCode }) {
     const navigate = useNavigate();
     const memberNo = useMemberNo();
     const [qrCodeUrl, setQrCodeUrl] = useState('');
@@ -21,14 +21,15 @@ function QrItem({ onRemove }) {
     const [isAIiLoading, setIsAIiLoading] = useState(false);
     const [boxHeight, setBoxHeight] = useState('60vh');
     const [boxTop, setBoxTop] = useState('40vh');
-    // const [sellerData, setSellerData] = useState({});
 
+    
     const [stompClient, setStompClient] = useState(
         Stomp.over(new SockJS('http://localhost:8091/ws')),
     );
     const wsConnect = () => {
         stompClient.connect({}, function (frame) {
             // console.log('Connected: ' + frame);
+
             stompClient.subscribe('/topic/sellinfo', function (message) {
                 const body = JSON.parse(message.body);
                 // console.log('message:', body);
@@ -39,21 +40,23 @@ function QrItem({ onRemove }) {
                 }
                 if (body.message === 'purchase information') {
                     // console.log('구매 정보 입력 완료');
-                    console.log(body.data);
-                    setIsAIiLoading(true);
-                    cardRecommend(body.data);
-                    // setSellerData(body.data); //판매자 정보 담아서 구매자 전달
-                    //axios로 결제 정보를 담아서 ai 추천 요청
-                    //추천 결과 나오면 페이지 이동해서 받은 정보 보여주기
-                    //axios로 선택한 카드로 결제요청 보내기
-                    //결제 요청 결과에 따라 성공 시)
-                    //결제history DB내용으로 영수증 보여주기(이때 한번 더 웹소켓 접속해서 결제 완료 알림
-                    //-> 판매자도 결제 완료 페이지로 이동: 웹소켓 종료(결제 완료))
+                    // console.log(body.data);
+                    //cardCode 받았는지에 따라 ai 추천 로직
+                    //카드코드 없어서 테스트 진행
+                    cardCode = '';
+                    if (!cardCode) {
+                        setIsAIiLoading(true);
+                        cardRecommend(body.data);
+                    } else {
+                        navigate('/pay', {
+                            state: {
+                                purchaseData: body.data,
+                                cardCode: cardCode,
+                            },
+                        });
+                    }
                 }
             });
-            //TODO: sellinfo로 값 전달하고 서버에서 받는거 테스트 필요
-            //받은 값 기반으로 서버 로직 돌리고 리턴값 받는거 테스트 필요
-            //QR 생성에 성공하면 -> 웹소켓 연결
         });
     };
     const cardRecommend = (data) => {
@@ -70,7 +73,7 @@ function QrItem({ onRemove }) {
             .then((response) => {
                 // console.log('추천 결과:', response.data);
                 navigate('/pay', {
-                    state: { aiData: response.data, purchaseData: data },
+                    state: { purchaseData: data, aiData: response.data },
                 });
             })
             .catch((error) => {
@@ -94,6 +97,7 @@ function QrItem({ onRemove }) {
             setIsQrVisible(true);
             return;
         }
+
         axios
             .get('http://localhost:8091/qr/seller?memberNo=' + memberNo, {
                 responseType: 'blob',
@@ -112,6 +116,7 @@ function QrItem({ onRemove }) {
         setBoxTop(isFullScreen ? '0' : '40vh');
     }, [isFullScreen]);
     //QR 생성 버튼 처음 눌렀을 때만 생김
+
     useEffect(() => {
         createQr();
     }, []);

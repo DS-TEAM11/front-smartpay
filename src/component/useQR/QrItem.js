@@ -37,9 +37,7 @@ function QrItem({ onRemove, cardCode }) {
                     setIsQrVisible(false);
                 }
                 if (body.message === 'purchase information') {
-                    // console.log('구매 정보 입력 완료');
-                    // console.log(body.data);
-                    //cardCode 받았는지에 따라 ai 추천 로직
+                    //일단 AI 전송
                     setIsAIiLoading(true);
                     cardRecommend(body.data);
                 }

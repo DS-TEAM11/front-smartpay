@@ -35,7 +35,6 @@ const CardRank = () => {
     <>
         <Header />
         {/* <Loading text={"AI가 최적의 카드를 찾는 중입니다."} /> */}
-        <section className="position-relative overflow-hidden pb-0 pt-xl-9">
             <div className="container pt-4 pt-sm-5">
                 <div className="mb-3">
                     <h1 className="text-center">이 달의 카드 TOP 5</h1>
@@ -48,7 +47,6 @@ const CardRank = () => {
                 
                 </div>
             </div>
-        </section>
     </>
 )
 }

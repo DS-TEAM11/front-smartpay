@@ -7,7 +7,7 @@ import Order from '../component/Order';
 import Header from '../component/Header';
 import RecoCard from '../component/RecoCard';
 import { useLocation } from 'react-router-dom';
-import { useMemberNo } from '../provider/MemberProvider';
+import { useMemberNo } from '../provider/PayProvider';
 
 const Pay = () => {
     const location = useLocation();
@@ -92,10 +92,10 @@ const Pay = () => {
 
 
     const getBenefit = { 
-        maximumBenefits: "300",
-        benefitType: "할일"
-        // maximumBenefits: recommendData.maximumBenefits,
-        // benefitType: recommendData.benefitType
+        // maximumBenefits: "300",
+        // benefitType: "할일"
+        maximumBenefits: recommendData.maximumBenefits,
+        benefitType: recommendData.benefitType
     }
 
     const getPurchase = {

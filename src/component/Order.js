@@ -73,7 +73,6 @@ const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
     }
 
     return (
-        <section className="position-relative overflow-hidden pb-0 pt-xl-9">
             <div className="container pt-4 pt-sm-5">
                 <div className="Order">
                     <h4>{FirstMessage}</h4>
@@ -91,14 +90,13 @@ const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
                         <div className="card-info-container2">
                             <span className='col-6 text-truncate'>{cardData.card_nick}</span>
                             <span className='col-6 text-end'>
-                                {cardData.card_company} ({cardData.lastNums.slice(-4)})
+                                {cardData.card_company} ({cardData.lastNums ? cardData.lastNums.slice(-4) : 'xxxx'})
                             </span>
                         </div>
                     </div>
                     <h4 className="text-center mt-3">{cardData.card_name}</h4>
                 </div>
             </div>
-        </section>
     );
 };
 

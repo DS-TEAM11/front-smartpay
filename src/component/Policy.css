@@ -18,14 +18,14 @@
     height: 100vh;
 }
 
-.white-box {
+.policy-container .white-box {
     overflow-y: auto;
     border-radius: 1rem 1rem 1rem 1rem;
     width: 92vw;
     margin-left: 15px;
 }
 
-.policy-buttons {
+.policy-container .policy-buttons {
     display: flex;
     justify-content: space-between;
     margin-top: 10px;

@@ -24,7 +24,7 @@ const CardInfo = () => {
     const [cardPicker, setCardPicker] = useState(false); // 카드 선택 모달 상태 추가
     const { selectedCard, setSelectedCard } = useSelectedCard(); // 선택된 카드 상태를 추가하여 관리합니다.
     const { showQr, setShowQr } = useShowQr(); // 상태를 추가하여 QR 코드를 표시할지 여부를 관리합니다.
-    const [showBenefit, setShowBenefit] = useState(false); // 카드 혜택을 표시할지 여부를 관리합니다.
+
     const handleDrag = () => {
         setShowQr(true);
     };
@@ -39,10 +39,6 @@ const CardInfo = () => {
 
     const handleCardRegister = () => {
         navigate('/register');
-    };
-    const handleShowBenefit = () => {
-        setShowBenefit(showBenefit ? false : true);
-        // console.log('카드 혜택 보여주기', selectedCard);
     };
 
     // memberNo가 있을 때 카드 데이터를 가져오는 useEffect
@@ -110,13 +106,8 @@ const CardInfo = () => {
 
             <div className="card-info-container border-bottom">
                 <div className="card-main-container border-bottom">
-                    <SlidingYComponent
-                        setShowQr={handleDrag}
-                        onClick={handleShowBenefit}
-                    >
-                        <MainCard card={selectedCard}>
-                            {showBenefit && <BenefitItem card={selectedCard} />}
-                        </MainCard>
+                    <SlidingYComponent setShowQr={handleDrag}>
+                        <MainCard card={selectedCard}></MainCard>
                     </SlidingYComponent>
                     <div className="up-content">
                         이 카드로 결제하려면 위로 드래그 해주세요.

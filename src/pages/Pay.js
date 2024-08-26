@@ -6,6 +6,7 @@ import Button from '../component/Button';
 import Order from '../component/Order';
 import Header from '../component/Header';
 import RecoCard from '../component/RecoCard';
+import CardPicker from '../component/homeCards/CardPicker';
 import { useLocation } from 'react-router-dom';
 import { useMemberNo } from '../provider/PayProvider';
 
@@ -16,7 +17,7 @@ const Pay = () => {
     const [recommendData, setRecommendData] = useState(location.state.aiData);
     const [purchaseData, setPurchaseData] = useState(location.state.purchaseData); //구매 정보 데이터
 
-    console.log(purchaseData.orderNo);
+    // console.log(purchaseData.orderNo);
     
     const memberNo = useMemberNo();
     const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -24,8 +25,8 @@ const Pay = () => {
     
     const [cardCode, setCardCode] = useState(location.state.cardCode);
 
-    console.log(cardCode);
-    console.log(recommendData); //TODO: 240823 이제 이 데이터 잘라서 페이지에 그려주면 됨
+    // console.log(cardCode);
+    // console.log(recommendData); //TODO: 240823 이제 이 데이터 잘라서 페이지에 그려주면 됨
 
     const [getIsAi, setGetIsAi] = useState(true);
     const [saveType, setSaveType] = useState(null);
@@ -34,6 +35,8 @@ const Pay = () => {
         selectedCard: null,
     });
 
+    const [showCardPicker, setShowCardPicker] = useState(false); 
+    const [cards, setCards] = useState([]); 
 
    useEffect(() => {
         if (cardCode) {
@@ -80,6 +83,10 @@ const Pay = () => {
                 aiCard: aiCardInfo,
                 selectedCard: selectedCardInfo,
             });
+            // console.log("===============================");
+            // console.log(cardInfo);
+            // console.log(aiCardInfo);
+            // console.log(selectedCardInfo);
 
             // saveType 설정
             if (recommendData.benefitType === "할인") {
@@ -95,8 +102,6 @@ const Pay = () => {
 
 
     const getBenefit = { 
-        // maximumBenefits: "300",
-        // benefitType: "할일"
         maximumBenefits: recommendData.maximumBenefits,
         benefitType: recommendData.benefitType
     }
@@ -116,11 +121,24 @@ const Pay = () => {
 
     //TODO: 실제 결제 요청 정보 담아야 함
     const handlePayment = async () => {
+
+        let cardNo = '';
+
+        //카드 번호 설정
+        if (getIsAi) {
+            cardNo = cardInfo.aiCard.lastNums;
+        } else {
+            cardNo = cardInfo.selectedCard.lastNums;
+        }
+
+        console.log(cardNo);
+
         const paymentData = {
+            
             orderNo: purchaseData.orderNo, //이전에서 받아와야 함? 
             price: purchaseData.purchasePrice,  //이것도 판매자
             product: purchaseData.purchaseItems, //판매자
-            cardNo: '4890168259065402',  //cardInfo 받아올때 card_no를 풀로 받아와야 할 듯 => ai일때와 선택카드일 때 잘 변경해서 넣어줘야 하는데 어떻게 해야할까
+            cardNo: cardNo,  //cardInfo 받아올때 card_no를 풀로 받아와야 할 듯 => ai일때와 선택카드일 때 잘 변경해서 넣어줘야 하는데 어떻게 해야할까
             cardCode: recommendData.recommendCard,  //cardInfo에서
             getIsAi: getIsAi, //이전 구매자 QR 생성부터 들고 와야 함
             payDate: purchaseData.payDate, //판매자 쪽에서
@@ -172,12 +190,24 @@ const Pay = () => {
         }
     };
 
-    // const handleSelectCard = () => {
-    //     setGetIsAi(true); // AI 카드 선택 상태로 변경
-    //     console.log("ai 카드로 결제하기 선택-------------");
-    // };
-    
+    //해당 멤버로 카드 리스트 가져오기(여기서 불러와야 함;;)
+    const handleShowCardPicker = async () => {
+        try {
+            const response = await axios.get('http://localhost:8091/api/cards/details/byMember', { params: { memberNo } });
+            setCards(response.data);
+            setShowCardPicker(true);
+        } catch (error) {
+            console.error('카드 리스트를 가져오는 데 실패했습니다.', error);
+        }
+    };
 
+    //카드 코드 가져와서 전환 -> 카드 코드 있으니 isAi는 false로 선택한 카드
+    const handleCardSelection = (selectedCardCode) => {
+        console.log(selectedCardCode);
+        setCardCode(selectedCardCode);
+        setShowCardPicker(false); // CardPicker 닫기
+    };
+    
     return (
         <div>
             <Header />
@@ -197,12 +227,20 @@ const Pay = () => {
 
                     <p
                         className="text-decoration-underline text-end mt-2 p-0"
-                        href=""
+                        onClick={handleShowCardPicker} 
                     >
                         다른 카드 선택하기
                     </p>
+
                 </div>
             </div>
+            {showCardPicker && (
+                <CardPicker
+                    onRemove={() => setShowCardPicker(false)}
+                    cards={cards}
+                    onCardSelect={handleCardSelection}
+                />
+            )}
 
             {!getIsAi && <RecoCard recommendData={recommendData} setCardCode={setCardCode} />}
         </div>

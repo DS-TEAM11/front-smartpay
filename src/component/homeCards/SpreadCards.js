@@ -9,10 +9,10 @@ const SpreadCards = React.memo(({ cards, onClick }) => {
             const translateValue = maxSize * index;
             const zIndexValue = 100 - index;
             document.querySelector(
-                `.spread_cards img:nth-child(${index + 1})`,
+                `.spread_cards .cardImg:nth-child(${index + 1})`,
             ).style.transform = ` translateX(${translateValue}%)`;
             document.querySelector(
-                `.spread_cards img:nth-child(${index + 1})`,
+                `.spread_cards .cardImg:nth-child(${index + 1})`,
             ).style.zIndex = zIndexValue;
         });
     }, []);

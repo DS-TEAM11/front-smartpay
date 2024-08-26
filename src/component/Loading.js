@@ -3,7 +3,7 @@ import './Loading.css';
 import BlackContainer from './BlackContainer';
 // import Button from "./Button";
 
-function Loading({ text }) {
+function Loading({ text, info }) {
     return (
         <>
             <BlackContainer />
@@ -21,14 +21,17 @@ function Loading({ text }) {
                     잠시만 기다려주세요.
                 </div>
 
-                <div className="buttons d-flex w-100 justify-content-between mt-8">
-                    <div className="text-light fs-6 fw-bolder text-center">
-                        정보 입력 완료
+                {info === 'pay' ? (
+                    <div className="buttons d-flex w-100 justify-content-between mt-8">
+                        {/* 각 텍스트에 기능 달아주기 */}
+                        <div className="text-light fs-6 fw-bolder text-center">
+                            정보 입력 완료
+                        </div>
+                        <div className="text-light fs-6 fw-bolder text-center">
+                            취소하기
+                        </div>
                     </div>
-                    <div className="text-light fs-6 fw-bolder text-center">
-                        취소하기
-                    </div>
-                </div>
+                ) : null}
             </div>
         </>
     );

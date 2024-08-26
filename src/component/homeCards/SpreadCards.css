@@ -24,7 +24,7 @@
     max-height: 300px;
 }
 
-.spread_cards div:hover {
+.spread_cards div:active {
     z-index: 101 !important;
     top: -10px;
 }

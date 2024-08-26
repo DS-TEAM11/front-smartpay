@@ -26,7 +26,7 @@ const SpreadCards = React.memo(({ cards, onClick }) => {
     return (
         <div
             className="spread_cards"
-            onClick={cards.length > 4 ? onClick : undefined}
+            onClick={cards.length > 5 ? onClick : undefined}
         >
             {cards.map((card, index) => (
                 <CardImg

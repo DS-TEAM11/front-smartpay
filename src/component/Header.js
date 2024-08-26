@@ -46,20 +46,20 @@ const Header = () => {
                                 </li>
                                 <li className="nav-item">
                                     {' '}
-                                    <a className="nav-link" href="/history">
+                                    <Link className="nav-link" to="/history">
                                         결제 내역
-                                    </a>{' '}
+                                    </Link>{' '}
                                 </li>
                                 <li className="nav-item">
                                     {' '}
-                                    <a className="nav-link" href="/rank">
+                                    <Link className="nav-link" to="/rank">
                                         이달의 카드 순위
-                                    </a>{' '}
+                                    </Link>{' '}
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="/mypage">
+                                    <Link className="nav-link" to="/mypage">
                                         마이페이지
-                                    </a>{' '}
+                                    </Link>{' '}
                                 </li>
                             </ul>
                         </div>
@@ -69,6 +69,7 @@ const Header = () => {
                         <ul className="nav align-items-center dropdown-hover ms-sm-2">
                             <div className="me-3">
                                 <Button
+                                    className="qr-create-btn"
                                     text={'결제 QR 생성'}
                                     onClick={handleClick}
                                 />

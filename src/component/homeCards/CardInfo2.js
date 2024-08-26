@@ -133,7 +133,11 @@ const CardInfo = () => {
                 />
             )}
             {cardPicker && (
-                <CardPicker onRemove={removerCardPicker} cards={fetchedCards} />
+                <CardPicker
+                    title="카드를 선택하세요."
+                    onRemove={removerCardPicker}
+                    cards={fetchedCards}
+                />
             )}
 
             <div className="card-info-container border-bottom">

@@ -4,6 +4,7 @@ import './PayHistory.css';
 import Header from '../component/Header';
 import MyCalendar from '../component/MyCalendar';
 import { useMemberNo } from '../provider/PayProvider';
+import CardImg from '../component/homeCards/CardImg';
 
 function PayHistory() {
     const [paymentData, setPaymentData] = useState([]);
@@ -89,14 +90,19 @@ function PayHistory() {
         return `${year}${month}${day}`; // YYYYMMDD 형식
     };
 
-    // 'YYYYMMDD' 형식의 날짜를 요일 이름으로 변환하는 함수
+    // 'YYYYMMDD' 형식의 날짜를 "월 일 요일" 형식으로 변환
     const formatDayName = (dateString) => {
         const date = new Date(
             dateString.slice(0, 4), // 연도
             dateString.slice(4, 6) - 1, // 월 (0부터 시작)
             dateString.slice(6, 8), // 일
         );
-        return date.toLocaleDateString('ko-KR', { weekday: 'long' }); // '월요일', '화요일' 등
+
+        return date.toLocaleDateString('ko-KR', {
+            month: 'long', // "8월"
+            day: 'numeric', // "26일"
+            weekday: 'long', // "월요일"
+        });
     };
 
     // 숫자를 통화 형식으로 변환하는 함수 (예: 1000 -> '1,000원')
@@ -159,17 +165,18 @@ function PayHistory() {
                                             key={payment.orderNo}
                                             className="table-row cssportal-grid"
                                         >
-                                            <div className="div1">
-                                                <img
+                                            <div className="item1">
+                                                <CardImg
                                                     className="card-image"
                                                     src={payment.cardImage}
                                                     alt="카드이미지"
+                                                    direction="horizontal"
                                                 />
                                             </div>
-                                            <div className="div2">
+                                            <div className="item2">
                                                 {payment.franchiseName}
                                             </div>
-                                            <div className="div3">
+                                            <div className="item3">
                                                 {/* getIsAi가 false일 때만 적립 또는 할인 정보 표시 */}
                                                 {payment.getIsAi === false ? (
                                                     <>
@@ -206,7 +213,7 @@ function PayHistory() {
                                                     ''
                                                 )}
                                             </div>
-                                            <div className="div4">
+                                            <div className="item4">
                                                 {formatCurrency(payment.price)}
                                             </div>
                                         </div>

@@ -7,10 +7,10 @@ import CardOwnedList from './CardOwnedList';
 import './CardPicker.css';
 const CardPicker = ({ title, onRemove, cards }) => {
     const { selectedCard, setSelectedCard } = useSelectedCard(); // 선택된 카드 상태 추가
-    const handleSelectCard = (card) => {
+    const handleSelectCard = ({card}) => {
         console.log(card);
+        
         console.log(card.cardCode);
-        // onCardSelect(card.cardCode);
         setSelectedCard(card);
         onRemove();
     };

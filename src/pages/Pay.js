@@ -8,12 +8,12 @@ import Header from '../component/Header';
 import RecoCard from '../component/RecoCard';
 import CardPicker from '../component/homeCards/CardPicker';
 import { useLocation } from 'react-router-dom';
-import { useMemberNo } from '../provider/PayProvider';
+import { useMemberNo, useSelectedCard } from '../provider/PayProvider';
 
 const Pay = () => {
     const location = useLocation();
     const navigate = useNavigate();
-
+const {selectedCard, setSelectedCard} = useSelectedCard();
     const [recommendData, setRecommendData] = useState(location.state.aiData);
     const [purchaseData, setPurchaseData] = useState(location.state.purchaseData); //구매 정보 데이터
 
@@ -201,12 +201,17 @@ const Pay = () => {
         }
     };
 
-    //카드 코드 가져와서 전환 -> 카드 코드 있으니 isAi는 false로 선택한 카드
-    const handleCardSelection = (selectedCardCode) => {
-        console.log(selectedCardCode);
-        setCardCode(selectedCardCode);
-        setShowCardPicker(false); // CardPicker 닫기
-    };
+    // //카드 코드 가져와서 전환 -> 카드 코드 있으니 isAi는 false로 선택한 카드
+    // const handleCardSelection = (selectedCardCode) => {
+    //     console.log(selectedCardCode);
+    //     setCardCode(selectedCard.cardCode);
+    //     setShowCardPicker(false); // CardPicker 닫기
+    // };
+
+    useEffect(()=> {
+        
+        setCardCode(selectedCard.cardCode);
+    },[selectedCard])
     
     return (
         <div>
@@ -238,7 +243,6 @@ const Pay = () => {
                 <CardPicker
                     onRemove={() => setShowCardPicker(false)}
                     cards={cards}
-                    onCardSelect={handleCardSelection}
                 />
             )}
 

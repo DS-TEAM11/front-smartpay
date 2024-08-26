@@ -10,7 +10,7 @@ const CardPicker = ({ title, onRemove, cards }) => {
     const handleSelectCard = (card) => {
         console.log(card);
         console.log(card.cardCode);
-        onCardSelect(card.cardCode);
+        // onCardSelect(card.cardCode);
         setSelectedCard(card);
         onRemove();
     };

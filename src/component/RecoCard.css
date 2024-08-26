@@ -12,6 +12,8 @@
     box-shadow: 0 -10px 10px -10px #4F46E5,
               -3px 0 3px -3px #4F46E5, 
               3px 0 3px -3px #4F46E5;
+    position: absolute;
+    bottom: 0;
 }
 
 .fixed-container {

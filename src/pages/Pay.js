@@ -13,7 +13,7 @@ import { useMemberNo, useSelectedCard } from '../provider/PayProvider';
 const Pay = () => {
     const location = useLocation();
     const navigate = useNavigate();
-const {selectedCard, setSelectedCard} = useSelectedCard();
+    const {selectedCard, setSelectedCard} = useSelectedCard();
     const [recommendData, setRecommendData] = useState(location.state.aiData);
     const [purchaseData, setPurchaseData] = useState(location.state.purchaseData); //구매 정보 데이터
 
@@ -36,7 +36,7 @@ const {selectedCard, setSelectedCard} = useSelectedCard();
     });
 
     const [showCardPicker, setShowCardPicker] = useState(false); 
-    const [cards, setCards] = useState([]); 
+    const [cards, setCards] = useState();  //카드 리스트
 
    useEffect(() => {
         if (cardCode) {
@@ -89,9 +89,9 @@ const {selectedCard, setSelectedCard} = useSelectedCard();
             // console.log(selectedCardInfo);
 
             // saveType 설정
-            if (recommendData.benefitType === "할인") {
+            if (recommendData.benefitType === "적립") {
                 setSaveType(0);
-            } else if (recommendData.benefitType === "적립") {
+            } else if (recommendData.benefitType === "할인") {
                 setSaveType(1);
             }
         };
@@ -193,28 +193,27 @@ const {selectedCard, setSelectedCard} = useSelectedCard();
     //해당 멤버로 카드 리스트 가져오기(여기서 불러와야 함;;)
     const handleShowCardPicker = async () => {
         try {
-            const response = await axios.get('http://localhost:8091/api/cards/details/byMember', { params: { memberNo } });
+            const response = await axios.get('http://localhost:8091/api/cards/details/byMember', {
+                params: { memberNo },
+                responseType: 'json'  // 응답 타입을 JSON으로 설정
+            });
             setCards(response.data);
+            console.log(response.data);
+            console.log(cards);
             setShowCardPicker(true);
         } catch (error) {
             console.error('카드 리스트를 가져오는 데 실패했습니다.', error);
         }
+        
     };
 
-    // //카드 코드 가져와서 전환 -> 카드 코드 있으니 isAi는 false로 선택한 카드
-    // const handleCardSelection = (selectedCardCode) => {
-    //     console.log(selectedCardCode);
-    //     setCardCode(selectedCard.cardCode);
-    //     setShowCardPicker(false); // CardPicker 닫기
-    // };
-
+    //카드 코드 가져오기
     useEffect(()=> {
-        
         setCardCode(selectedCard.cardCode);
     },[selectedCard])
     
     return (
-        <div>
+        <div className='Pay'>
             <Header />
             <Order getCardInfo={cardInfo} getBenefit={getBenefit} getPurchase={getPurchase} getIsAi={getIsAi}/>
 
@@ -245,8 +244,7 @@ const {selectedCard, setSelectedCard} = useSelectedCard();
                     cards={cards}
                 />
             )}
-
-            {!getIsAi && <RecoCard recommendData={recommendData} setCardCode={setCardCode} />}
+                {!getIsAi && <RecoCard recommendData={recommendData} setCardCode={setCardCode} />}
         </div>
     );
 };

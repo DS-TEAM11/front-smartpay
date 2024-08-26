@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import './SlidingYComponent.css';
 import upArrow from '../../img/upArrow.png';
+import { useSelectedCard } from '../../provider/PayProvider';
+
 const SlidingYComponent = ({ setShowQr, onClick, children }) => {
     const [startY, setStartY] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
-
+    const [showBenefit, setShowBenefit] = useState(false); // 카드 혜택을 표시할지 여부를 관리합니다.
+    const { selectedCard } = useSelectedCard();
+    const handleShowBenefit = () => {
+        setShowBenefit(showBenefit ? false : true);
+        // console.log('카드 혜택 보여주기', selectedCard);
+    };
     const handleMouseDown = (event) => {
         setStartY(event.clientY);
         setIsDragging(true);
@@ -27,8 +34,7 @@ const SlidingYComponent = ({ setShowQr, onClick, children }) => {
             // console.log('드래그 방향: 위');
             setShowQr();
         } else {
-            //TODO:카드 혜택 정보 보여주기
-            onClick();
+            handleShowBenefit();
         }
 
         resetDragging();
@@ -55,8 +61,9 @@ const SlidingYComponent = ({ setShowQr, onClick, children }) => {
             // console.log('드래그 방향: 위');
             setShowQr();
         } else {
-            onClick();
+            // onClick();
             //TODO:카드 혜택 정보 보여주기
+            handleShowBenefit();
         }
 
         resetDragging();
@@ -80,7 +87,9 @@ const SlidingYComponent = ({ setShowQr, onClick, children }) => {
             onTouchCancel={resetDragging} // 터치가 취소될 때 드래그 상태 리셋
         >
             <img className="up-arrow" src={upArrow} />
-            {children}
+            {React.Children.map(children, (child) =>
+                React.cloneElement(child, { showBenefit: showBenefit }),
+            )}
         </div>
     );
 };

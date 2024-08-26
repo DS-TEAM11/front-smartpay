@@ -1,12 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import CardImg from './CardImg';
-const MainCard = React.memo(({ card, children }) => {
-    const { cardImage, cardNick } = card;
+import BenefitItem from './BenefitItem';
+const MainCard = React.memo(({ card, showBenefit, children }) => {
+    // console.log('메인카드', card);
+    const { cardImg, cardName } = card;
+
     return (
-        <div className="main-card">
-            <CardImg src={cardImage} alt={cardNick} direction="horizontal" />
+        <>
+            <CardImg src={cardImg} alt={cardName} direction="horizontal">
+                {showBenefit && <BenefitItem card={card} />}
+            </CardImg>
             {children}
-        </div>
+        </>
     );
 });
 

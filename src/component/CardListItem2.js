@@ -6,13 +6,13 @@ const CardListItem2 = ({ card, selectedCard, onSelect }) => {
 
     useEffect(() => {
         const img = new Image();
-        img.src = card.cardImage; // cardImage 사용
+        img.src = card.cardImg; // cardImage 사용
         img.onload = () => {
             if (img.height > img.width) {
                 setIsRotated(true);
             }
         };
-    }, [card.cardImage]);
+    }, [card.cardImg]);
 
     return (
         <li
@@ -24,7 +24,7 @@ const CardListItem2 = ({ card, selectedCard, onSelect }) => {
             onClick={() => onSelect(card)}
         >
             <img
-                src={card.cardImage} // cardImage 사용
+                src={card.cardImg} // cardImage 사용
                 alt={card.cardName}
                 className={isRotated ? 'vertical-image' : 'horizontal-image'}
             />

@@ -15,14 +15,15 @@ const Pay = () => {
 
     const [recommendData, setRecommendData] = useState(location.state.aiData);
     const [purchaseData, setPurchaseData] = useState(location.state.purchaseData); //구매 정보 데이터
-    console.log(purchaseData);
+
+    console.log(purchaseData.orderNo);
     
     const memberNo = useMemberNo();
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [paymentData, setPaymentData] = useState({}); //결제요청할 데이터 해야함
     
     const [cardCode, setCardCode] = useState(location.state.cardCode);
-    console.log(purchaseData);
+
     console.log(cardCode);
     console.log(recommendData); //TODO: 240823 이제 이 데이터 잘라서 페이지에 그려주면 됨
 
@@ -37,6 +38,8 @@ const Pay = () => {
    useEffect(() => {
         if (cardCode) {
             setGetIsAi(false); // 카드 코드가 있으면 선택한 카드 결제
+        } else{
+            setGetIsAi(true);
         }
 
         //카드 정보 가져오는 API 호출
@@ -114,13 +117,13 @@ const Pay = () => {
     //TODO: 실제 결제 요청 정보 담아야 함
     const handlePayment = async () => {
         const paymentData = {
-            orderNo: '리액트테스트입니다3', //이전에서 받아와야 함? 
+            orderNo: purchaseData.orderNo, //이전에서 받아와야 함? 
             price: purchaseData.purchasePrice,  //이것도 판매자
             product: purchaseData.purchaseItems, //판매자
-            cardNo: '2222-2222-2222-2222',  //cardInfo 받아올때 card_no를 풀로 받아와야 할 듯 => ai일때와 선택카드일 때 잘 변경해서 넣어줘야 하는데 어떻게 해야할까
+            cardNo: '4890168259065402',  //cardInfo 받아올때 card_no를 풀로 받아와야 할 듯 => ai일때와 선택카드일 때 잘 변경해서 넣어줘야 하는데 어떻게 해야할까
             cardCode: recommendData.recommendCard,  //cardInfo에서
             getIsAi: getIsAi, //이전 구매자 QR 생성부터 들고 와야 함
-            payDate: '20240101', //판매자 쪽에서
+            payDate: purchaseData.payDate, //판매자 쪽에서
             saveType: saveType,  //여기서 AI 결과 값에 따라 자바스트립트로 처리 해야 할 듯
             savePrice: recommendData.maximumBenefits, //AI 정보
             franchiseName: purchaseData.franchiseName, //판매자
@@ -168,6 +171,11 @@ const Pay = () => {
             console.log('에러');
         }
     };
+
+    // const handleSelectCard = () => {
+    //     setGetIsAi(true); // AI 카드 선택 상태로 변경
+    //     console.log("ai 카드로 결제하기 선택-------------");
+    // };
     
 
     return (
@@ -196,7 +204,7 @@ const Pay = () => {
                 </div>
             </div>
 
-            {!getIsAi && <RecoCard recommendData={recommendData} />}
+            {!getIsAi && <RecoCard recommendData={recommendData} setCardCode={setCardCode} />}
         </div>
     );
 };

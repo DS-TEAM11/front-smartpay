@@ -14,3 +14,8 @@
     padding: 1rem;
     z-index: 1;
 }
+.benefit-container li {
+    margin-bottom: 0.5rem;
+    list-style-type: none;
+    font-size: 1.1rem;
+}

@@ -23,3 +23,8 @@
     max-width: 300px;
     max-height: 300px;
 }
+
+.spread_cards img:hover {
+    z-index: 2;
+    top: -10px;
+}

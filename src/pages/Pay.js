@@ -142,8 +142,8 @@ const Pay = () => {
             cardCode: recommendData.recommendCard,  //cardInfo에서
             getIsAi: getIsAi, //이전 구매자 QR 생성부터 들고 와야 함
             payDate: purchaseData.payDate, //판매자 쪽에서
-            saveType: saveType,  //여기서 AI 결과 값에 따라 자바스트립트로 처리 해야 할 듯
-            savePrice: recommendData.maximumBenefits, //AI 정보
+            saveType: getIsAi ? saveType : null,  //여기서 AI 결과 값에 따라 자바스트립트로 처리 해야 할 듯
+            savePrice:  getIsAi ? recommendData.maximumBenefits : null,//AI 정보
             franchiseName: purchaseData.franchiseName, //판매자
             franchiseCode: purchaseData.franchiseCode, //판매자
             memberNo: memberNo, 
@@ -174,16 +174,23 @@ const Pay = () => {
                 //결제 요청 값? 데이터 그대로 보내줘? 아님 쿼리파라미터로 달아서 페이지 이동? -> receipt에서는 파라미터 값 가져와서 API 호출?
             } else if (paymentStatus === 1) {
                 // 카드 불일치
-                alert('결제 실패: 카드 정보 불일치');
+                alert('결제 실패: 카드 정보 불일치 다시 시도해주세요');
+                handleHomeClick();
             } else if (paymentStatus === 2) {
                 // 유효기간 만료
-                alert('결제 실패:  유효기간 만료');
+                alert('결제 실패:  유효기간 만료  다시 시도해주세요');
+                handleHomeClick();
+
             } else if (paymentStatus === 3) {
                 // 한도 초과
-                alert('결제 실패: 카드 한도 초과');
+                alert('결제 실패: 카드 한도 초과  다시 시도해주세요');
+                handleHomeClick();
+
             } else {
                 // 예외 에러
-                alert('결제 실패: 서버 에러 발생');
+                alert('결제 실패: 서버 에러 발생  다시 시도해주세요');
+                handleHomeClick();
+
             }
         } catch (error) {
             console.log('에러');
@@ -211,6 +218,10 @@ const Pay = () => {
     useEffect(()=> {
         setCardCode(selectedCard.cardCode);
     },[selectedCard])
+
+    const handleHomeClick = () => {
+        navigate('/home'); // /home 경로로 이동
+    };
     
     return (
         <div className='Pay'>

@@ -5,7 +5,7 @@ import CardImg from './CardImg';
 const CardListBox = ({ card, onSelect }) => {
     const [isRotated, setIsRotated] = useState(false);
     const { selectedCard } = useSelectedCard();
-console.log("카드",card);
+// console.log("카드",card);
     useEffect(() => {
         const img = new Image();
         img.src = card.cardImg || card.cardImage;

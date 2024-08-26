@@ -204,7 +204,7 @@ function Register() {
                     <div className="form-group">
                         <label>유효기간(MM/YY)</label>
                         <input
-                            type="text"
+                            type="number"
                             placeholder="MM / YY"
                             value={validPeriod}
                             onChange={(e) => setValidPeriod(e.target.value)}

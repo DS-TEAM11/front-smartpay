@@ -10,10 +10,21 @@
     margin: auto;
 }
 
+.spread_cards div {
+    position: relative;
+}
+
 .spread_cards img {
     position: absolute;
     width: 60vw;
     height: 60vw;
     object-fit: contain;
     border-radius: 8px;
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.spread_cards img:hover {
+    z-index: 2;
+    top: -10px;
 }

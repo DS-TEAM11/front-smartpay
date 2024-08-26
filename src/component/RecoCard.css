@@ -20,6 +20,7 @@
     overflow: hidden;
     display: flex;
     position: relative;
+    box-shadow: none;
 
 }
 

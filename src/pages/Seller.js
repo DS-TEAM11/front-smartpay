@@ -14,6 +14,40 @@ const Seller = () => {
     //웹소켓 관련 코드
     const stompClientRef = useRef(null);
     const isConnectedRef = useRef(false); // stompClient 연결 상태 추적
+
+    const today = new Date();
+    const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, '');
+
+    //주문번호 생성
+    const handleOrderNo = async () => {
+        try{
+            const url = 'http://localhost:8091/api/payment/pay';
+            const data = {
+                product: formData.purchaseItems,
+                price: formData.purchasePrice,
+                isAi: true,
+                payDate: formattedDate,
+                franchiseName: formData.franchiseName,
+                franchiseCode: formData.franchiseCode,
+                memberNo: memberNo,
+            };
+            console.log('Sending data:', data);
+            const response = await axios.post(url, data, {
+                responseType:'json',
+            });
+            const orderNo = response.data; 
+            console.log('Order No:', orderNo);
+
+            setFormData((prevData) => ({
+                ...prevData,
+                orderNo: orderNo,
+            }));
+            return orderNo;
+        }catch(error){
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
         const socket = new SockJS('http://localhost:8091/ws');
         const stompClient = Stomp.over(socket);
@@ -49,6 +83,7 @@ const Seller = () => {
         } else {
             connectStompClient();
         }
+        
 
         // 컴포넌트 언마운트 시 연결 해제
         return () => {
@@ -72,8 +107,9 @@ const Seller = () => {
             }
         });
     };
-    const send_information = () => {
-        const purchase_data = { ...formData, memberNo: memberNo };
+    const send_information =  async () => {
+        const orderNo = await handleOrderNo();
+        const purchase_data = { ...formData, memberNo: memberNo, payDate: formattedDate, orderNo: orderNo };
         stompClientRef.current.send(
             '/topic/sellinfo',
             {},

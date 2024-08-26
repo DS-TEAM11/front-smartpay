@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./RecoCard.css";
 import axios from "axios";
 
-const RecoCard = ({ recommendData }) => {
+const RecoCard = ({ recommendData, setCardCode }) => {
     const [cardInfo, setCardInfo] = useState({});
     const imgRef = useRef(null);
 
@@ -26,6 +26,11 @@ const RecoCard = ({ recommendData }) => {
         getCardInfo();
     }, [recommendData]);
 
+    const handleCardPaymentClick = () => {
+        setCardCode('');  // cardCode를 빈 문자열로 설정
+        console.log("카드코드 없음 -----------------------------");
+    };
+
 
     return (
         <div className="RecoCard">
@@ -34,7 +39,7 @@ const RecoCard = ({ recommendData }) => {
                     <p className="fs-5 blue-text fw-bold m-0">AI 추천카드</p>
                 </div>
                 <div className="col-5">
-                    <p className="text-decoration-underline text-end m-0">이 카드로 결제하기</p>
+                    <p className="text-decoration-underline text-end m-0"  onClick={handleCardPaymentClick}>이 카드로 결제하기</p>
                 </div>
             </div>
 

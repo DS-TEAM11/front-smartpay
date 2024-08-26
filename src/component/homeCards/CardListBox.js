@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import './CardListItem2.css';
-
-const CardListItem2 = ({ card, selectedCard, onSelect }) => {
+import { useSelectedCard } from '../../provider/PayProvider';
+import './CardListBox.css';
+import CardImg from './CardImg';
+const CardListBox = ({ card, onSelect }) => {
     const [isRotated, setIsRotated] = useState(false);
+    const { selectedCard } = useSelectedCard();
 
     useEffect(() => {
         const img = new Image();
-        img.src = card.cardImg; // cardImage 사용
+        img.src = card.cardImg;
         img.onload = () => {
             if (img.height > img.width) {
                 setIsRotated(true);
@@ -23,9 +25,10 @@ const CardListItem2 = ({ card, selectedCard, onSelect }) => {
             }`}
             onClick={() => onSelect(card)}
         >
-            <img
-                src={card.cardImg} // cardImage 사용
+            <CardImg
+                src={card.cardImg}
                 alt={card.cardName}
+                direction="horizontal"
                 className={isRotated ? 'vertical-image' : 'horizontal-image'}
             />
             <div className="card-info">
@@ -35,19 +38,19 @@ const CardListItem2 = ({ card, selectedCard, onSelect }) => {
                 <div className="card-type">
                     {card.cardCompany || '카드사 없음'}
                 </div>
-                <input
-                    type="radio"
-                    name="cardSelect"
-                    value={card.cardCode}
-                    checked={
-                        selectedCard && selectedCard.cardName === card.cardName
-                    }
-                    readOnly
-                    className="card-select"
-                />
             </div>
+            <input
+                type="radio"
+                name="cardSelect"
+                value={card.cardCode}
+                checked={
+                    selectedCard && selectedCard.cardName === card.cardName
+                }
+                readOnly
+                className="card-select"
+            />
         </li>
     );
 };
 
-export default CardListItem2;
+export default CardListBox;

@@ -1,4 +1,6 @@
+import CardImg from './homeCards/CardImg';
 import './Order.css';
+import './homeCards/CardImg.css'
 import { useState, useEffect, useRef } from 'react';
 
 const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
@@ -23,20 +25,20 @@ const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
         }
     }, [getCardInfo, getIsAi]);
 
-    useEffect(() => {
-        if (imgRef.current && containerRef.current && cardData.card_img) {
-            const imgElement = imgRef.current;
-            const containerElement = containerRef.current;
-            const { naturalWidth: width, naturalHeight: height } = imgElement;
+    // useEffect(() => {
+    //     if (imgRef.current && containerRef.current && cardData.card_img) {
+    //         const imgElement = imgRef.current;
+    //         const containerElement = containerRef.current;
+    //         const { naturalWidth: width, naturalHeight: height } = imgElement;
 
-            if (width > height) { // 가로로 된 카드이면
-                imgElement.classList.add('rotate-image');
-                imgElement.classList.remove('img-size');
-                containerElement.style.width = `${height + 15}px`;
-                containerElement.style.height = `${width + 15}px`;
-            }
-        }
-    }, [cardData.card_img]);
+    //         if (width > height) { // 가로로 된 카드이면
+    //             imgElement.classList.add('rotate-image');
+    //             imgElement.classList.remove('img-size');
+    //             containerElement.style.width = `${height + 15}px`;
+    //             containerElement.style.height = `${width + 15}px`;
+    //         }
+    //     }
+    // }, [cardData.card_img]);
     // const isAIRecommended = true; // AI 추천 여부를 나타내는 변수인데 어디서 받아할까,,,
 
     let FirstMessage;
@@ -80,17 +82,18 @@ const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
                     <h4>{ThirdMessage}</h4>
                     <div className="d-flex flex-column align-items-center mt-4">
                         <div ref={containerRef} className='card-info-container1'>
-                            <img
+                            {/* <img
                                 ref={imgRef}
                                 src={cardData.card_img}
                                 alt="CardImg"
                                 className="img-size"
-                            />
+                            /> */}
+                            <CardImg src={cardData.card_img} alt={cardData.card_nick} direction="vertical" ></CardImg>
                         </div>
                         <div className="card-info-container2">
                             <span className='col-6 text-truncate'>{cardData.card_nick}</span>
                             <span className='col-6 text-end'>
-                                {cardData.card_company} ({cardData.lastNums ? cardData.lastNums.slice(-4) : 'xxxx'})
+                                {cardData.card_company} ({cardData.lastNums ? cardData.lastNums.slice(-4) : 'error'})
                             </span>
                         </div>
                     </div>

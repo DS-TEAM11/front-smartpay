@@ -24,7 +24,7 @@ const CardInfo = () => {
     const [cardPicker, setCardPicker] = useState(false); // 카드 선택 모달 상태 추가
     const { selectedCard, setSelectedCard } = useSelectedCard(); // 선택된 카드 상태를 추가하여 관리합니다.
     const { showQr, setShowQr } = useShowQr(); // 상태를 추가하여 QR 코드를 표시할지 여부를 관리합니다.
-    const [showBenefit, setShowBenefit] = useState(false); // 카드 혜택을 표시할지 여부를 관리합니다.
+
     const handleDrag = () => {
         setShowQr(true);
     };
@@ -40,10 +40,6 @@ const CardInfo = () => {
     const handleCardRegister = () => {
         navigate('/register');
     };
-    const handleShowBenefit = () => {
-        setShowBenefit(showBenefit ? false : true);
-        // console.log('카드 혜택 보여주기', selectedCard);
-    };
 
     // memberNo가 있을 때 카드 데이터를 가져오는 useEffect
     useEffect(() => {
@@ -51,18 +47,50 @@ const CardInfo = () => {
             setLoading(true); // 데이터를 로드하기 시작할 때 로딩 상태를 true로 설정
             axios
                 .get(
-                    'http://localhost:8091/api/cards/details/byMember', // 새로운 엔드포인트 사용
+                    'http://localhost:8091/api/cards/details/byMember2', // 새로운 엔드포인트 사용
                     {
                         params: { memberNo },
                     },
                 )
                 .then((response) => {
-                    const sortedCards = response.data.sort(
-                        (a, b) => new Date(a.regDate) - new Date(b.regDate),
+                    // console.log('byMember2 test', response.data);
+
+                    // 데이터를 분리
+                    const cards = response.data[0]; // 첫 번째 배열
+                    const cardInfos = response.data[1]; // 두 번째 배열
+
+                    // cardCode를 기준으로 원하는 구조로 매핑
+                    const sortedCards = cards.reduce((acc, card) => {
+                        // cardInfos에서 card.cardCode에 맞는 정보를 찾음
+                        const cardInfo = cardInfos.find(
+                            (info) => info.cardCode === card.cardCode,
+                        );
+
+                        if (cardInfo) {
+                            // cardCode를 키로, 필요한 정보를 객체로 저장
+                            acc[card.cardCode] = {
+                                ...cardInfo,
+                                cardNick: card.cardNick,
+                                cardImage: cardInfo.cardImg, // card.cardImg가 아니라 card.cardImage로 수정
+                                regDate: card.regDate,
+                            };
+                        }
+                        return acc;
+                    }, {});
+
+                    // console.log('sortedCards', sortedCards);
+
+                    // 최신순으로 정렬
+                    const sortedCardArray = Object.values(sortedCards).sort(
+                        (a, b) => new Date(b.regDate) - new Date(a.regDate),
                     );
 
-                    setFetchedCards(sortedCards); // 정렬된 카드 데이터를 상태에 저장
-                    setSelectedCard(sortedCards[0]); // 첫 번째 카드를 선택된 카드로 설정
+                    // 가장 최근에 등록된 카드 선택
+                    const mostRecentCard = sortedCardArray[0];
+
+                    setFetchedCards(sortedCardArray); // 정렬된 카드 데이터를 상태에 저장
+                    setSelectedCard(mostRecentCard); // 가장 최근에 등록된 카드를 선택된 카드로 설정
+                    // console.log('selected', mostRecentCard);
                     setLoading(false); // 데이터 로드 완료 시 로딩 상태를 false로 설정
                 })
                 .catch((error) => {
@@ -105,18 +133,17 @@ const CardInfo = () => {
                 />
             )}
             {cardPicker && (
-                <CardPicker onRemove={removerCardPicker} cards={fetchedCards} />
+                <CardPicker
+                    title="카드를 선택하세요."
+                    onRemove={removerCardPicker}
+                    cards={fetchedCards}
+                />
             )}
 
             <div className="card-info-container border-bottom">
                 <div className="card-main-container border-bottom">
-                    <SlidingYComponent
-                        setShowQr={handleDrag}
-                        onClick={handleShowBenefit}
-                    >
-                        <MainCard card={selectedCard}>
-                            {showBenefit && <BenefitItem card={selectedCard} />}
-                        </MainCard>
+                    <SlidingYComponent setShowQr={handleDrag}>
+                        <MainCard card={selectedCard}></MainCard>
                     </SlidingYComponent>
                     <div className="up-content">
                         이 카드로 결제하려면 위로 드래그 해주세요.

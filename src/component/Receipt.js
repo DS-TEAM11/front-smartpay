@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate  } from 'react-router-dom';
 import './Receipt.css';
 import axios from 'axios';
 import Button from './Button';
@@ -10,6 +10,7 @@ import Header from './Header';
 // 받아온 데이터를 출력하기
 const Receipt = () => {
     const location = useLocation();
+    const navigate = useNavigate(); 
     // const [formData, setFormData] = useState(location.state.aiData);
     const queryParams = new URLSearchParams(location.search);
     const orderNo = queryParams.get('orderNo');
@@ -52,6 +53,10 @@ const Receipt = () => {
     }, [orderNo]);
     // console.log('영수증 페이지에 정보 전달됨', formData);
     // console.log('영수증 페이지에 정보 전달됨', JSON.stringify(formData));
+    const handleBackClick = () => {
+        navigate('/home'); // /home 경로로 이동
+    };
+
     return (
         <>
             <Header />
@@ -73,10 +78,13 @@ const Receipt = () => {
                             <div className="infoTitle">결제 금액</div>
                             <div className="infoValue">{formData.price.toLocaleString()}원</div>
                         </div>
-                        <div className="purchaseBenefit">
-                            <div className="infoTitle">받은 혜택</div>
-                            <div className="infoValue royalblue">{formData.savePrice}원</div>
-                        </div>
+                         {/* isAi가 true일 때만 혜택 정보를 표시 */}
+                         {formData.isAi && (
+                            <div className="purchaseBenefit">
+                                <div className="infoTitle">받은 혜택</div>
+                                <div className="infoValue royalblue">{formData.savePrice}원 {formData.saveType == 0 ? '적립' : '할인'}</div>
+                            </div>
+                        )}
                         <div className="purchaseUsedCard">
                             <div className="infoTitle">결제 카드</div>
                             <div className="infoValue">{formData.cardNo.slice(-4)}</div>
@@ -90,7 +98,7 @@ const Receipt = () => {
                             <div className="infoValue">본인</div>
                         </div>
                     </div>
-                    <Button text={'돌아가기'} className="back_btn" />
+                    <Button text={'돌아가기'} className="back_btn" onClick={handleBackClick} />
                 </div>
             </div>
         </>

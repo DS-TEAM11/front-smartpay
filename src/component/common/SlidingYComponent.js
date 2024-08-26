@@ -10,7 +10,7 @@ const SlidingYComponent = ({ setShowQr, onClick, children }) => {
     const { selectedCard } = useSelectedCard();
     const handleShowBenefit = () => {
         setShowBenefit(showBenefit ? false : true);
-        console.log('카드 혜택 보여주기', selectedCard);
+        // console.log('카드 혜택 보여주기', selectedCard);
     };
     const handleMouseDown = (event) => {
         setStartY(event.clientY);

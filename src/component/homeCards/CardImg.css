@@ -4,3 +4,8 @@
 .cardImg {
     filter: drop-shadow(2px 4px 6px black);
 }
+
+.cardImg img {
+    width: 100%;
+    height: 100%;
+}

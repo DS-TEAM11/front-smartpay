@@ -1,3 +1,64 @@
 .card-list {
     width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+.card-list .card-item {
+    display: flex;
+    flex-direction: row;
+}
+
+.card-list .card-item .cardImg {
+    margin-left: 0.2rem;
+    width: 4em;
+    height: 4em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-list .card-item .cardImg img {
+    width: 4em;
+    height: auto;
+    object-fit: contain;
+}
+
+.card-list .card-item .cardImg img.rotate {
+    transform-origin: center center;
+    transform: rotate(90deg);
+    width: auto;
+    height: 4em;
+}
+
+.card-list .card-item.selected {
+    background-color: #f0f8ff;
+    border-color: #6f42c1;
+}
+
+.card-list .card-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.card-list .card-item .card-info {
+    width: 10rem;
+    word-break: keep-all;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #333;
+    margin-top: 10px;
+    position: relative;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.card-list .card-item .card-info .card-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+.card-list .card-item .card-info .card-type {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0;
 }

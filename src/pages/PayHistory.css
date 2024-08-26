@@ -20,11 +20,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
 }
 
 .payhistory .data .table-container .dayTable .dayName {
-    margin: 0 8% ;
+    margin: 0 8%;
     text-align: left;
 }
 
@@ -50,7 +49,10 @@
 
 .payhistory .data .table-container .dayTable .table-row .div3 {
     grid-area: 2/2/3/3;
-    COLOR: RED;
+    color: RED;
+}
+.payhistory .data .table-container .dayTable .table-row .div3 .recommend {
+    width: 20%;
 }
 
 .payhistory .data .table-container .dayTable .table-row .div4 {

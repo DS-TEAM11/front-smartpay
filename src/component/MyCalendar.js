@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './MyCalendar.css'; // 추가된 스타일 시트
+import moment from 'moment';
 
 function MyCalendar({ value, onChange }) {
     const [showCalendar, setShowCalendar] = useState(false);
@@ -64,6 +65,8 @@ function MyCalendar({ value, onChange }) {
                     <Calendar
                         onChange={handleDateChange}
                         value={selectedDateRange}
+                        formatDay={(locale, date) => moment(date).format('DD')} // 일 생략
+                        calendarType="gregory" // 일요일 부터 시작
                         selectRange={true} // 날짜 범위 선택 모드 활성화
                     />
                 </div>

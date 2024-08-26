@@ -28,21 +28,19 @@ function Register() {
 
     const navigate = useNavigate();
 
-    // 1. memberNo를 가져오는 useEffect
+    // memberNo 가져오기
     useEffect(() => {
-        // 로컬스토리지에서 토큰 가져오기
         const token = localStorage.getItem('accessToken');
 
         if (token) {
-            // 백엔드로 memberNo 요청
             axios
                 .get('http://localhost:8091/member/findMember', {
                     headers: {
-                        Authorization: token, // Bearer 포함
+                        Authorization: token,
                     },
                 })
                 .then((response) => {
-                    setMemberNo(response.data); // 응답받은 memberNo 저장
+                    setMemberNo(response.data);
                 })
                 .catch((error) => {
                     console.error('memberNo 요청 에러', error);
@@ -50,7 +48,7 @@ function Register() {
         }
     }, []);
 
-    // 2. memberNo를 사용해 카드 데이터를 가져오는 useEffect
+    // memberNo로 카드 데이터 가져오기
     useEffect(() => {
         if (memberNo) {
             const token = localStorage.getItem('accessToken');
@@ -59,11 +57,10 @@ function Register() {
                 .get('http://localhost:8091/api/cards/byMember', {
                     params: { memberNo },
                     headers: {
-                        Authorization: token, // Bearer 포함
+                        Authorization: token,
                     },
                 })
                 .then((response) => {
-                    // 카드 데이터를 regDate 기준으로 정렬
                     const sortedCards = response.data.sort(
                         (a, b) => new Date(a.regDate) - new Date(b.regDate),
                     );
@@ -76,7 +73,7 @@ function Register() {
                     );
                 });
         }
-    }, [memberNo]); // memberNo가 변경될 때만 이 useEffect가 실행됨
+    }, [memberNo]);
 
     const handleCardSelectClick = async () => {
         setIsModalOpen(true);
@@ -127,7 +124,30 @@ function Register() {
 
             if (response.ok) {
                 console.log('카드가 성공적으로 등록되었습니다.');
-                navigate('/memberPwd');
+                try {
+                    const pwdResponse = await axios.get(
+                        'http://localhost:8091/member/isPaypwdEmpty',
+                        { params: { memberNo } },
+                    );
+
+                    if (pwdResponse.status === 200) {
+                        // 결제 비밀번호가 없는 경우
+                        navigate('/memberPwd');
+                    } else {
+                        navigate('/home'); // 홈 화면으로 이동
+                    }
+                } catch (error) {
+                    if (error.response && error.response.status === 404) {
+                        // 결제 비밀번호가 있는 경우
+                        navigate('/home');
+                    } else {
+                        // 기타 네트워크 오류 처리
+                        console.error(
+                            '결제 비밀번호 확인 중 오류가 발생했습니다.',
+                            error,
+                        );
+                    }
+                }
             } else {
                 console.error('카드 등록에 실패했습니다.');
             }
@@ -204,7 +224,7 @@ function Register() {
                     <div className="form-group">
                         <label>유효기간(MM/YY)</label>
                         <input
-                            type="number"
+                            type="text"
                             placeholder="MM / YY"
                             value={validPeriod}
                             onChange={(e) => setValidPeriod(e.target.value)}

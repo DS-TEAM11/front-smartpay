@@ -95,7 +95,7 @@ function MemberPwd() {
             <div className="member-pwd-container">
                 <h2>스마트페이 결제</h2>
                 <div className="mainText">
-                    <p>비밀번호 등록</p>
+                    <div className="passwordText">비밀번호 등록</div>
                 </div>
                 <div className="pin-circles">
                     {pin.map((_, index) => (

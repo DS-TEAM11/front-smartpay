@@ -25,6 +25,7 @@ const BenefitsAndManagement = ({ benefits, managementItems }) => (
                         key={index}
                         imageSrc={item.imageSrc}
                         description={item.description}
+                        onClick={item.onClick}
                     />
                 ))}
             </div>

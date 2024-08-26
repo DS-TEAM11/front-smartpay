@@ -61,6 +61,7 @@ h2 {
 .centered {
     grid-column: 2 / 3; /* 네 번째 줄에서 두 번째 위치 */
     grid-row: 4; /* 네 번째 줄로 이동 */
+    justify-self: center; /* 가운데 정렬 */
 }
 
 .undo-button {
@@ -70,4 +71,10 @@ h2 {
 
 .wide-button {
     width: 80%; /* 버튼 너비를 80%로 설정 */
+}
+.passwordText {
+    font-size: 30px;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 20px;
 }

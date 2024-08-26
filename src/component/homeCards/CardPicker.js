@@ -5,9 +5,12 @@ import Button from '../Button';
 import { useSelectedCard } from '../../provider/PayProvider';
 import CardListItem2 from '../CardListItem2';
 import './CardPicker.css';
-const CardPicker = ({ onRemove, cards }) => {
+const CardPicker = ({ onRemove, cards, onCardSelect }) => {
     const { selectedCard, setSelectedCard } = useSelectedCard(); // 선택된 카드 상태 추가
     const handleSelectCard = (card) => {
+        console.log(card);
+        console.log(card.cardCode);
+        onCardSelect(card.cardCode);
         setSelectedCard(card);
         onRemove();
     };

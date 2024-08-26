@@ -22,7 +22,7 @@ const SpreadCards = React.memo(({ cards, onClick }) => {
             {cards.map((card, index) => (
                 <CardImg
                     key={index}
-                    src={card.cardImage}
+                    src={card.cardImg}
                     alt={card.cardNick}
                     direction="horizontal"
                 />

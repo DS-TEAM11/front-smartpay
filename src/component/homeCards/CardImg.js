@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import './CardImg.css';
 
-const CardImg = React.memo(({ src, alt, direction, children }) => {
+const CardImg = React.memo(({ src, alt, direction, onClick, children }) => {
     const imgRef = useRef(null);
     useEffect(() => {
         const imgElement = imgRef.current;
@@ -42,7 +42,7 @@ const CardImg = React.memo(({ src, alt, direction, children }) => {
     }, [direction]); // direction이 변경될 때마다 useEffect 실행
 
     return (
-        <div className="cardImg">
+        <div className="cardImg" onClick={onClick}>
             {children}
             <img ref={imgRef} src={src} alt={alt} />
         </div>

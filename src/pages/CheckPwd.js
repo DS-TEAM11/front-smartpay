@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../component/Header';
-import CheckitPwd from '../component/CheckitPwd'; // 새로운 CheckPwdContent 컴포넌트 임포트
+import PwdItem from '../component/PwdItem';
+import CheckitPwd from '../component/CheckitPwd';
 
 function CheckPwd() {
     return (

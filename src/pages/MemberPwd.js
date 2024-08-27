@@ -111,7 +111,9 @@ function MemberPwd() {
                     {shuffledNumbers.map((number) => (
                         <button
                             key={number}
-                            className="pin-button"
+                            className={`pin-button ${
+                                number === '0' ? 'centered' : ''
+                            }`}
                             onClick={() => handlePinChange(number)}
                         >
                             {number}

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../pages/MemberPwd.css';
-import Button from '../component/Button';
+import Button from './Button';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-function CheckitPwd() {
+function PwdItem() {
     const [checkPin, setCheckPin] = useState(['', '', '', '', '', '']);
     const [activeCheckPinIndex, setActiveCheckPinIndex] = useState(0);
     const [shuffledNumbers, setShuffledNumbers] = useState([]);
@@ -87,8 +87,7 @@ function CheckitPwd() {
             })
             .then((response) => {
                 if (response.status === 200) {
-                    alert('정상적으로 등록되었습니다.');
-                    navigate('/home');
+                    console.log('Data sent:', payload);
                 }
             })
             .catch((error) => {
@@ -142,4 +141,4 @@ function CheckitPwd() {
     );
 }
 
-export default CheckitPwd;
+export default PwdItem;

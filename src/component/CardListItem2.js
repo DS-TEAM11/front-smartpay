@@ -34,7 +34,7 @@ const CardListItem2 = ({ card, selectedCard, onSelect }) => {
                 </div>{' '}
                 {/* 카드 이름 */}
                 <div className="card-type">
-                    {card.isCredit === 1 ? '신용카드' : '체크카드'}
+                    {card.cardCompany || '카드사 없음'}
                 </div>
                 <input
                     type="radio"

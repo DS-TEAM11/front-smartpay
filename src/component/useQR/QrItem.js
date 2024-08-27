@@ -60,6 +60,7 @@ function QrItem({ onRemove, cardCode }) {
             .then((response) => {
                 // console.log('추천 결과:', response.data);
                 // cardCode도 같이 보내게 수정
+                // console.log(cardCode);
                 navigate('/pay', {
                     state: {
                         purchaseData: data,

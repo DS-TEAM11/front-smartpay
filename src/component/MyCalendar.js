@@ -46,9 +46,9 @@ function MyCalendar({ value, onChange }) {
         const format = (date) => {
             if (!(date instanceof Date)) return '날짜선택';
             const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            const month = String(date.getMonth() + 1);
+            const day = String(date.getDate());
+            return `${month}월 ${day}일`;
         };
 
         return `${format(startDate)} ~ ${format(endDate)}`;
@@ -56,7 +56,7 @@ function MyCalendar({ value, onChange }) {
 
     return (
         <div className="mycalendar">
-            <button className="btn" onClick={toggleCalendar}>
+            <button className="btn btn-calendar" onClick={toggleCalendar}>
                 <i className="bi bi-calendar4"></i>{' '}
                 {formatDateRange(selectedDateRange)}
             </button>

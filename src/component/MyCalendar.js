@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './MyCalendar.css'; // 추가된 스타일 시트
+import moment from 'moment';
 
 function MyCalendar({ value, onChange }) {
     const [showCalendar, setShowCalendar] = useState(false);
@@ -45,9 +46,9 @@ function MyCalendar({ value, onChange }) {
         const format = (date) => {
             if (!(date instanceof Date)) return '날짜선택';
             const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            const month = String(date.getMonth() + 1);
+            const day = String(date.getDate());
+            return `${month}월 ${day}일`;
         };
 
         return `${format(startDate)} ~ ${format(endDate)}`;
@@ -55,7 +56,7 @@ function MyCalendar({ value, onChange }) {
 
     return (
         <div className="mycalendar">
-            <button className="btn" onClick={toggleCalendar}>
+            <button className="btn btn-calendar" onClick={toggleCalendar}>
                 <i className="bi bi-calendar4"></i>{' '}
                 {formatDateRange(selectedDateRange)}
             </button>
@@ -64,6 +65,8 @@ function MyCalendar({ value, onChange }) {
                     <Calendar
                         onChange={handleDateChange}
                         value={selectedDateRange}
+                        formatDay={(locale, date) => moment(date).format('D')} // 일 생략
+                        calendarType="gregory" // 일요일 부터 시작
                         selectRange={true} // 날짜 범위 선택 모드 활성화
                     />
                 </div>

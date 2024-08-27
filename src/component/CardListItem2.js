@@ -31,7 +31,8 @@ const CardListItem2 = ({ card, selectedCard, onSelect }) => {
             <div className="card-info">
                 <div className="card-name">
                     {card.cardName || 'No Name Available'}
-                </div>
+                </div>{' '}
+                {/* 카드 이름 */}
                 <div className="card-type">
                     {card.cardCompany || '카드사 없음'}
                 </div>

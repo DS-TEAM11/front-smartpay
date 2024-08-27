@@ -1,5 +1,5 @@
 .rotate {
-    transform: rotate(90deg);
+    transform: rotate(270deg);
 }
 .cardImg {
     filter: drop-shadow(2px 4px 6px black);

@@ -1,26 +1,38 @@
 .management-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 70px; /* 아이템 크기를 고정 */
-    height: 70px;
+    display: inline-block; /* 인라인 블록으로 설정하여 줄 바꿈 없이 나란히 배치 */
+    vertical-align: top; /* 상단 정렬 */
+    width: 25%; /* 한 화면에 3개가 들어가도록 너비 조정 */
+    height: auto;
     background-color: #f0f4f8;
-    border-radius: 10px;
+    border-radius: 10%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin: 5px; /* 아이템 간의 간격을 위해 여백 추가 */
     text-align: center;
+    margin-left: 3%; /* 왼쪽 마진 설정 */
+    margin-right: 3%; /* 오른쪽 마진 설정 */
+    margin-top: 0; /* 위쪽 마진 제거 */
+    margin-bottom: 0; /* 아래쪽 마진 제거 */
+}
+
+.management-items {
+    text-align: center; /* 자식 요소들이 가운데 정렬되도록 설정 */
+}
+
+.management-section h3 {
+    text-align: left;
+    padding-left: 20px;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
 }
 
 .management-item img {
-    width: 40px; /* 이미지 크기 조정 */
-    height: 40px;
-    margin-bottom: 5px; /* 이미지와 텍스트 사이 여백 */
+    margin-top: 4%;
+    width: 45%; /* 이미지 크기를 더 크게 조정 */
+    height: auto; /* 자동으로 비율 유지 */
+    margin-bottom: 5%;
 }
 
-.management-item p {
+.description-text {
     font-size: 12px;
     color: #333;
-    margin: 0;
-    text-align: center;
 }

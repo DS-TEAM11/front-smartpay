@@ -107,7 +107,9 @@ function PayHistory() {
 
     // 숫자를 통화 형식으로 변환하는 함수 (예: 1000 -> '1,000원')
     const formatCurrency = (amount) => {
-        return `${amount.toLocaleString()}원`;
+        // amount가 null 또는 undefined일 경우 0으로 처리
+        const validAmount = amount ?? 0;
+        return `${validAmount.toLocaleString()}원`;
     };
 
     // 결제 데이터를 날짜별로 그룹화하는 함수
@@ -177,8 +179,8 @@ function PayHistory() {
                                                 {payment.franchiseName}
                                             </div>
                                             <div className="item3">
-                                                {/* getIsAi가 false일 때만 적립 또는 할인 정보 표시 */}
-                                                {payment.getIsAi === false ? (
+                                                {/* getIsAi가 true일 때만 적립 또는 할인 정보 표시 */}
+                                                {payment.getIsAi === true ? (
                                                     <>
                                                         <img
                                                             className="recommend"

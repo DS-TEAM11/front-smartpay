@@ -1,10 +1,14 @@
 import React from 'react';
 import './ManagementItem.css';
 
-const ManagementItem = ({ imageSrc, description }) => (
-    <div className="management-item">
+const ManagementItem = ({ imageSrc, description, onClick }) => (
+    <div
+        className="management-item"
+        onClick={onClick}
+        style={{ cursor: 'pointer' }}
+    >
         <img src={imageSrc} alt={description} />
-        <p>{description}</p>
+        <div className="description-text">{description}</div>
     </div>
 );
 

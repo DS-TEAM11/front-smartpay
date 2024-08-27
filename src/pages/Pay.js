@@ -37,6 +37,17 @@ const Pay = () => {
 
     const [showCardPicker, setShowCardPicker] = useState(false); 
     const [cards, setCards] = useState();  //카드 리스트
+    const [cardSelected, setCardSelected] = useState(false);
+
+    // 카드 코드 가져오기
+    useEffect(() => {
+        if (showCardPicker && selectedCard) {
+            setCardCode(selectedCard.cardCode);
+            setCardSelected(false); // 카드 선택 후 상태 초기화
+        }
+    }, [selectedCard, showCardPicker]);
+
+    
 
    useEffect(() => {
         if (cardCode) {
@@ -214,10 +225,10 @@ const Pay = () => {
         
     };
 
-    //카드 코드 가져오기
-    useEffect(()=> {
-        setCardCode(selectedCard.cardCode);
-    },[selectedCard])
+    // //카드 코드 가져오기
+    // useEffect(()=> {
+    //     setCardCode(selectedCard.cardCode);
+    // },[selectedCard])
 
     const handleHomeClick = () => {
         navigate('/home'); // /home 경로로 이동

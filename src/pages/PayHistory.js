@@ -179,8 +179,8 @@ function PayHistory() {
                                                 {payment.franchiseName}
                                             </div>
                                             <div className="item3">
-                                                {/* getIsAi가 false일 때만 적립 또는 할인 정보 표시 */}
-                                                {payment.getIsAi === false ? (
+                                                {/* getIsAi가 true일 때만 적립 또는 할인 정보 표시 */}
+                                                {payment.getIsAi === true ? (
                                                     <>
                                                         <img
                                                             className="recommend"

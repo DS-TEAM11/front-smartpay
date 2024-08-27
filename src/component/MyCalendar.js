@@ -65,7 +65,7 @@ function MyCalendar({ value, onChange }) {
                     <Calendar
                         onChange={handleDateChange}
                         value={selectedDateRange}
-                        formatDay={(locale, date) => moment(date).format('DD')} // 일 생략
+                        formatDay={(locale, date) => moment(date).format('D')} // 일 생략
                         calendarType="gregory" // 일요일 부터 시작
                         selectRange={true} // 날짜 범위 선택 모드 활성화
                     />

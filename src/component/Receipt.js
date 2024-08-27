@@ -87,7 +87,7 @@ const Receipt = () => {
                         )}
                         <div className="purchaseUsedCard">
                             <div className="infoTitle">결제 카드</div>
-                            <div className="infoValue">{formData.cardNo.slice(-4)}</div>
+                            <div className="infoValue">({formData.cardNo.slice(-4)})</div>
                         </div>
                         <div className="purchaseStatus">
                             <div className="infoTitle">결제 상태</div>

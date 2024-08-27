@@ -137,6 +137,10 @@ const CardInfo = () => {
                     title="카드를 선택하세요."
                     onRemove={removerCardPicker}
                     cards={fetchedCards}
+                    onCardSelect={(card) => {
+                        setSelectedCard(card); 
+                        setCardPicker(false);   
+                    }}
                 />
             )}
 

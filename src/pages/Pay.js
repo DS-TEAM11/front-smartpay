@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import PaymentSuccess from '../component/Receipt';
 import Button from '../component/Button';
 import Order from '../component/Order';
 import Header from '../component/Header';
@@ -9,6 +8,9 @@ import RecoCard from '../component/RecoCard';
 import CardPicker from '../component/homeCards/CardPicker';
 import { useLocation } from 'react-router-dom';
 import { useMemberNo, useSelectedCard } from '../provider/PayProvider';
+import PwdItem from '../component/PwdItem';
+import BlackContainer from '../component/BlackContainer';
+import Loading from '../component/Loading';
 
 const Pay = () => {
     const location = useLocation();
@@ -16,18 +18,12 @@ const Pay = () => {
     const {selectedCard, setSelectedCard} = useSelectedCard();
     const [recommendData, setRecommendData] = useState(location.state.aiData);
     const [purchaseData, setPurchaseData] = useState(location.state.purchaseData); //구매 정보 데이터
-
-    // console.log(purchaseData.orderNo);
     
     const memberNo = useMemberNo();
-    const [paymentSuccess, setPaymentSuccess] = useState(false);
+    // const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [paymentData, setPaymentData] = useState({}); //결제요청할 데이터 해야함
     
     const [cardCode, setCardCode] = useState(location.state.cardCode);
-
-    // console.log(cardCode);
-    // console.log(recommendData); //TODO: 240823 이제 이 데이터 잘라서 페이지에 그려주면 됨
-
     const [getIsAi, setGetIsAi] = useState(true);
     const [saveType, setSaveType] = useState(null);
     const [cardInfo, setCardInfo] = useState({
@@ -37,24 +33,24 @@ const Pay = () => {
 
     const [showCardPicker, setShowCardPicker] = useState(false); 
     const [cards, setCards] = useState();  //카드 리스트
-    const [cardSelected, setCardSelected] = useState(false);
 
-    // 카드 코드 가져오기
+    // PwdItem 표시 상태
+    const [showPwdItem, setShowPwdItem] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    // 카드 코드와 AI 상태 설정
     useEffect(() => {
-        if (showCardPicker && selectedCard) {
-            setCardCode(selectedCard.cardCode);
-            setCardSelected(false); // 카드 선택 후 상태 초기화
-        }
-    }, [selectedCard, showCardPicker]);
-
+        console.log("AI 카드 코드 확인 =====")
+        console.log(cardCode);
     
-
-   useEffect(() => {
         if (cardCode) {
-            setGetIsAi(false); // 카드 코드가 있으면 선택한 카드 결제
-        } else{
+            setGetIsAi(false); 
+        } else {
             setGetIsAi(true);
         }
+    }, [cardCode]);
+
+    useEffect(() => {
 
         //카드 정보 가져오는 API 호출
         const getCardInfo = async (code) => {
@@ -108,9 +104,16 @@ const Pay = () => {
         };
 
         loadCardData();
+
     },  [cardCode, recommendData.benefitType, recommendData.recommendCard, getIsAi, memberNo]);
 
 
+
+    //카드 코드 가져오기
+    // useEffect(()=> {
+    //     console.log()
+    //     setCardCode(selectedCard.cardCode);
+    // },[selectedCard])
 
     const getBenefit = { 
         maximumBenefits: recommendData.maximumBenefits,
@@ -122,14 +125,50 @@ const Pay = () => {
         price: purchaseData.purchasePrice,
         product: purchaseData.purchaseItems
     }
-    
 
+    // 카드 선택 처리
+    const handleCardSelect = (card) => {
+        // setSelectedCard(card); // CardPicker에서 선택한 카드 설정
+        setCardCode(card.cardCode); // 선택된 카드의 코드 설정
+        setShowCardPicker(false); // 카드 선택 후 CardPicker 닫기
+    };
 
-    
-    //TODO: 다른 카드 선택하기 하면 카드 리스트 컴포넌트 불러오고 화면도 바꿔야하고 데이터 값도 바꿔야 하고 OMG~~
+    //해당 멤버로 카드 리스트 가져오기
+    const handleShowCardPicker = async () => {
+        try {
+            const response = await axios.get('http://localhost:8091/api/cards/details/byMember', {
+                params: { memberNo },
+                responseType: 'json'  // 응답 타입을 JSON으로 설정
+            });
+            setCards(response.data);
+            // console.log(response.data);
+            // console.log(cards);
+            setShowCardPicker(true);
+            
+        } catch (error) {
+            console.error('카드 리스트를 가져오는 데 실패했습니다.', error);
+        }
+        
+    };
 
-   
-
+    // PwdItem 컴포넌트
+    const handlePwd = async () => {
+        setShowPwdItem(true);
+    };
+    //결제 비밀번호 확인
+    const handlePasswordValidation = (isValid) => {
+        setShowPwdItem(false); 
+        if (isValid) {
+            setShowPwdItem(false);
+            setIsLoading(true);
+            handlePayment(); //결제 로직 수행
+        }
+    };
+    //블랙컨테이너 클릭시 닫기
+    const handleOverlayClick = () => {
+        setShowPwdItem(false); 
+    };
+  
     //TODO: 실제 결제 요청 정보 담아야 함
     const handlePayment = async () => {
 
@@ -142,10 +181,9 @@ const Pay = () => {
             cardNo = cardInfo.selectedCard.lastNums;
         }
 
-        console.log(cardNo);
+        // console.log(cardNo);
 
         const paymentData = {
-            
             orderNo: purchaseData.orderNo, //이전에서 받아와야 함? 
             price: purchaseData.purchasePrice,  //이것도 판매자
             product: purchaseData.purchaseItems, //판매자
@@ -179,12 +217,13 @@ const Pay = () => {
             if (paymentStatus === 0) {
                 // 결제 성공
                 alert('결제가 완료되었습니다.');
-                setPaymentSuccess(true);
+                // setPaymentSuccess(true);
                 // setPaymentData(response.data);
                 navigate(`/pay/receipt?orderNo=${orderNo}`);
                 //결제 요청 값? 데이터 그대로 보내줘? 아님 쿼리파라미터로 달아서 페이지 이동? -> receipt에서는 파라미터 값 가져와서 API 호출?
             } else if (paymentStatus === 1) {
                 // 카드 불일치
+                setIsLoading(true);
                 alert('결제 실패: 카드 정보 불일치 다시 시도해주세요');
                 handleHomeClick();
             } else if (paymentStatus === 2) {
@@ -208,34 +247,21 @@ const Pay = () => {
         }
     };
 
-    //해당 멤버로 카드 리스트 가져오기(여기서 불러와야 함;;)
-    const handleShowCardPicker = async () => {
-        try {
-            const response = await axios.get('http://localhost:8091/api/cards/details/byMember', {
-                params: { memberNo },
-                responseType: 'json'  // 응답 타입을 JSON으로 설정
-            });
-            setCards(response.data);
-            console.log(response.data);
-            console.log(cards);
-            setShowCardPicker(true);
-        } catch (error) {
-            console.error('카드 리스트를 가져오는 데 실패했습니다.', error);
-        }
-        
-    };
-
-    // //카드 코드 가져오기
-    // useEffect(()=> {
-    //     setCardCode(selectedCard.cardCode);
-    // },[selectedCard])
-
     const handleHomeClick = () => {
         navigate('/home'); // /home 경로로 이동
     };
-    
+  
     return (
         <div className='Pay'>
+             {isLoading && (
+                <Loading text={'결제 진행 중입니다.'} />
+            )}
+            {showPwdItem && (
+                <>
+                    <BlackContainer onClick={handleOverlayClick} />
+                    <PwdItem Success={handlePasswordValidation} />
+                </>
+            )}
             <Header />
             <Order getCardInfo={cardInfo} getBenefit={getBenefit} getPurchase={getPurchase} getIsAi={getIsAi}/>
 
@@ -247,7 +273,7 @@ const Pay = () => {
                         </div>
                     )}
                     <Button
-                        onClick={handlePayment}
+                        onClick={handlePwd}
                         text={'이 카드로 결제하기'}
                     />
 
@@ -262,11 +288,13 @@ const Pay = () => {
             </div>
             {showCardPicker && (
                 <CardPicker
-                    onRemove={() => setShowCardPicker(false)}
+                    onRemove={() => setShowCardPicker(false)} 
                     cards={cards}
+                    onCardSelect={handleCardSelect}
                 />
             )}
                 {!getIsAi && <RecoCard recommendData={recommendData} setCardCode={setCardCode} />}
+               
         </div>
     );
 };

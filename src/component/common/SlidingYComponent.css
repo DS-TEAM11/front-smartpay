@@ -41,15 +41,27 @@
 .slide-container > img.rotate {
     animation: slideUpDownRotate 1s ease-in-out infinite alternate;
 }
+
 .slide-container .cardImg {
+    filter: drop-shadow(2px 4px 6px black);
+    margin-left: 0.2rem;
     width: 100%;
+    height: auto;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.slide-container .cardImg > img {
+
+.slide-container .cardImg img {
     max-width: 70vw;
-    height: auto;
+    width: auto;
     max-height: 30vh;
     object-fit: contain;
+}
+
+.slide-container .cardImg img.rotate {
+    transform-origin: center center;
+    max-height: 70vw;
+    height: auto;
+    max-width: 30vh;
 }

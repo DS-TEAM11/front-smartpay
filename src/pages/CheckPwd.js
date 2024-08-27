@@ -7,7 +7,7 @@ function CheckPwd() {
     return (
         <div>
             <Header />
-            <CheckitPwd />
+            <PwdItem />
         </div>
     );
 }

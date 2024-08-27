@@ -87,8 +87,8 @@ function PwdItem() {
             })
             .then((response) => {
                 if (response.status === 200) {
-                    // console.log('Data sent:', payload);
-                    
+                    console.log('Data sent:', payload);
+                    alert('성공했어요');
                 }
             })
             .catch((error) => {

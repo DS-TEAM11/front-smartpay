@@ -21,7 +21,7 @@ const Header = () => {
                 <nav className="navbar navbar-expand-xl">
                     <div className="container">
                         {/* <!-- Logo START --> */}
-                        <Link className="navbar-brand col-5 py-0" to="/home">
+                        <Link className="navbar-brand py-0" to="/home">
                             <img
                                 className="light-mode-item navbar-brand-item"
                                 src="/assets/images/splogo2.png"

@@ -1,6 +1,6 @@
-import React, { useState, Link } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Button from '../component/Button';
 import { InputValue } from '../component/common/InputValue';
 import './Login.css';
@@ -109,7 +109,7 @@ const Login = () => {
                         />
                         자동로그인
                     </label>
-                    <Link href="#" className="find-id-pw">
+                    <Link to="#" className="find-id-pw">
                         ID/PW 찾기
                     </Link>
                 </div>
@@ -120,7 +120,7 @@ const Login = () => {
                 />
             </form>
             <div className="register-link">
-                아직 회원이 아니신가요? <Link href="/signup">회원가입</Link>
+                아직 회원이 아니신가요? <Link to="/signup">회원가입</Link>
             </div>
             <Button
                 className="kakao-login-btn"

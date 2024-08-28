@@ -25,10 +25,10 @@ import Button from './component/Button';
 import NotFoundPage from './pages/404';
 import Test from './pages/Test';
 import PayHistory from './pages/PayHistory';
-import memberPwd from './pages/MemberPwd';
-import CheckPwd from './pages/CheckPwd';
-import MemberPwd from './pages/MemberPwd';
-
+// import memberPwd from './pages/MemberPwd';
+// import CheckPwd from './pages/CheckPwd';
+// import MemberPwd from './pages/MemberPwd';
+import BenefitTest from './pages/BenefitTest';
 const SplashScreen = () => {
     const navigate = useNavigate();
 

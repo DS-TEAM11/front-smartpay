@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../component/PwdItem.css';
+// import '../component/PwdItem.css';
+import '../pages/MemberPwd.css';
 import Button from './Button';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -107,7 +108,7 @@ function PwdItem({ Success }) {
     };
 
     return (
-        <div className="pwd-pwd-container">
+        <div className="pwd-container">
             <h2>스마트페이 결제</h2>
             <div className="passwordText">비밀번호 확인</div>
             <div className="pin-circles">

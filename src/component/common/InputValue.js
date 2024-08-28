@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '../Button';
 
 const InputValue = React.memo(({ title, ...props }) => {
-    const { placeholder, id, onChange, readOnly, value, type, disabled } =
+    const { placeholder, id, onChange, readOnly, value, type, disabled, onInput, maxLength, onKeyDown, onClick} =
         props;
     const inputProps = {
         id,
@@ -13,6 +13,10 @@ const InputValue = React.memo(({ title, ...props }) => {
         onChange,
         ...(readOnly ? { readOnly: true } : {}), // readOnly가 true일 때만 추가
         ...(disabled ? { disabled: true } : {}), // disabled가 true일 때만 추가
+        maxLength,
+        onInput,
+        onKeyDown,
+        onClick,
     };
 
     return (

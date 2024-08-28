@@ -56,6 +56,7 @@ const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
     let ThirdMessage;
 
     const money = parseInt(getPurchase.price);
+    const saveMoney = parseInt(getBenefit.maximumBenefits);
 
     if (getIsAi) {
         FirstMessage = <>AI 추천 카드로</>;
@@ -69,10 +70,7 @@ const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
         ThirdMessage = (
             <>
                 결제하고
-                <span className="blue-text">
-                    {' '}
-                    {getBenefit.maximumBenefits}원
-                </span>
+                <span className="blue-text"> {saveMoney.toLocaleString()}원</span>
                 <span className="blue-text"> {getBenefit.benefitType} </span>
                 받을게요.
             </>
@@ -106,7 +104,7 @@ const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
                     </div>
                     <div className="card-info-container2">
                         <span className="col-6 text-truncate">
-                            {cardData.card_nick}
+                            {cardData.card_nick ? cardData.card_nick : cardData.card_name}
                         </span>
                         <span className="col-6 text-end">
                             {cardData.card_company} (

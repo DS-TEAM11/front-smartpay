@@ -4,13 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../component/Header';
 import './MemberPwd.css';
 import Button from '../component/Button';
+import { useMemberNo } from '../provider/PayProvider';
 
-function MemberPwd() {
+function MemberPwd({ Success }) {
     const [pin, setPin] = useState(['', '', '', '', '', '']);
     const [activePinIndex, setActivePinIndex] = useState(0);
-    const [memberNo, setMemberNo] = useState(null); // 서버로부터 받아온 회원 번호 상태
+    // const [memberNo, setMemberNo] = useState(null); // 서버로부터 받아온 회원 번호 상태
     const [shuffledNumbers, setShuffledNumbers] = useState([]);
+    const [statePwd, setStatePwd] = useState(false);
     const navigate = useNavigate();
+    const memberNo = useMemberNo();
 
     useEffect(() => {
         // 임의로 섞인 숫자 패드를 설정
@@ -22,20 +25,20 @@ function MemberPwd() {
 
         // 회원 번호를 가져오는 요청을 추가
         const token = localStorage.getItem('accessToken');
-        if (token) {
-            axios
-                .get('http://localhost:8091/member/findMember', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
-                .then((response) => {
-                    setMemberNo(response.data); // 서버로부터 회원 번호 설정
-                })
-                .catch((error) => {
-                    console.error('회원 번호 요청 에러', error);
-                });
-        }
+        // if (token) {
+        //     axios
+        //         .get('http://localhost:8091/member/findMember', {
+        //             headers: {
+        //                 Authorization: `Bearer ${token}`,
+        //             },
+        //         })
+        //         .then((response) => {
+        //             setMemberNo(response.data); // 서버로부터 회원 번호 설정
+        //         })
+        //         .catch((error) => {
+        //             console.error('회원 번호 요청 에러', error);
+        //         });
+        // }
     }, []);
 
     const handlePinChange = (value) => {
@@ -44,7 +47,7 @@ function MemberPwd() {
             newPin[activePinIndex] = value;
             setPin(newPin);
             setActivePinIndex(activePinIndex + 1);
-        }
+        } 
     };
 
     const submitPin = () => {
@@ -69,13 +72,15 @@ function MemberPwd() {
             })
             .then((response) => {
                 if (response.status === 200) {
-                    navigate('/checkPwd', {
-                        state: { pin: pin, memberNo: memberNo },
-                    }); // CheckPwd 화면으로 이동
+                    // navigate('/checkPwd', {
+                    //     state: { pin: pin, memberNo: memberNo },
+                    // }); // CheckPwd 화면으로 이동
+                    Success(true);
                 }
             })
             .catch((error) => {
                 alert('비밀번호 설정에 실패했습니다. 다시 시도해 주세요.');
+                Success(false);
                 console.error('비밀번호 설정 오류:', error);
             });
     };
@@ -91,8 +96,7 @@ function MemberPwd() {
 
     return (
         <div>
-            <Header />
-            <div className="member-pwd-container">
+            <div className="pwd-container">
                 <h2>스마트페이 결제</h2>
                 <div className="mainText">
                     <div className="passwordText">비밀번호 등록</div>
@@ -130,6 +134,7 @@ function MemberPwd() {
                     onClick={submitPin}
                     text="비밀번호 설정"
                     className="wide-button"
+                    disabled={pin.join('').length < 6} 
                 />
             </div>
         </div>

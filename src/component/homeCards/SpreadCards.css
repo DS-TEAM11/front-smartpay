@@ -9,13 +9,13 @@
     height: 50%;
     margin: auto;
     padding: 0;
-    position: relative;
+    position: absolute;
+    top: 0;
 }
 
 .spread_cards .cardImg {
     position: absolute;
-    transform: translateY(4em);
-    height: 100%;
+    transform: translate(-6rem, 2rem);
     display: flex;
     align-items: center;
     justify-content: center;

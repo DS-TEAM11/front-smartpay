@@ -1,20 +1,22 @@
 .policy-container {
-    /* position: fixed; */
-    bottom: 0;
+    position: absolute;
+    bottom: 10%;
+    right: 1px;
     width: 100vw;
-    height: 40vh;
+    height: 80vh;
     background-color: white;
-    border-radius: 15px 15px 0 0;
+    border-radius: 15px 15px 15px 15px;
     z-index: 10001; /* 모달이 최상단에 오도록 설정 */
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
+    /* flex-direction: column;
+    justify-content: space-between; */
+    padding: 0px;
     box-sizing: border-box;
     transition: height 0.3s ease;
+    align-items: center;
 }
 
-.policy-container.fullscreen {
+.policy-container .fullscreen {
     height: 100vh;
 }
 

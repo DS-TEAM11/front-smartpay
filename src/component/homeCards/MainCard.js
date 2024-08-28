@@ -8,9 +8,12 @@ const MainCard = React.memo(({ card, showBenefit, children }) => {
 
     const handleRotateChange = (rotated, parentDiv, imgElement) => {
         setIsRotated(rotated);
-        if (parentDiv) {
+        if (parentDiv && isRotated) {
             parentDiv.style.height = imgElement.width + 'px';
             parentDiv.style.width = imgElement.height + 'px';
+        } else if (parentDiv && !isRotated) {
+            parentDiv.style.height = imgElement.height + 'px';
+            parentDiv.style.width = imgElement.width + 'px';
         }
     };
 

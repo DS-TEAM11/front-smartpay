@@ -7,7 +7,7 @@ const CardImg = React.memo(
 
         useEffect(() => {
             const imgElement = imgRef.current;
-            const parentDiv = imgElement.closest('.slide-container');
+            const parentDiv = imgElement.parentElement;
 
             const handleImageLoad = () => {
                 const naturalWidth = imgElement.naturalWidth;

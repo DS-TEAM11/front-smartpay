@@ -1,8 +1,9 @@
 .benefit-container {
     position: absolute;
-    width: 70vw;
-    max-height: 20vh;
+    width: -webkit-fill-available;
     height: -webkit-fill-available;
+    max-width: 70vw;
+    max-height: 44vw;
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 8px;
     overflow: hidden;

@@ -18,7 +18,7 @@
     align-items: center;
     position: relative;
 }
-.main-container .card-info-container .card-main-container div {
+.main-container .card-info-container .card-main-container > div {
     padding: 1em 0;
 }
 

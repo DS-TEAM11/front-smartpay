@@ -35,10 +35,10 @@
     }
 }
 
-.slide-container > div {
+.slide-container > .cardImg {
     animation: slideUpDown 1s ease-in-out infinite alternate;
 }
-.slide-container > div > img.rotate {
+.slide-container > .cardImg.rotate {
     animation: slideUpDownRotate 1s ease-in-out infinite alternate;
 }
 
@@ -51,7 +51,6 @@
     max-width: 70vw;
     width: auto;
     max-height: 30vh;
-    object-fit: contain;
 }
 
 .slide-container .cardImg img.rotate {

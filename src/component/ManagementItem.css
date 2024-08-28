@@ -14,6 +14,9 @@
 }
 
 .management-items {
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
     text-align: center; /* 자식 요소들이 가운데 정렬되도록 설정 */
 }
 

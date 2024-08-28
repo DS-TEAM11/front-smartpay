@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Button from './Button';
 import QrItem from './useQR/QrItem';
+import './Header.css';
 const Header = () => {
     const [showQr, setShowQr] = useState(false); // 상태를 추가하여 QR 코드를 표시할지 여부를 관리합니다.
 
@@ -30,7 +31,6 @@ const Header = () => {
                             />
                         </Link>
                         {/* <!-- Logo END --> */}
-
                         {/* <!-- Main navbar START --> */}
                         <div
                             className="navbar-collapse collapse "
@@ -64,16 +64,16 @@ const Header = () => {
                             </ul>
                         </div>
                         {/* <!-- Main navbar END --> */}
-
                         {/* <!-- Buttons --> */}
                         <ul className="nav align-items-center dropdown-hover ms-sm-2">
                             <div className="me-3">
                                 <Button
                                     className="qr-create-btn"
-                                    text={'결제 QR 생성'}
+                                    text={'AI QR 코드 생성'}
                                     onClick={handleClick}
                                 />
                             </div>
+
                             {/* <!-- Responsive navbar toggler --> */}
                             <li className="nav-item">
                                 <button

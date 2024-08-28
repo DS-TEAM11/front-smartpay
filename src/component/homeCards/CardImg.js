@@ -1,52 +1,59 @@
 import React, { useEffect, useRef } from 'react';
 import './CardImg.css';
 
-const CardImg = React.memo(({ src, alt, direction, onClick, children }) => {
-    const imgRef = useRef(null);
-    useEffect(() => {
-        const imgElement = imgRef.current;
+const CardImg = React.memo(
+    ({ src, alt, direction, type, onClick, children, onRotateChange }) => {
+        const imgRef = useRef(null);
 
-        const handleImageLoad = () => {
-            const naturalWidth = imgElement.naturalWidth;
-            const naturalHeight = imgElement.naturalHeight;
-            imgElement.classList.remove('rotate');
-            if (direction === 'vertical') {
-                // direction이 vertical로 설정된 경우
-                if (naturalWidth > naturalHeight) {
-                    // 가로가 더 길면 90도 회전
-                    // imgElement.style.transform += 'rotate(90deg)';
-                    imgElement.classList.add('rotate');
-                } else {
-                    // 세로가 더 길거나 같으면 그대로 표시
-                    // imgElement.style.transform = 'none';
+        useEffect(() => {
+            const imgElement = imgRef.current;
+            const parentDiv = imgElement.closest('.slide-container');
+
+            const handleImageLoad = () => {
+                const naturalWidth = imgElement.naturalWidth;
+                const naturalHeight = imgElement.naturalHeight;
+                imgElement.classList.remove('rotate');
+                let rotated = false;
+
+                if (direction === 'vertical') {
+                    if (naturalWidth > naturalHeight) {
+                        imgElement.classList.add('rotate');
+                        rotated = true;
+                    }
+                } else if (direction === 'horizontal') {
+                    if (naturalWidth < naturalHeight) {
+                        imgElement.classList.add('rotate');
+                        rotated = true;
+                    }
                 }
-            } else if (direction === 'horizontal') {
-                // direction이 horizontal로 설정된 경우
-                if (naturalWidth < naturalHeight) {
-                    // 세로가 더 길면 90도 회전
-                    // imgElement.style.transform += 'rotate(90deg)';
-                    imgElement.classList.add('rotate');
-                } else {
-                    // 가로가 더 길거나 같으면 그대로 표시
-                    // imgElement.style.transform = 'none';
+
+                if (onRotateChange) {
+                    onRotateChange(rotated, parentDiv, imgElement);
                 }
+            };
+
+            if (imgElement.complete) {
+                handleImageLoad();
+            } else {
+                imgElement.onload = handleImageLoad;
             }
-        };
+        }, [direction, onRotateChange]);
 
-        // 이미지가 이미 로드된 상태인지 확인
-        if (imgElement.complete) {
-            handleImageLoad();
-        } else {
-            imgElement.onload = handleImageLoad;
+        if (type === 'li') {
+            return (
+                <li className="cardImg" onClick={onClick}>
+                    {children}
+                    <img ref={imgRef} src={src} alt={alt} />
+                </li>
+            );
         }
-    }, [direction]); // direction이 변경될 때마다 useEffect 실행
-
-    return (
-        <div className="cardImg" onClick={onClick}>
-            {children}
-            <img ref={imgRef} src={src} alt={alt} />
-        </div>
-    );
-});
+        return (
+            <div className="cardImg" onClick={onClick}>
+                {children}
+                <img ref={imgRef} src={src} alt={alt} />
+            </div>
+        );
+    },
+);
 
 export default CardImg;

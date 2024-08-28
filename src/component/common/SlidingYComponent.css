@@ -35,21 +35,16 @@
     }
 }
 
-.slide-container > * {
+.slide-container > div {
     animation: slideUpDown 1s ease-in-out infinite alternate;
 }
-.slide-container > img.rotate {
+.slide-container > div > img.rotate {
     animation: slideUpDownRotate 1s ease-in-out infinite alternate;
 }
 
 .slide-container .cardImg {
-    filter: drop-shadow(2px 4px 6px black);
-    margin-left: 0.2rem;
     width: 100%;
     height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .slide-container .cardImg img {

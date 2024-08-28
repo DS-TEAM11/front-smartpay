@@ -8,7 +8,6 @@ const CardImg = React.memo(
         useEffect(() => {
             const imgElement = imgRef.current;
             const parentDiv = imgElement.parentElement;
-
             const handleImageLoad = () => {
                 const naturalWidth = imgElement.naturalWidth;
                 const naturalHeight = imgElement.naturalHeight;
@@ -27,16 +26,27 @@ const CardImg = React.memo(
                     }
                 }
 
-                if (onRotateChange) {
-                    onRotateChange(rotated, parentDiv, imgElement);
+                if (direction && parentDiv && imgElement.width) {
+                    if (rotated && !parentDiv.style.width) {
+                        parentDiv.style.height = imgElement.width + 'px';
+                        parentDiv.style.width = imgElement.height + 'px';
+                    } else if (!rotated && !parentDiv.style.height) {
+                        parentDiv.style.height = imgElement.height + 'px';
+                        parentDiv.style.width = imgElement.width + 'px';
+                    }
                 }
             };
 
+            imgElement.onload = handleImageLoad;
+
+            // 만약 이미지가 이미 로드된 상태라면, handleImageLoad를 즉시 호출
             if (imgElement.complete) {
                 handleImageLoad();
-            } else {
-                imgElement.onload = handleImageLoad;
             }
+
+            return () => {
+                imgElement.onload = null; // 메모리 누수 방지
+            };
         }, [direction, onRotateChange]);
 
         if (type === 'li') {

@@ -17,6 +17,32 @@ const Home = () => {
     const memberNo = useMemberNo();
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
     const navigate = useNavigate(); // useNavigate 훅 사용
+    const [totalSavePrice, setTotalSavePrice] = useState(0); //이번달 총 적립금액
+    const [totalDiscountPrice, setTotalDiscountPrice] = useState(0); //이번달 총 할인금액
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (memberNo) {
+                try {
+                    const response = await axios.get(
+                        'http://localhost:8091/member/getBenefit',
+                        {
+                            params: { memberNo: memberNo },
+                        },
+                    );
+
+                    setTotalSavePrice(response.data.totalSavePrice);
+                    setTotalDiscountPrice(response.data.totalDiscountPrice);
+                } catch (error) {
+                    console.error('Failed to fetch benefit data', error);
+                } finally {
+                    setIsLoading(false); // 데이터 로딩이 완료되면 로딩 상태를 false로 설정
+                }
+            }
+        };
+
+        fetchData();
+    }, [memberNo]);
 
     return (
         <>
@@ -27,11 +53,11 @@ const Home = () => {
                     benefits={[
                         {
                             imageSrc: image1,
-                            description: '이번달 30,100원 적립',
+                            description: `이번달 ${totalSavePrice.toLocaleString()}원 적립`,
                         },
                         {
                             imageSrc: image2,
-                            description: '이번달 7,800원 할인',
+                            description: `이번달 ${totalDiscountPrice.toLocaleString()}원 할인`,
                         },
                         {
                             imageSrc: image3,

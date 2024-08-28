@@ -100,7 +100,7 @@ const Pay = () => {
                 setSaveType(0);
             } else if (recommendData.benefitType === '할인') {
                 setSaveType(1);
-            } else if (recommendData.benefitType === '캐시백'){
+            } else if (recommendData.benefitType === '캐시백') {
                 setSaveType(2);
             }
         };

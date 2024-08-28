@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './RankItem.css';
 import CardImg from './homeCards/CardImg';
 
 const RankItem = ({ rankItems }) => {
+    //회전에 따라 저장
+    const [isRotated, setIsRotated] = useState(false);
+    const handleRotateChange = (rotated, parentDiv, imgElement) => {
+        setIsRotated(rotated);
+    };
+    useEffect(() => {}, [rankItems]);
     return (
         <>
             {rankItems.map(
@@ -21,9 +27,11 @@ const RankItem = ({ rankItems }) => {
                                 </div>
                                 <div className="col-3 d-flex justify-content-center pb-2 ">
                                     <CardImg
+                                        // className="medium"
                                         src={item[4]}
                                         alt={item[2]}
                                         direction="horizontal"
+                                        onRotateChange={handleRotateChange}
                                     />
                                 </div>
                                 <div className="col-8 pt-2">

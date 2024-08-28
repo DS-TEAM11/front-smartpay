@@ -2,12 +2,24 @@ import React, { useEffect, useRef } from 'react';
 import './CardImg.css';
 
 const CardImg = React.memo(
-    ({ src, alt, direction, type, onClick, children, onRotateChange }) => {
+    ({
+        className,
+        src,
+        alt,
+        direction,
+        type,
+        onClick,
+        children,
+        onRotateChange,
+    }) => {
         const imgRef = useRef(null);
 
         useEffect(() => {
             const imgElement = imgRef.current;
             const parentDiv = imgElement.parentElement;
+            if (className) {
+                parentDiv.classList.add(className);
+            }
             const handleImageLoad = () => {
                 const naturalWidth = imgElement.naturalWidth;
                 const naturalHeight = imgElement.naturalHeight;

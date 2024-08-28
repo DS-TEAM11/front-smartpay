@@ -42,14 +42,14 @@ const SlidingYComponent = ({ setShowQr, onClick, children }) => {
     };
 
     const handleTouchStart = (event) => {
-        event.preventDefault();
+        // event.preventDefault();
         setStartY(event.touches[0].clientY);
         setIsDragging(true);
     };
 
     const handleTouchMove = (event) => {
         if (!isDragging) return;
-        event.preventDefault();
+        // event.preventDefault();
         // 드래그 중에 수행할 작업이 있다면 여기에 추가
     };
 

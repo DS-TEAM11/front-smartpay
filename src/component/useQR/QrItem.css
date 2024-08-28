@@ -7,9 +7,10 @@
 }
 
 .qrItem .white-box {
-    position: absolute;
+    position: fixed;
     /* top: 40vh; */
     left: 0;
+    bottom: 0;
     box-sizing: border-box;
     margin: 0;
     width: 100vw;

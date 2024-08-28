@@ -12,10 +12,6 @@ import PwdItem from '../component/PwdItem';
 import MemberPwd from './MemberPwd';
 
 
-
-
-
-
 const formatCardNo = (value) => {
     return value
         .replace(/\s?/g, '') // 모든 공백을 제거

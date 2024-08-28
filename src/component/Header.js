@@ -1,16 +1,18 @@
 import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Button from './Button';
 import QrItem from './useQR/QrItem';
+import './Header.css';
 const Header = () => {
     const [showQr, setShowQr] = useState(false); // 상태를 추가하여 QR 코드를 표시할지 여부를 관리합니다.
-
+    const location = useLocation();
     const handleClick = () => {
         setShowQr(true);
     };
     const removeQrItem = () => {
         setShowQr(false);
     };
+
     return (
         <>
             <div className="qrshow">
@@ -21,7 +23,7 @@ const Header = () => {
                 <nav className="navbar navbar-expand-xl">
                     <div className="container">
                         {/* <!-- Logo START --> */}
-                        <Link className="navbar-brand col-5 py-0" to="/home">
+                        <Link className="navbar-brand py-0" to="/home">
                             <img
                                 className="light-mode-item navbar-brand-item"
                                 src="/assets/images/splogo2.png"
@@ -30,7 +32,6 @@ const Header = () => {
                             />
                         </Link>
                         {/* <!-- Logo END --> */}
-
                         {/* <!-- Main navbar START --> */}
                         <div
                             className="navbar-collapse collapse "
@@ -64,16 +65,19 @@ const Header = () => {
                             </ul>
                         </div>
                         {/* <!-- Main navbar END --> */}
-
                         {/* <!-- Buttons --> */}
                         <ul className="nav align-items-center dropdown-hover ms-sm-2">
                             <div className="me-3">
-                                <Button
-                                    className="qr-create-btn"
-                                    text={'결제 QR 생성'}
-                                    onClick={handleClick}
-                                />
+                                {location.pathname.toLowerCase() ===
+                                    '/home' && (
+                                    <Button
+                                        className="qr-create-btn"
+                                        text={'AI QR 코드 생성'}
+                                        onClick={handleClick}
+                                    />
+                                )}
                             </div>
+
                             {/* <!-- Responsive navbar toggler --> */}
                             <li className="nav-item">
                                 <button

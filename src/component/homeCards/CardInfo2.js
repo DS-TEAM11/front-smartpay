@@ -9,7 +9,8 @@ import SpreadCards from './SpreadCards';
 import Loading from '../Loading';
 import QrItem from '../useQR/QrItem'; // QrItem 컴포넌트 import
 import BenefitItem from './BenefitItem';
-import SlidingYComponent from '../common/SlidingYComponent';
+import SlidingYComponent from './SlidingYComponent';
+import CustomToggle from '../CustomToggle';
 import {
     useShowQr,
     useSelectedCard,
@@ -138,13 +139,14 @@ const CardInfo = () => {
                     onRemove={removerCardPicker}
                     cards={fetchedCards}
                     onCardSelect={(card) => {
-                        setSelectedCard(card); 
-                        setCardPicker(false);   
+                        setSelectedCard(card);
+                        setCardPicker(false);
                     }}
                 />
             )}
 
             <div className="card-info-container border-bottom">
+                <CustomToggle />
                 <div className="card-main-container border-bottom">
                     <SlidingYComponent setShowQr={handleDrag}>
                         <MainCard card={selectedCard}></MainCard>

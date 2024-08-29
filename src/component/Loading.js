@@ -24,9 +24,9 @@ function Loading({ text, info }) {
                 {info === 'pay' ? (
                     <div className="buttons d-flex w-100 justify-content-between mt-8">
                         {/* 각 텍스트에 기능 달아주기 */}
-                        <div className="text-light fs-6 fw-bolder text-center">
+                        {/* <div className="text-light fs-6 fw-bolder text-center">
                             정보 입력 완료
-                        </div>
+                        </div> */}
                         <div className="text-light fs-6 fw-bolder text-center">
                             취소하기
                         </div>

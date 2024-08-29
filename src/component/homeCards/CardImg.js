@@ -1,52 +1,81 @@
 import React, { useEffect, useRef } from 'react';
 import './CardImg.css';
 
-const CardImg = React.memo(({ src, alt, direction, onClick, children }) => {
-    const imgRef = useRef(null);
-    useEffect(() => {
-        const imgElement = imgRef.current;
+const CardImg = React.memo(
+    ({
+        className,
+        src,
+        alt,
+        direction,
+        type,
+        onClick,
+        children,
+        onRotateChange,
+    }) => {
+        const imgRef = useRef(null);
 
-        const handleImageLoad = () => {
-            const naturalWidth = imgElement.naturalWidth;
-            const naturalHeight = imgElement.naturalHeight;
-            imgElement.classList.remove('rotate');
-            if (direction === 'vertical') {
-                // direction이 vertical로 설정된 경우
-                if (naturalWidth > naturalHeight) {
-                    // 가로가 더 길면 90도 회전
-                    // imgElement.style.transform += 'rotate(90deg)';
-                    imgElement.classList.add('rotate');
-                } else {
-                    // 세로가 더 길거나 같으면 그대로 표시
-                    // imgElement.style.transform = 'none';
-                }
-            } else if (direction === 'horizontal') {
-                // direction이 horizontal로 설정된 경우
-                if (naturalWidth < naturalHeight) {
-                    // 세로가 더 길면 90도 회전
-                    // imgElement.style.transform += 'rotate(90deg)';
-                    imgElement.classList.add('rotate');
-                } else {
-                    // 가로가 더 길거나 같으면 그대로 표시
-                    // imgElement.style.transform = 'none';
-                }
+        useEffect(() => {
+            const imgElement = imgRef.current;
+            const parentDiv = imgElement.parentElement;
+            if (className) {
+                parentDiv.classList.add(className);
             }
-        };
+            const handleImageLoad = () => {
+                const naturalWidth = imgElement.naturalWidth;
+                const naturalHeight = imgElement.naturalHeight;
+                imgElement.classList.remove('rotate');
+                let rotated = false;
 
-        // 이미지가 이미 로드된 상태인지 확인
-        if (imgElement.complete) {
-            handleImageLoad();
-        } else {
+                if (direction === 'vertical') {
+                    if (naturalWidth > naturalHeight) {
+                        imgElement.classList.add('rotate');
+                        rotated = true;
+                    }
+                } else if (direction === 'horizontal') {
+                    if (naturalWidth < naturalHeight) {
+                        imgElement.classList.add('rotate');
+                        rotated = true;
+                    }
+                }
+
+                if (direction && parentDiv && imgElement.width) {
+                    if (rotated && !parentDiv.style.width) {
+                        parentDiv.style.height = imgElement.width + 'px';
+                        parentDiv.style.width = imgElement.height + 'px';
+                    } else if (!rotated && !parentDiv.style.height) {
+                        parentDiv.style.height = imgElement.height + 'px';
+                        parentDiv.style.width = imgElement.width + 'px';
+                    }
+                }
+            };
+
             imgElement.onload = handleImageLoad;
-        }
-    }, [direction]); // direction이 변경될 때마다 useEffect 실행
 
-    return (
-        <div className="cardImg" onClick={onClick}>
-            {children}
-            <img ref={imgRef} src={src} alt={alt} />
-        </div>
-    );
-});
+            // 만약 이미지가 이미 로드된 상태라면, handleImageLoad를 즉시 호출
+            if (imgElement.complete) {
+                handleImageLoad();
+            }
+
+            return () => {
+                imgElement.onload = null; // 메모리 누수 방지
+            };
+        }, [direction, onRotateChange]);
+
+        if (type === 'li') {
+            return (
+                <li className="cardImg" onClick={onClick}>
+                    {children}
+                    <img ref={imgRef} src={src} alt={alt} />
+                </li>
+            );
+        }
+        return (
+            <div className="cardImg" onClick={onClick}>
+                {children}
+                <img ref={imgRef} src={src} alt={alt} />
+            </div>
+        );
+    },
+);
 
 export default CardImg;

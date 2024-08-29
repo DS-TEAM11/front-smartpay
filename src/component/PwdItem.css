@@ -1,4 +1,4 @@
-.pwd-container {
+.pwd-pwd-container{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,14 +12,13 @@
     top: 50%;   
     left: 50%; 
     transform: translate(-50%, -50%); 
-    border-radius: 2%;
+    border-radius: 20px;
 }
 
-.pwd-container h2 {
-    font-size: 30px; 
+.pwd-pwd-container h2 {
+    font-size: 30px; /* "스마트페이 결제" 텍스트 작게 */
     font-weight: bold;
     color: #4f46e5;
-    margin-bottom: 5%;
 }
 
 .pin-circles {
@@ -29,8 +28,8 @@
 }
 
 .circle {
-    width: 15px; /* 원 크기 더 크게 */
-    height: 15px; /* 원 크기 더 크게 */
+    width: 20px; /* 원 크기 더 크게 */
+    height: 20px; /* 원 크기 더 크게 */
     border-radius: 50%;
     background-color: #e0e0e0;
     margin: 0 10px; /* 간격도 더 넓게 */
@@ -42,19 +41,19 @@
 
 .pin-keypad {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /*이게 뭐임??*/
-    gap: 0; /* 키패드 간격 조정 */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px; /* 키패드 간격 조정 */
     margin-bottom: 20px;
-    width: 65%;
+    width: 80%;
 }
 
-.pin-button {
+.pwd-pwd-container .pin-button {
     width: 100%;
-    padding: 10% 0; /*버튼 크기 더 크게*/
+    padding: 20px 0; /* 버튼 크기 더 크게 */
     font-size: 22px; /* 버튼 글씨 크기 더 크게 */
     background-color: #ffffff;
-    border: none;
-    border-radius: 5px;
+    /* border: 1px solid #d0d0d0; */
+    /* border-radius: 5px; */
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -77,9 +76,8 @@
 .wide-button {
     width: 80%; /* 버튼 너비를 80%로 설정 */
 }
-.passwordText {
-    font-size: 20px;
+.pwd-pwd-container .passwordText {
+    font-size: 25px;
     font-weight: bold;
     color: #000000;
-    margin-bottom: 20px;
 }

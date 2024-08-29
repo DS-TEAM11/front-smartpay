@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+// import '../component/PwdItem.css';
 import '../pages/MemberPwd.css';
 import Button from './Button';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-function PwdItem() {
+function PwdItem({ Success }) {
     const [checkPin, setCheckPin] = useState(['', '', '', '', '', '']);
     const [activeCheckPinIndex, setActiveCheckPinIndex] = useState(0);
     const [shuffledNumbers, setShuffledNumbers] = useState([]);
@@ -64,13 +65,13 @@ function PwdItem() {
     const verifyPin = () => {
         const checkPinCode = checkPin.join('');
 
-        // pin이 배열인지 확인하고 비교
-        if (!Array.isArray(pin) || pin.join('') !== checkPinCode) {
-            alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요.');
-            setCheckPin(['', '', '', '', '', '']);
-            setActiveCheckPinIndex(0);
-            return;
-        }
+        // // pin이 배열인지 확인하고 비교
+        // if (!Array.isArray(pin) || pin.join('') !== checkPinCode) {
+        //     alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요.');
+        //     setCheckPin(['', '', '', '', '', '']);
+        //     setActiveCheckPinIndex(0);
+        //     return;
+        // }
 
         const payload = {
             memberNo: memberNo,
@@ -87,24 +88,26 @@ function PwdItem() {
             })
             .then((response) => {
                 if (response.status === 200) {
-                    console.log('Data sent:', payload);
-                    alert('성공했어요');
+                    // console.log('Data sent:', payload);
                 }
             })
             .catch((error) => {
                 if (error.response && error.response.status === 404) {
                     alert('비밀번호가 일치하지 않습니다. 다시 시도해 주세요.');
+                    Success(false);
                 } else {
                     alert('비밀번호 검증에 실패했습니다. 다시 시도해 주세요.');
+                    Success(false);
                 }
                 console.error('비밀번호 검증 오류:', error);
+                Success(false);
                 setCheckPin(['', '', '', '', '', '']);
                 setActiveCheckPinIndex(0);
             });
     };
 
     return (
-        <div className="member-pwd-container">
+        <div className="pwd-container">
             <h2>스마트페이 결제</h2>
             <div className="passwordText">비밀번호 확인</div>
             <div className="pin-circles">

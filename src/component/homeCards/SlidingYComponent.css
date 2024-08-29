@@ -35,21 +35,27 @@
     }
 }
 
-.slide-container > * {
+.slide-container > .cardImg {
     animation: slideUpDown 1s ease-in-out infinite alternate;
 }
-.slide-container > img.rotate {
+.slide-container > .cardImg.rotate {
     animation: slideUpDownRotate 1s ease-in-out infinite alternate;
 }
+
 .slide-container .cardImg {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.slide-container .cardImg > img {
-    max-width: 70vw;
     height: auto;
+}
+
+.slide-container .cardImg img {
+    max-width: 70vw;
+    width: auto;
     max-height: 30vh;
-    object-fit: contain;
+}
+
+.slide-container .cardImg img.rotate {
+    transform-origin: center center;
+    max-height: 70vw;
+    height: auto;
+    max-width: 30vh;
 }

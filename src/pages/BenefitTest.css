@@ -1,0 +1,78 @@
+.benefittest-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+.benefittest-container .card-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.benefittest-container .card-item {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 100%; /* 카드 아이템이 화면의 가로를 꽉 채우도록 설정 */
+    max-width: 800px; /* 최대 너비를 제한하여 너무 커지지 않도록 설정 */
+    text-align: center;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.benefittest-container .card-item:hover {
+    transform: translateY(-5px);
+}
+
+.benefittest-container .card-item img {
+    width: 100px;
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.benefittest-container .card-item h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.benefittest-container .card-item ul {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    text-align: left;
+}
+
+.benefittest-container .card-item ul li {
+    background-color: #f0f0f0;
+    margin-bottom: 5px;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+.benefittest-container .card-item .no-benefit {
+    background-color: #ffdddd;
+    padding: 10px;
+    border-radius: 5px;
+    color: #d9534f;
+    font-weight: bold;
+}
+
+.benefittest-container .totals {
+    margin-top: 30px;
+    text-align: left;
+}
+
+.benefittest-container .totals h3 {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 10px;
+}

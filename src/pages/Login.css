@@ -1,12 +1,10 @@
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
-
 .login-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 100vh;
+    padding: 50px;
+    margin: auto;
     text-align: center;
-    font-family: 'Pretendard Variable';
-    padding-top: 0%;
 }
 
 .login-container .logo {

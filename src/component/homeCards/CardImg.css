@@ -1,11 +1,47 @@
-.rotate {
-    transform: rotate(270deg);
-}
 .cardImg {
     filter: drop-shadow(2px 4px 6px black);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .cardImg img {
     width: 100%;
-    height: 100%;
+    height: auto;
+    object-fit: contain;
+    max-width: -webkit-fill-available;
+    max-height: -webkit-fill-available;
+}
+
+.cardImg img.rotate {
+    transform-origin: center center;
+    transform: rotate(90deg);
+    width: 100%;
+    height: auto;
+    max-width: -webkit-fill-available;
+    max-height: -webkit-fill-available;
+}
+
+.cardImg.small img,
+.cardImg.small .benefit-container {
+    width: clamp(40px, 15vw, 4rem);
+    height: clamp(40px, 15vw, 4rem);
+    max-width: clamp(40px, 15vw, 4rem);
+    max-height: clamp(40px, 15vw, 4rem);
+}
+
+.cardImg.medium img,
+.cardImg.medium .benefit-container {
+    width: clamp(120px, 30vw, 10rem);
+    height: clamp(120px, 30vw, 10rem);
+    max-width: clamp(120px, 30vw, 10rem);
+    max-height: clamp(120px, 30vw, 10rem);
+}
+
+.cardImg.large img.rotate,
+.cardImg.large .benefit-container {
+    width: clamp(200px, 60vw, 350px);
+    height: clamp(200px, 60vw, 350px);
+    max-width: clamp(200px, 60vw, 350px);
+    max-height: clamp(200px, 60vw, 350px);
 }

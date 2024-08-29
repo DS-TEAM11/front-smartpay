@@ -1,24 +1,32 @@
 import CardImg from './homeCards/CardImg';
 import './Order.css';
-import './homeCards/CardImg.css'
+import './homeCards/CardImg.css';
 import { useState, useEffect, useRef } from 'react';
 
 const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
     const imgRef = useRef(null);
     const containerRef = useRef(null);
-
+    //회전에 따라 저장
+    const [isRotated, setIsRotated] = useState(false);
+    const handleRotateChange = (rotated, parentDiv, imgElement) => {
+        console.log(imgElement);
+        console.log(parentDiv);
+        setIsRotated(rotated);
+    };
     const [cardData, setCardData] = useState({
-        card_name: "",
-        card_nick: "",
-        card_code: "",
-        card_company: "",
-        lastNums: "",
-        card_img: "",
+        card_name: '',
+        card_nick: '',
+        card_code: '',
+        card_company: '',
+        lastNums: '',
+        card_img: '',
     });
 
     useEffect(() => {
         // getIsAi가 true이면 aiCard 정보 사용, false이면 selectedCard 정보 사용
-        const cardInfo = getIsAi ? getCardInfo.aiCard : getCardInfo.selectedCard;
+        const cardInfo = getIsAi
+            ? getCardInfo.aiCard
+            : getCardInfo.selectedCard;
 
         if (cardInfo) {
             setCardData(cardInfo);
@@ -45,19 +53,25 @@ const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
     let SecondMessage;
     let ThirdMessage;
 
+    const money = parseInt(getPurchase.price);
+    const saveMoney = parseInt(getBenefit.maximumBenefits);
+
     if (getIsAi) {
         FirstMessage = <>AI 추천 카드로</>;
         SecondMessage = (
             <>
                 <span className="blue-text"> {getPurchase.franchiseName}</span>
                 에서
-                <span className="blue-text"> {getPurchase.price}원</span>
+                <span className="blue-text"> {money.toLocaleString()}원</span>
             </>
         );
         ThirdMessage = (
             <>
                 결제하고
-                <span className="blue-text"> {getBenefit.maximumBenefits}원</span>
+                <span className="blue-text">
+                    {' '}
+                    {saveMoney.toLocaleString()}원
+                </span>
                 <span className="blue-text"> {getBenefit.benefitType} </span>
                 받을게요.
             </>
@@ -68,40 +82,46 @@ const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
             <>
                 <span className="blue-text"> {getPurchase.franchiseName}</span>
                 에서
-                <span className="blue-text"> {getPurchase.price}원</span>
+                <span className="blue-text"> {money.toLocaleString()}원</span>
             </>
         );
         ThirdMessage = <>결제할게요.</>;
     }
 
     return (
-            <div className="container pt-4 pt-sm-5">
-                <div className="Order">
-                    <h4>{FirstMessage}</h4>
-                    <h4>{SecondMessage}</h4>
-                    <h4>{ThirdMessage}</h4>
-                    <div className="d-flex flex-column align-items-center mt-4">
-                        <div ref={containerRef} className='card-info-container1'>
-                            {/* <img
-                                ref={imgRef}
-                                src={cardData.card_img}
-                                alt="CardImg"
-                                className="img-size"
-                            /> */}
-                            <CardImg src={cardData.card_img} alt={cardData.card_nick} direction="vertical" ></CardImg>
-                        </div>
-                        <div className="card-info-container2">
-                            <span className='col-6 text-truncate'>{cardData.card_nick}</span>
-                            <span className='col-6 text-end'>
-                                {cardData.card_company} ({cardData.lastNums ? cardData.lastNums.slice(-4) : 'error'})
-                            </span>
-                        </div>
+        <div className="container pt-4 pt-sm-5">
+            <div className="Order">
+                <h4>{FirstMessage}</h4>
+                <h4>{SecondMessage}</h4>
+                <h4>{ThirdMessage}</h4>
+                <div className="d-flex flex-column align-items-center mt-4">
+                    <div ref={containerRef} className="card-info-container1">
+                        <CardImg
+                            src={cardData.card_img}
+                            alt={cardData.card_nick}
+                            direction="vertical"
+                            onRotateChange={handleRotateChange}
+                        ></CardImg>
                     </div>
-                    <h4 className="text-center mt-3">{cardData.card_name}</h4>
+                    <div className="card-info-container2">
+                        <span className="col-6 text-truncate">
+                            {cardData.card_nick
+                                ? cardData.card_nick
+                                : cardData.card_name}
+                        </span>
+                        <span className="col-6 text-end">
+                            {cardData.card_company} (
+                            {cardData.lastNums
+                                ? cardData.lastNums.slice(-4)
+                                : 'error'}
+                            )
+                        </span>
+                    </div>
                 </div>
+                <h4 className="text-center mt-3">{cardData.card_name}</h4>
             </div>
+        </div>
     );
 };
-
 
 export default Order;

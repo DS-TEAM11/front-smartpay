@@ -1,0 +1,86 @@
+.custom-toggle {
+    font-size: 12px;
+    position: relative;
+    height: 2em;
+    width: 70%;
+    margin: 1.5em auto;
+    padding: 1em;
+    background: #d9d9d9;
+    border-radius: 2em;
+    box-sizing: border-box;
+    max-width: 400px;
+}
+
+.custom-toggle * {
+    margin: 0;
+    padding: 0;
+    border-radius: 2em;
+    box-sizing: border-box;
+}
+
+.custom-toggle .switch-button {
+    width: 100%;
+    height: 2.5em;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate3D(-50%, -50%, 0);
+    will-change: transform;
+    z-index: 197 !important;
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+
+.custom-toggle .switch-button-case {
+    display: inline-block;
+    background: none;
+    width: 49%;
+    height: 100%;
+    color: #4f46e5;
+    position: relative;
+    border: none;
+    transition: 0.3s ease all;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.custom-toggle .switch-button-case:hover {
+    color: grey;
+    cursor: pointer;
+}
+
+.custom-toggle .switch-button-case:focus {
+    outline: none;
+}
+
+.custom-toggle .switch-button .active {
+    color: #ffffff;
+    background-color: #4f46e5;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    z-index: -1;
+    transition: 0.3s ease-out all;
+}
+
+.custom-toggle .switch-button .active-case {
+    color: #ffffff;
+}
+
+.custom-toggle .signature {
+    position: fixed;
+    font-family: sans-serif;
+    font-weight: 100;
+    bottom: 10px;
+    left: 0;
+    letter-spacing: 4px;
+    font-size: 10px;
+    width: 100vw;
+    text-align: center;
+    color: white;
+    text-transform: uppercase;
+    text-decoration: none;
+}

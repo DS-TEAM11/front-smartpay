@@ -25,7 +25,6 @@ const Signup = () => {
     const [isVerified, setIsVerified] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [isSmsSent, setIsSmsSent] = useState(false);
-    //const [isModalOpen, setIsModalOpen] = useState(false);
     const [isPolicyVisible, setIsPolicyVisible] = useState(false);
     const navigate = useNavigate();
 
@@ -56,7 +55,8 @@ const Signup = () => {
         setPhone(onlyNums);
     };
 
-    const handleSendSms = (e) => {
+    // 현재 방식
+    const handleSendSmsCurrent = (e) => {
         e.preventDefault();
         if (validatePhone(phone)) {
             axios
@@ -75,7 +75,29 @@ const Signup = () => {
         }
     };
 
-    const handleVerifyCode = (e) => {
+    // 새로운 API 방식
+    const handleSendSmsApi = (e) => {
+        e.preventDefault();
+        if (validatePhone(phone)) {
+            axios
+                .post('http://localhost:8091/api/sms/send', {
+                    phoneNumber: phone,
+                })
+                .then((response) => {
+                    setIsSmsSent(true);
+                    alert('인증번호가 발송되었습니다.');
+                })
+                .catch((error) => {
+                    console.error('인증번호 생성 실패:', error);
+                    alert('인증번호 생성에 실패했습니다.');
+                });
+        } else {
+            alert('전화번호를 올바르게 입력해주세요.');
+        }
+    };
+
+    // 현재 방식
+    const handleVerifyCodeCurrent = (e) => {
         e.preventDefault();
         const trimmedInputCode = inputCode.trim(); // 입력된 값의 공백 제거
         const verificationCodeString = verificationCode.toString().trim(); // verificationCode를 문자열로 변환하고 공백 제거
@@ -85,6 +107,28 @@ const Signup = () => {
             alert('인증이 완료되었습니다.');
         } else {
             alert('인증번호가 올바르지 않습니다.');
+        }
+    };
+
+    // 새로운 API 방식
+    const handleVerifyCodeApi = (e) => {
+        e.preventDefault();
+        if (validatePhone(phone)) {
+            axios
+                .post('http://localhost:8091/api/sms/verify', {
+                    phoneNumber: phone,
+                    code: inputCode,
+                })
+                .then((response) => {
+                    setIsVerified(true);
+                    alert('인증이 완료되었습니다.');
+                })
+                .catch((error) => {
+                    console.error('인증 실패:', error);
+                    alert('인증에 실패했습니다.');
+                });
+        } else {
+            alert('전화번호를 올바르게 입력해주세요.');
         }
     };
 
@@ -259,7 +303,13 @@ const Signup = () => {
                         ) : (
                             <Button
                                 text="인증번호 발송"
-                                onClick={handleSendSms}
+                                onClick={
+                                    // 현재 방식 사용
+                                    // handleSendSmsCurrent
+
+                                    // 새로운 API 방식 사용
+                                    handleSendSmsApi
+                                }
                                 disabled={isSmsSent}
                             />
                         )}
@@ -282,7 +332,13 @@ const Signup = () => {
                         ) : (
                             <Button
                                 text="인증번호 확인"
-                                onClick={handleVerifyCode}
+                                onClick={
+                                    // 현재 방식 사용
+                                    // handleVerifyCodeCurrent
+
+                                    // 새로운 API 방식 사용
+                                    handleVerifyCodeApi
+                                }
                                 disabled={isVerified}
                             />
                         )}

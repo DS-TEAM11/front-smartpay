@@ -13,19 +13,20 @@ const SlidingYComponent = ({ setShowQr, onClick, children }) => {
         // console.log('카드 혜택 보여주기', selectedCard);
     };
     const handleMouseDown = (event) => {
+        event.preventDefault();
         setStartY(event.clientY);
         setIsDragging(true);
     };
 
     const handleMouseMove = (event) => {
         if (!isDragging) return;
-
+        event.preventDefault();
         // 드래그 중에 수행할 작업이 있다면 여기에 추가
     };
 
     const handleMouseUp = (event) => {
         if (!isDragging) return;
-
+        event.preventDefault();
         const endY = event.clientY;
         const deltaY = endY - startY;
 
@@ -41,19 +42,20 @@ const SlidingYComponent = ({ setShowQr, onClick, children }) => {
     };
 
     const handleTouchStart = (event) => {
+        // event.preventDefault();
         setStartY(event.touches[0].clientY);
         setIsDragging(true);
     };
 
     const handleTouchMove = (event) => {
         if (!isDragging) return;
-
+        // event.preventDefault();
         // 드래그 중에 수행할 작업이 있다면 여기에 추가
     };
 
     const handleTouchEnd = (event) => {
         if (!isDragging) return;
-
+        event.preventDefault();
         const endY = event.changedTouches[0].clientY;
         const deltaY = endY - startY;
         if (deltaY < -50) {
@@ -85,6 +87,7 @@ const SlidingYComponent = ({ setShowQr, onClick, children }) => {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             onTouchCancel={resetDragging} // 터치가 취소될 때 드래그 상태 리셋
+            style={{ touchAction: 'none' }} // 터치 동작 방지
         >
             <img className="up-arrow" src={upArrow} />
             {React.Children.map(children, (child) =>

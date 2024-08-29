@@ -3,18 +3,12 @@ import { useSelectedCard } from '../../provider/PayProvider';
 import './CardListBox.css';
 import CardImg from './CardImg';
 const CardListBox = ({ card, onSelect }) => {
-    const [isRotated, setIsRotated] = useState(false);
     const { selectedCard } = useSelectedCard();
-// console.log("카드",card);
-    useEffect(() => {
-        const img = new Image();
-        img.src = card.cardImg || card.cardImage;
-        img.onload = () => {
-            if (img.height > img.width) {
-                setIsRotated(true);
-            }
-        };
-    }, [card.cardImg]);
+    //회전에 따라 저장
+    const [isRotated, setIsRotated] = useState(false);
+    const handleRotateChange = (rotated, parentDiv, imgElement) => {
+        setIsRotated(rotated);
+    };
 
     return (
         <li
@@ -29,7 +23,8 @@ const CardListBox = ({ card, onSelect }) => {
                 src={card.cardImg || card.cardImage}
                 alt={card.cardName}
                 direction="horizontal"
-                className={isRotated ? 'vertical-image' : 'horizontal-image'}
+                className="small"
+                onRotateChange={handleRotateChange}
             />
             <div className="card-info">
                 <div className="card-name">

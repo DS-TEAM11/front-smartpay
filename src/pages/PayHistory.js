@@ -11,7 +11,15 @@ function PayHistory() {
     const [cardListData, setCardListData] = useState([]);
     const memberNo = useMemberNo();
     const [cardNo, setCardNo] = useState('');
+    const [isRotated, setIsRotated] = useState(false);
 
+    const handleRotateChange = (rotated, parentDiv, imgElement) => {
+        setIsRotated(rotated);
+        if (parentDiv) {
+            parentDiv.style.height = imgElement.width + 'px';
+            parentDiv.style.width = imgElement.height + 'px';
+        }
+    };
     // 현재 달의 시작일과 종료일 계산
     const today = new Date();
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -165,14 +173,17 @@ function PayHistory() {
                                     {groupedData[dayName].map((payment) => (
                                         <div
                                             key={payment.orderNo}
-                                            className="table-row cssportal-grid"
+                                            className="table-row cssportal-grid border-bottom"
                                         >
                                             <div className="item1">
                                                 <CardImg
-                                                    className="card-image"
+                                                    className="small"
                                                     src={payment.cardImage}
                                                     alt="카드이미지"
                                                     direction="horizontal"
+                                                    onRotateChange={
+                                                        handleRotateChange
+                                                    }
                                                 />
                                             </div>
                                             <div className="item2">

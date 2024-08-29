@@ -25,10 +25,9 @@ import Button from './component/Button';
 import NotFoundPage from './pages/404';
 import Test from './pages/Test';
 import PayHistory from './pages/PayHistory';
-// import memberPwd from './pages/MemberPwd';
 // import CheckPwd from './pages/CheckPwd';
 // import MemberPwd from './pages/MemberPwd';
-
+import BenefitTest from './pages/BenefitTest';
 const SplashScreen = () => {
     const navigate = useNavigate();
 
@@ -68,8 +67,8 @@ function App() {
                         <Route path="/afterkakao" element={<Afterkakao />} />
                         <Route path="*" element={<NotFoundPage />} />
                         <Route path="/history" element={<PayHistory />} />
-                        {/* <Route path="/memberPwd" element={<MemberPwd />} /> */}
-                        {/* <Route path="/checkPwd" element={<CheckPwd />} /> */}
+                        {/* <Route path="/memberPwd" element={<MemberPwd />} />
+                        <Route path="/checkPwd" element={<CheckPwd />} /> */}
                     </Routes>
                 </PayProvider>
             </Router>

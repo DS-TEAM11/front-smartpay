@@ -13,14 +13,14 @@
     justify-content: center;
 }
 
-.img-size{
+.img-size {
     width: 65%;
     height: auto;
 }
 
 .rotate-image {
     transform: rotate(90deg) scale(1.5);
-    object-fit: contain ;
+    object-fit: contain;
 }
 
 .card-info-container1 {
@@ -28,6 +28,8 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    min-width: -webkit-fill-available;
+    height: clamp(20rem, 70vw, 35rem);
 }
 
 .card-info-container2 {

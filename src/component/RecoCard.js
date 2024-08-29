@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import "./RecoCard.css";
-import axios from "axios";
+import React, { useState, useEffect, useRef } from 'react';
+import './RecoCard.css';
+import axios from 'axios';
 
 const RecoCard = ({ recommendData, setCardCode }) => {
     const [cardInfo, setCardInfo] = useState({});
@@ -16,7 +16,7 @@ const RecoCard = ({ recommendData, setCardCode }) => {
             const response = await axios.post(url, data, {
                 responseType: 'json',
             });
-            setCardInfo(response.data); 
+            setCardInfo(response.data);
         } catch (error) {
             console.error('에러', error);
         }
@@ -27,10 +27,9 @@ const RecoCard = ({ recommendData, setCardCode }) => {
     }, [recommendData]);
 
     const handleCardPaymentClick = () => {
-        setCardCode('');  // cardCode를 빈 문자열로 설정
-        console.log("카드코드 없음 -----------------------------");
+        setCardCode(''); // cardCode를 빈 문자열로 설정
+        console.log('카드코드 없음 -----------------------------');
     };
-
 
     return (
         <div className="RecoCard">
@@ -39,7 +38,12 @@ const RecoCard = ({ recommendData, setCardCode }) => {
                     <p className="fs-5 blue-text fw-bold m-0">AI 추천카드</p>
                 </div>
                 <div className="col-5">
-                    <p className="text-decoration-underline text-end m-0"  onClick={handleCardPaymentClick}>이 카드로 결제하기</p>
+                    <p
+                        className="text-decoration-underline text-end m-0"
+                        onClick={handleCardPaymentClick}
+                    >
+                        이 카드로 결제하기
+                    </p>
                 </div>
             </div>
 
@@ -57,7 +61,12 @@ const RecoCard = ({ recommendData, setCardCode }) => {
                 <div className="col-8 d-flex flex-column justify-content-center px-0">
                     <p className="fs-5 my-0 fw-bold">{cardInfo.card_name}</p>
                     <p className="fs-7">
-                        이 카드를 사용하면 <span className="blue-text fw-bolder save">{recommendData.maximumBenefits}원 {recommendData.benefitType}</span>을 받을 수 있어요.
+                        이 카드를 사용하면{' '}
+                        <span className="blue-text fw-bolder save">
+                            {recommendData.maximumBenefits}원{' '}
+                            {recommendData.benefitType}
+                        </span>
+                        을 받을 수 있어요.
                     </p>
                 </div>
             </div>

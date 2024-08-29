@@ -1,6 +1,11 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+const ConfigEnum = Object.freeze({
+    PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+    COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+});
+const ConfigContext = createContext(ConfigEnum); // ConfigContext 생성
 
 // Context 생성
 const MemberContext = createContext(null);
@@ -35,7 +40,7 @@ export const PayProvider = ({ children }) => {
 
             if (token) {
                 axios
-                    .get('http://localhost:8091/member/findMember', {
+                    .get(`${ConfigEnum.PAY_SERVER_URL}/member/findMember`, {
                         headers: {
                             Authorization: token,
                         },
@@ -51,15 +56,17 @@ export const PayProvider = ({ children }) => {
     }, [location.pathname]);
 
     return (
-        <MemberContext.Provider value={memberNo}>
-            <SelectedCardContext.Provider
-                value={{ selectedCard, setSelectedCard }}
-            >
-                <ShowQrContext.Provider value={{ showQr, setShowQr }}>
-                    {children}
-                </ShowQrContext.Provider>
-            </SelectedCardContext.Provider>
-        </MemberContext.Provider>
+        <ConfigContext.Provider value={ConfigEnum}>
+            <MemberContext.Provider value={memberNo}>
+                <SelectedCardContext.Provider
+                    value={{ selectedCard, setSelectedCard }}
+                >
+                    <ShowQrContext.Provider value={{ showQr, setShowQr }}>
+                        {children}
+                    </ShowQrContext.Provider>
+                </SelectedCardContext.Provider>
+            </MemberContext.Provider>
+        </ConfigContext.Provider>
     );
 };
 
@@ -84,4 +91,12 @@ const useShowQr = () => {
     return context;
 };
 
-export { useMemberNo, useSelectedCard, useShowQr };
+const useConfig = () => {
+    const context = useContext(ConfigContext);
+    if (!context) {
+        throw new Error('useConfig must be used within a PayProvider');
+    }
+    return context;
+};
+
+export { useMemberNo, useSelectedCard, useShowQr, useConfig };

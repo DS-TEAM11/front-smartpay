@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import axios from 'axios';
 import Loading from '../Loading';
 import BlackContainer from '../BlackContainer';
@@ -26,11 +26,17 @@ function QrItem({ onRemove, cardCode }) {
     const [stompClient, setStompClient] = useState(
         Stomp.over(new SockJS('http://localhost:8091/ws')),
     );
+
+    const stompClientRef = useRef(null);
+    const isConnectedRef = useRef(false); // stompClient 연결 상태 추적
+
     const wsConnect = () => {
         stompClient.connect({}, function (frame) {
             // console.log('Connected: ' + frame);
-
-            stompClient.subscribe('/topic/sellinfo', function (message) {
+            if (!stompClientRef.current) {
+                stompClientRef.current = stompClient;
+            }
+            stompClient.subscribe('/topic/sellinfo/'+memberNo, function (message) {
                 const body = JSON.parse(message.body);
                 // console.log('message:', body);
                 if (body.message === 'seller enter') {
@@ -74,6 +80,12 @@ function QrItem({ onRemove, cardCode }) {
             });
     };
     const handleRemove = () => {
+        //구매자가 취소하기 버튼 누르면 판매자에게 전송하고 웹소켓 끊기
+        stompClientRef.current.send(
+            '/topic/sellinfo/'+memberNo,
+            {},
+            JSON.stringify({ message: 'buyer exit' }),
+        );
         // stompClient.disconnect()를 먼저 실행
         if (stompClient && typeof stompClient.disconnect === 'function') {
             stompClient.disconnect();
@@ -117,7 +129,7 @@ function QrItem({ onRemove, cardCode }) {
         <>
             {/* //웹소켓 접속해서 판매자가 정보 입력 중일 때 */}
             {isLoading && !isAIiLoading && (
-                <Loading text={'사장님이 결제 정보를 입력하고 있어요.'} />
+                <Loading text={'사장님이 결제 정보를 입력하고 있어요.'} info={'pay'} onCancel={handleRemove}  />
             )}
             {isLoading && isAIiLoading && (
                 <Loading

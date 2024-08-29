@@ -42,7 +42,7 @@
 
 .pin-keypad {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /*이게 뭐임??*/
+    grid-template-columns: repeat(3, 1fr);
     gap: 0; /* 키패드 간격 조정 */
     margin-bottom: 20px;
     width: 65%;

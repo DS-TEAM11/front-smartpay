@@ -43,10 +43,13 @@ const CardRank = () => {
                 </div>
 
                 <div className="py-3">
-                    <Categoryselect
-                        category={category}
-                        onChange={handleCategoryChange}
-                    />
+                    <div className='mb-4'>
+                        <Categoryselect
+                            category={category}
+                            onChange={handleCategoryChange}
+                        />
+                    </div>
+                    
                     <RankItem rankItems={rankItems} />
                 </div>
             </div>

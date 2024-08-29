@@ -66,7 +66,7 @@ const Seller = () => {
 
                     // 연결이 완료된 후에만 메시지 전송
                     stompClientRef.current.send(
-                        '/topic/sellinfo',
+                        '/topic/sellinfo/'+memberNo,
                         {},
                         JSON.stringify({ message: 'seller enter' }),
                     );
@@ -96,7 +96,7 @@ const Seller = () => {
     }, []);
 
     const subscribeToTopic = () => {
-        stompClientRef.current.subscribe('/topic/sellinfo', function (message) {
+        stompClientRef.current.subscribe('/topic/sellinfo/'+memberNo, function (message) {
             const body = JSON.parse(message.body);
             console.log('message:', body);
             if (body.message === 'purchase end') {
@@ -105,13 +105,33 @@ const Seller = () => {
                     window.location.href = 'http://localhost:3000/pay/receipt';
                 }
             }
+
+            //구매자가 로딩화면 중에서 취소하기를 누르면
+            if(body.message === 'buyer exit'){
+                alert("구매자가 주문을 취소하였습니다.");
+
+                //판매자 웹소켓 끊기(근데 새로고침 하면 다시 연결됨)
+                if (stompClientRef.current && isConnectedRef.current) {
+                    stompClientRef.current.disconnect(() => {
+                        console.log('Disconnected');
+                    });
+                }
+            }
         });
     };
     const send_information =  async () => {
+        const { franchiseCode, franchiseType, franchiseName, purchaseItems, purchasePrice } = formData;
+
+        //모든 값을 입력해야 함
+        if (!franchiseCode || !franchiseType || !franchiseName || !purchaseItems || !purchasePrice) {
+            alert('모든 값을 입력해주세요');
+            return; 
+        }
+
         const orderNo = await handleOrderNo();
         const purchase_data = { ...formData, memberNo: memberNo, payDate: formattedDate, orderNo: orderNo };
         stompClientRef.current.send(
-            '/topic/sellinfo',
+            '/topic/sellinfo/'+memberNo,
             {},
             JSON.stringify({
                 message: 'purchase information',
@@ -146,12 +166,12 @@ const Seller = () => {
     //입력 폼 데이터 핸들링 끝 ------------------
     return (
         <div className="App">
-            <div className="my-content-box">
-                <div className="logo">
+            <div className="my-content-box px-4 align-items-center">
+                <div className="logo text-center">
                     <img src="assets/images/logo.png" alt="SP Logo" />
                 </div>
                 {/* <img src={logo} alt="logo" className="logo" /> */}
-                <div className="page-title">판매자 페이지</div>
+                <div className="page-title text-center fs-2 mb-4 fw-bold">판매자 페이지</div>
                 <form onSubmit={handleSubmit}>
                     <InputValue
                         placeholder="ex) 10000, 10001, 10002 ..."
@@ -189,10 +209,13 @@ const Seller = () => {
                         onChange={handleInputChange}
                         type="number"
                     />
+                    <div className='my-4 text-center'>
                     <Button
                         text={'결제 요청 전송'}
                         onClick={send_information}
                     ></Button>
+                    </div>
+                    
                 </form>
             </div>
         </div>

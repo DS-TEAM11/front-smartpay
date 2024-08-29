@@ -158,7 +158,7 @@ function PayHistory() {
                             <option value="">카드 선택</option>
                             {cardListData.map((card) => (
                                 <option key={card.cardNo} value={card.cardNo}>
-                                    {card.cardNick}
+                                    {card.cardNick || card.cardName}
                                 </option>
                             ))}
                         </select>
@@ -207,12 +207,6 @@ function PayHistory() {
                                                                     ? '적립 이미지'
                                                                     : '할인 이미지'
                                                             }
-                                                            // style={{
-                                                            //     width: '20px',
-                                                            //     height: 'auto',
-                                                            //     marginRight:
-                                                            //         '8px',
-                                                            // }} // 이미지 크기 및 간격 조정
                                                         />
                                                         {payment.saveType === 0
                                                             ? `${formatCurrency(

@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, act } from 'react';
 import axios from 'axios';
 // import '../component/PwdItem.css';
 import '../pages/MemberPwd.css';
 import Button from './Button';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useMemberNo } from '../provider/PayProvider';
 
 function PwdItem({ Success }) {
     const [checkPin, setCheckPin] = useState(['', '', '', '', '', '']);
     const [activeCheckPinIndex, setActiveCheckPinIndex] = useState(0);
     const [shuffledNumbers, setShuffledNumbers] = useState([]);
-    const [memberNo, setMemberNo] = useState(null);
+    // const [memberNo, setMemberNo] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
 
+    const memberNo = useMemberNo();
     // location.state에서 pin과 memberNo를 가져옴, 기본값 설정
     const { pin = [], memberNo: locationMemberNo } = location.state || {};
 
@@ -23,27 +25,37 @@ function PwdItem({ Success }) {
         };
         setShuffledNumbers(shuffleNumbers());
 
-        if (!locationMemberNo) {
-            const token = localStorage.getItem('accessToken');
-            if (token) {
-                axios
-                    .get('http://localhost:8091/member/findMember', {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    })
-                    .then((response) => {
-                        setMemberNo(response.data);
-                    })
-                    .catch((error) => {
-                        console.error('회원 번호 요청 에러', error);
-                    });
-            }
-        } else {
-            setMemberNo(locationMemberNo);
-        }
+        // if (!locationMemberNo) {
+        //     const token = localStorage.getItem('accessToken');
+        //     if (token) {
+        //         axios
+        //             .get('http://localhost:8091/member/findMember', {
+        //                 headers: {
+        //                     Authorization: `Bearer ${token}`,
+        //                 },
+        //             })
+        //             .then((response) => {
+        //                 setMemberNo(response.data);
+        //             })
+        //             .catch((error) => {
+        //                 console.error('회원 번호 요청 에러', error);
+        //             });
+        //     }
+        // } else {
+        //     setMemberNo(locationMemberNo);
+        // }
     }, [locationMemberNo]);
 
+
+
+    useEffect(() => {
+        // Automatically verify PIN when it reaches 6 digits
+        if (checkPin.every(digit => digit !== '')) {
+            verifyPin();
+        }
+    }, [checkPin]);
+
+    
     const handleCheckPinChange = (value) => {
         if (activeCheckPinIndex < checkPin.length) {
             const newCheckPin = [...checkPin];
@@ -95,9 +107,13 @@ function PwdItem({ Success }) {
                 if (error.response && error.response.status === 404) {
                     alert('비밀번호가 일치하지 않습니다. 다시 시도해 주세요.');
                     Success(false);
+                    setCheckPin(['', '', '', '', '', '']);
+                    setActiveCheckPinIndex(0);
                 } else {
                     alert('비밀번호 검증에 실패했습니다. 다시 시도해 주세요.');
                     Success(false);
+                    setCheckPin(['', '', '', '', '', '']);
+                    setActiveCheckPinIndex(0);
                 }
                 console.error('비밀번호 검증 오류:', error);
                 Success(false);
@@ -121,7 +137,7 @@ function PwdItem({ Success }) {
                 ))}
             </div>
             <div className="pin-keypad">
-                {shuffledNumbers.map((number, index) => (
+                {shuffledNumbers.map((number) => (
                     <button
                         key={number}
                         className={`pin-button ${

@@ -120,6 +120,14 @@ const Seller = () => {
         });
     };
     const send_information =  async () => {
+        const { franchiseCode, franchiseType, franchiseName, purchaseItems, purchasePrice } = formData;
+
+        //모든 값을 입력해야 함
+        if (!franchiseCode || !franchiseType || !franchiseName || !purchaseItems || !purchasePrice) {
+            alert('모든 값을 입력해주세요');
+            return; 
+        }
+
         const orderNo = await handleOrderNo();
         const purchase_data = { ...formData, memberNo: memberNo, payDate: formattedDate, orderNo: orderNo };
         stompClientRef.current.send(
@@ -158,12 +166,12 @@ const Seller = () => {
     //입력 폼 데이터 핸들링 끝 ------------------
     return (
         <div className="App">
-            <div className="my-content-box">
-                <div className="logo">
+            <div className="my-content-box px-4 align-items-center">
+                <div className="logo text-center">
                     <img src="assets/images/logo.png" alt="SP Logo" />
                 </div>
                 {/* <img src={logo} alt="logo" className="logo" /> */}
-                <div className="page-title">판매자 페이지</div>
+                <div className="page-title text-center fs-2 mb-4 fw-bold">판매자 페이지</div>
                 <form onSubmit={handleSubmit}>
                     <InputValue
                         placeholder="ex) 10000, 10001, 10002 ..."
@@ -201,10 +209,13 @@ const Seller = () => {
                         onChange={handleInputChange}
                         type="number"
                     />
+                    <div className='my-4 text-center'>
                     <Button
                         text={'결제 요청 전송'}
                         onClick={send_information}
                     ></Button>
+                    </div>
+                    
                 </form>
             </div>
         </div>

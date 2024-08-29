@@ -66,7 +66,7 @@ const Seller = () => {
 
                     // 연결이 완료된 후에만 메시지 전송
                     stompClientRef.current.send(
-                        '/topic/sellinfo',
+                        '/topic/sellinfo/'+memberNo,
                         {},
                         JSON.stringify({ message: 'seller enter' }),
                     );
@@ -96,7 +96,7 @@ const Seller = () => {
     }, []);
 
     const subscribeToTopic = () => {
-        stompClientRef.current.subscribe('/topic/sellinfo', function (message) {
+        stompClientRef.current.subscribe('/topic/sellinfo/'+memberNo, function (message) {
             const body = JSON.parse(message.body);
             console.log('message:', body);
             if (body.message === 'purchase end') {
@@ -105,13 +105,25 @@ const Seller = () => {
                     window.location.href = 'http://localhost:3000/pay/receipt';
                 }
             }
+
+            //구매자가 로딩화면 중에서 취소하기를 누르면
+            if(body.message === 'buyer exit'){
+                alert("구매자가 주문을 취소하였습니다.");
+
+                //판매자 웹소켓 끊기(근데 새로고침 하면 다시 연결됨)
+                if (stompClientRef.current && isConnectedRef.current) {
+                    stompClientRef.current.disconnect(() => {
+                        console.log('Disconnected');
+                    });
+                }
+            }
         });
     };
     const send_information =  async () => {
         const orderNo = await handleOrderNo();
         const purchase_data = { ...formData, memberNo: memberNo, payDate: formattedDate, orderNo: orderNo };
         stompClientRef.current.send(
-            '/topic/sellinfo',
+            '/topic/sellinfo/'+memberNo,
             {},
             JSON.stringify({
                 message: 'purchase information',

@@ -215,7 +215,7 @@ const Pay = () => {
             );
             const paymentStatus = response.data; // API가 반환하는 return 값(결제 상태)
 
-            console.log(paymentStatus);
+            // console.log(paymentStatus);
 
             const orderNo = paymentData.orderNo;
 

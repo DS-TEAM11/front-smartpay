@@ -67,6 +67,7 @@ function App() {
                         <Route path="/afterkakao" element={<Afterkakao />} />
                         <Route path="*" element={<NotFoundPage />} />
                         <Route path="/history" element={<PayHistory />} />
+                        <Route path="/benefitTest" element={<BenefitTest />} />
                         {/* <Route path="/memberPwd" element={<MemberPwd />} />
                         <Route path="/checkPwd" element={<CheckPwd />} /> */}
                     </Routes>

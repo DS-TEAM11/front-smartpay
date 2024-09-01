@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 const ConfigEnum = Object.freeze({
     PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
     COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
@@ -24,6 +24,7 @@ export const PayProvider = ({ children }) => {
     const [selectedCard, setSelectedCard] = useState('');
     const [showQr, setShowQr] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const excludedPaths = [
@@ -35,25 +36,72 @@ export const PayProvider = ({ children }) => {
             '/test',
         ];
 
-        if (!excludedPaths.includes(location.pathname.toLowerCase())) {
-            const token = localStorage.getItem('accessToken');
+        const fetchMemberNo = async () => {
+            try {
+                let token = localStorage.getItem('accessToken');
 
-            if (token) {
-                axios
-                    .get(`${ConfigEnum.PAY_SERVER_URL}/member/findMember`, {
+                if (!token) {
+                    // 액세스 토큰이 없을 경우 쿠키에 있는 리프레시 토큰으로 재발급 요청
+                    const response = await axios.get(
+                        `${ConfigEnum.PAY_SERVER_URL}/member/jwt-test`,
+                        {
+                            withCredentials: true, // 쿠키 자동 전송
+                        },
+                    );
+
+                    // 상태 코드가 404일 경우 로그인 페이지로 리다이렉트
+                    if (response.status === 404) {
+                        console.log(
+                            '404 에러 발생, 로그인 페이지로 리다이렉트',
+                        );
+                        navigate('/login', { replace: true }); // replace 옵션을 추가해 브라우저 기록을 남기지 않음
+                        return;
+                    }
+                    console.log('jwt-test로 get요청 결과', response);
+
+                    // 새로운 토큰들을 저장
+                    token = response.headers.authorization;
+                    const newRefreshToken =
+                        response.headers['authorization-refresh'];
+
+                    if (token) {
+                        localStorage.setItem('accessToken', token);
+                    }
+
+                    if (newRefreshToken) {
+                        document.cookie = `refreshToken=${newRefreshToken}; path=/; HttpOnly`;
+                    }
+                }
+
+                // 액세스 토큰으로 memberNo 가져오기
+                const memberResponse = await axios.get(
+                    `${ConfigEnum.PAY_SERVER_URL}/member/findMember`,
+                    {
                         headers: {
                             Authorization: token,
                         },
-                    })
-                    .then((response) => {
-                        setMemberNo(response.data);
-                    })
-                    .catch((error) => {
-                        console.error('memberNo 요청 에러', error);
-                    });
+                    },
+                );
+
+                setMemberNo(memberResponse.data);
+            } catch (error) {
+                console.error('Failed to fetch memberNo', error);
+                if (error.response && error.response.status === 401) {
+                    // 인증 에러 발생 시 리프레시 토큰 삭제 및 로그인 페이지로 리다이렉트
+                    document.cookie = 'refreshToken=; Max-Age=0; path=/;';
+                    navigate('/login');
+                } else if (error.response && error.response.status === 404) {
+                    // 리프레시 토큰 요청 결과가 404일 경우 로그인 페이지로 리다이렉트
+                    console.log('404 에러 발생, 로그인 페이지로 리다이렉트');
+                    navigate('/login', { replace: true });
+                }
             }
+        };
+
+        if (!excludedPaths.includes(location.pathname.toLowerCase())) {
+            fetchMemberNo();
         }
-    }, [location.pathname]);
+    }, [location.pathname, navigate]);
 
     return (
         <ConfigContext.Provider value={ConfigEnum}>

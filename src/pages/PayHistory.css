@@ -5,13 +5,10 @@
     margin: 0 auto;
     padding-top: 15%;
     box-sizing: border-box;
-    text-align: center;
-    overflow: hidden;
-    /*  스크롤 제거 */
+    overflow: auto;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    /* 상단에서 시작 */
+    /* justify-content: flex-start; */
     align-items: center;
 }
 
@@ -24,9 +21,17 @@
 .payhistory .data {
     width: 100%;
 }
+
+.payhistory .data .table-container .dayTable {
+    border: 1px solid #ccc; /* 경계선 두께와 색상 설정 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    padding: 10px; /* 내용과 경계선 사이에 패딩 추가 */
+    margin-bottom: 15px; /* 각 dayTable 간의 간격 */
+    margin: 1%
+}
 .payhistory .data .table-container .dayTable .dayName {
-    margin: 0 8%;
-    text-align: left;
+    margin: 0 5%;
+    font-weight: bold;
 }
 
 /* cssportal-grid 구조  */
@@ -42,36 +47,43 @@
 
 /* 하위 선택자 구조화 */
 .payhistory .data .table-container .dayTable .table-row .item1 {
-    grid-area: 1 / 1 / 3 / 2;
-    justify-self: center;
-    align-content: center;
+    grid-area: 1/1/2/3;
+    font-size: 25px;
+    font-weight: bold;
+    margin-left: 5%;
+    align-content: end;
 }
 
 .payhistory .data .table-container .dayTable .table-row .item2 {
-    grid-area: 1/2/2/3;
+    grid-area: 2/1/3/3;
+    margin-left: 5%;
+    display: flex;
+    font-weight: bold;
 }
 
 .payhistory .data .table-container .dayTable .table-row .item3 {
-    grid-area: 2/2/3/3;
-    color: RED;
-}
-.payhistory .data .table-container .dayTable .table-row .item3 .recommend {
-    width: 20%;
+    grid-area: 1/3/2/4;
+    color: blue;
+    align-content: end;
+    text-align: right;
 }
 
 .payhistory .data .table-container .dayTable .table-row .item4 {
-    grid-area: 1 / 3 / 3 / 4;
-    justify-self: center;
-    align-content: center;
+    grid-area: 2/3/3/4;
+    align-items: center;
+    align-content: baseline;
+    text-align: right;
+    font-weight: bold;
 }
 
 .payhistory .data .table-container .dayTable .table-row .cardImg {
     width: 100%;
     height: 100%;
     filter: drop-shadow(1px 3px 4px black);
+    margin-right: 8px;
 }
 
 .payhistory .data .table-container .dayTable .table-row .cardImg img {
-    max-width: 4rem;
-    height: 4rem;
+    max-width: 2rem;
+    height: 2rem;
 }

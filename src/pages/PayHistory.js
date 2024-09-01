@@ -176,6 +176,11 @@ function PayHistory() {
                                             className="table-row cssportal-grid border-bottom"
                                         >
                                             <div className="item1">
+                                                <span className='franchiseName'>                                                    
+                                                    {payment.franchiseName}
+                                                </span>                                                
+                                            </div>
+                                            <div className="item2">
                                                 <CardImg
                                                     className="small"
                                                     src={payment.cardImage}
@@ -185,29 +190,14 @@ function PayHistory() {
                                                         handleRotateChange
                                                     }
                                                 />
-                                            </div>
-                                            <div className="item2">
-                                                {payment.franchiseName}
+                                                <div>
+                                                    {payment.cardName}
+                                                </div>
                                             </div>
                                             <div className="item3">
                                                 {/* getIsAi가 true일 때만 적립 또는 할인 정보 표시 */}
                                                 {payment.getIsAi === true ? (
                                                     <>
-                                                        <img
-                                                            className="recommend"
-                                                            src={
-                                                                payment.saveType ===
-                                                                0
-                                                                    ? 'assets/images/earn.png' // 적립 이미지 URL
-                                                                    : 'assets/images/discount.png' // 할인 이미지 URL
-                                                            }
-                                                            alt={
-                                                                payment.saveType ===
-                                                                0
-                                                                    ? '적립 이미지'
-                                                                    : '할인 이미지'
-                                                            }
-                                                        />
                                                         {payment.saveType === 0
                                                             ? `${formatCurrency(
                                                                   payment.savePrice,

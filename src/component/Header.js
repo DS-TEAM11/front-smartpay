@@ -1,16 +1,55 @@
-import React, { useState, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useRef, createContext } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from './Button';
 import QrItem from './useQR/QrItem';
+import axios from 'axios';
 import './Header.css';
+
+// 환경 변수를 올바르게 불러옵니다.
+const ConfigEnum = Object.freeze({
+    PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+    COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+});
+const ConfigContext = createContext(ConfigEnum); // ConfigContext 생성
+
 const Header = () => {
     const [showQr, setShowQr] = useState(false); // 상태를 추가하여 QR 코드를 표시할지 여부를 관리합니다.
     const location = useLocation();
+    const navigate = useNavigate();
     const handleClick = () => {
         setShowQr(true);
     };
     const removeQrItem = () => {
         setShowQr(false);
+    };
+
+    const handleLogout = async () => {
+        try {
+            const token = localStorage.getItem('accessToken');
+            console.log(`${ConfigEnum.PAY_SERVER_URL}/member/logout`);
+
+            // 백엔드 서버로 로그아웃 요청을 보냄
+            await axios.post(
+                `${ConfigEnum.PAY_SERVER_URL}/member/logout`,
+                {},
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                    withCredentials: true, // 쿠키를 함께 전송
+                },
+            );
+
+            // 로컬 스토리지와 쿠키에서 토큰 삭제
+            document.cookie = 'refreshToken=; Max-Age=0; path=/;';
+            localStorage.removeItem('accessToken');
+
+            // 로그인 페이지로 이동
+            navigate('/login', { replace: true });
+        } catch (error) {
+            console.error('로그아웃 실패:', error);
+            // 로그아웃 실패 시 사용자에게 피드백 제공 (옵션)
+        }
     };
 
     return (
@@ -61,6 +100,16 @@ const Header = () => {
                                     <Link className="nav-link" to="/mypage">
                                         마이페이지
                                     </Link>{' '}
+                                </li>
+                                <li className="nav-item">
+                                    {/* <!-- 로그아웃 버튼 추가 --> */}
+                                    <button
+                                        className="nav-link btn btn-link"
+                                        onClick={handleLogout}
+                                        style={{ textDecoration: 'none' }}
+                                    >
+                                        로그아웃
+                                    </button>
                                 </li>
                             </ul>
                         </div>

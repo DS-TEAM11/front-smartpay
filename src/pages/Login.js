@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import Button from '../component/Button';
@@ -33,10 +33,17 @@ const Login = () => {
             const response = await axios.post(
                 'http://localhost:8091/login',
                 loginData,
+                { withCredentials: true }
             );
-
+            // console.log('Response 헤더 내용');
+            // console.log(response);
+            // console.log('액세스토큰 꺼내기');
+            // console.log(response.headers.authorization);
+            // console.log('리프레시토큰 꺼내기');
+            //console.log(response.headers.authorization-refresh);
             const accessToken = response.headers.authorization;
             const refreshToken = response.headers['authorization-refresh'];
+            //console.log(refreshToken);
 
             if (accessToken) {
                 localStorage.setItem('accessToken', accessToken);

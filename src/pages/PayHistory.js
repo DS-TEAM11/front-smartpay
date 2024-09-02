@@ -176,9 +176,9 @@ function PayHistory() {
                                             className="table-row cssportal-grid border-bottom"
                                         >
                                             <div className="item1">
-                                                <span className='franchiseName'>                                                    
+                                                <span className="franchiseName">
                                                     {payment.franchiseName}
-                                                </span>                                                
+                                                </span>
                                             </div>
                                             <div className="item2">
                                                 <CardImg
@@ -190,9 +190,7 @@ function PayHistory() {
                                                         handleRotateChange
                                                     }
                                                 />
-                                                <div>
-                                                    {payment.cardName}
-                                                </div>
+                                                <div>{payment.cardName}</div>
                                             </div>
                                             <div className="item3">
                                                 {/* getIsAi가 true일 때만 적립 또는 할인 정보 표시 */}

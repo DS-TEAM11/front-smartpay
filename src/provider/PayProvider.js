@@ -107,7 +107,12 @@ export const PayProvider = ({ children }) => {
             fetchMemberNo();
         }
     }, [location.pathname, navigate]);
-
+    //멤버 정보 없으면 로그인 페이지로 이동(임시)
+    useEffect(() => {
+        if (!memberNo) {
+            navigate('/login');
+        }
+    }, [memberNo]);
     return (
         <ConfigContext.Provider value={ConfigEnum}>
             <MemberContext.Provider value={memberNo}>

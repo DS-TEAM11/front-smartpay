@@ -3,7 +3,7 @@ import './SpreadCards.css';
 import CardImg from './CardImg'; // CardImg component import
 import { useSelectedCard } from '../../provider/PayProvider';
 
-const SpreadCards = React.memo(({ cards, onClick }) => {
+const SpreadCards = React.memo(({ cards, onClick, isLeftActive }) => {
     const { selectedCard, setSelectedCard } = useSelectedCard();
     const handleSelectCard = (card) => {
         // console.log(card);
@@ -22,8 +22,8 @@ const SpreadCards = React.memo(({ cards, onClick }) => {
                 `.spread_cards .cardImg:nth-child(${index + 1})`,
             ).style.marginLeft = `${33 + translateValue}%`;
         });
-    }, []);
-    
+    }, [isLeftActive]);
+
     return (
         <ul
             className="spread_cards"

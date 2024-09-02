@@ -30,12 +30,11 @@ export const PayProvider = ({ children }) => {
         const excludedPaths = [
             '/',
             '/login',
-            '/register',
+            '/signup',
             '/welcome',
             '/seller',
             '/test',
         ];
-
         const fetchMemberNo = async () => {
             try {
                 let token = localStorage.getItem('accessToken');
@@ -57,7 +56,13 @@ export const PayProvider = ({ children }) => {
                         navigate('/login', { replace: true }); // replace 옵션을 추가해 브라우저 기록을 남기지 않음
                         return;
                     }
-                    console.log('jwt-test로 get요청 결과', response);
+                    if (response.status === 500) {
+                        console.log(
+                            '500 에러 발생, 로그인 페이지로 리다이렉트',
+                        );
+                        navigate('/login', { replace: true }); // replace 옵션을 추가해 브라우저 기록을 남기지 않음
+                        return;
+                    }
 
                     // 새로운 토큰들을 저장
                     token = response.headers.authorization;

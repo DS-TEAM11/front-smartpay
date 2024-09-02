@@ -25,6 +25,11 @@ const CardInfo = () => {
     const [cardPicker, setCardPicker] = useState(false); // 카드 선택 모달 상태 추가
     const { selectedCard, setSelectedCard } = useSelectedCard(); // 선택된 카드 상태를 추가하여 관리합니다.
     const { showQr, setShowQr } = useShowQr(); // 상태를 추가하여 QR 코드를 표시할지 여부를 관리합니다.
+    const [isLeftActive, setIsLeftActive] = useState(true);
+
+    const handleSwitchPriorityMode = () => {
+        setIsLeftActive(isLeftActive ? false : true);
+    };
 
     const handleDrag = () => {
         setShowQr(true);
@@ -54,8 +59,7 @@ const CardInfo = () => {
                     },
                 )
                 .then((response) => {
-                    // console.log('byMember2 test', response.data);
-
+                    console.log('byMember2 test', response.data);
                     // 데이터를 분리
                     const cards = response.data[0]; // 첫 번째 배열
                     const cardInfos = response.data[1]; // 두 번째 배열
@@ -81,10 +85,17 @@ const CardInfo = () => {
 
                     // console.log('sortedCards', sortedCards);
 
-                    // 최신순으로 정렬
-                    const sortedCardArray = Object.values(sortedCards).sort(
-                        (a, b) => new Date(b.regDate) - new Date(a.regDate),
-                    );
+                    // priority에 따라 정렬
+                    const sortedCardArray = Object.values(sortedCards);
+                    if (isLeftActive) {
+                        sortedCardArray.sort(
+                            (a, b) => a.benefitPriority - b.benefitPriority,
+                        );
+                    } else {
+                        sortedCardArray.sort(
+                            (a, b) => a.usagePriority - b.usagePriority,
+                        );
+                    }
 
                     // 가장 최근에 등록된 카드 선택
                     const mostRecentCard = sortedCardArray[0];
@@ -102,7 +113,7 @@ const CardInfo = () => {
                     setLoading(false); // 오류 발생 시에도 로딩 상태를 false로 설정
                 });
         }
-    }, [memberNo]); // memberNo가 설정된 후에만 실행
+    }, [memberNo, isLeftActive]); // memberNo가 설정된 후에만 실행
 
     if (loading) {
         return (
@@ -146,7 +157,10 @@ const CardInfo = () => {
             )}
 
             <div className="card-info-container border-bottom">
-                <CustomToggle />
+                <CustomToggle
+                    onClick={handleSwitchPriorityMode}
+                    isLeftActive={isLeftActive}
+                />
                 <div className="card-main-container border-bottom">
                     <SlidingYComponent setShowQr={handleDrag}>
                         <MainCard card={selectedCard}></MainCard>

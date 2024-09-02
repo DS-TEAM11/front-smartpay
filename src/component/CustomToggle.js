@@ -1,16 +1,9 @@
 import React, { useState } from 'react';
 import './CustomToggle.css';
 
-const CustomToggle = ({ children, onClick }) => {
-    const [isLeftActive, setIsLeftActive] = useState(true);
+const CustomToggle = ({ onClick, isLeftActive }) => {
+    console.log(isLeftActive);
 
-    const switchLeft = () => {
-        setIsLeftActive(true);
-    };
-
-    const switchRight = () => {
-        setIsLeftActive(false);
-    };
     return (
         <div className="custom-toggle">
             <div className="switch-button">
@@ -22,7 +15,7 @@ const CustomToggle = ({ children, onClick }) => {
                     className={`switch-button-case left ${
                         isLeftActive ? 'active-case' : ''
                     }`}
-                    onClick={switchLeft}
+                    onClick={onClick}
                 >
                     혜택 우선
                 </button>
@@ -30,7 +23,7 @@ const CustomToggle = ({ children, onClick }) => {
                     className={`switch-button-case right ${
                         !isLeftActive ? 'active-case' : ''
                     }`}
-                    onClick={switchRight}
+                    onClick={onClick}
                 >
                     실적 우선
                 </button>

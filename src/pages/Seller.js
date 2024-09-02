@@ -14,7 +14,7 @@ const Seller = () => {
     //웹소켓 관련 코드
     const stompClientRef = useRef(null);
     const isConnectedRef = useRef(false); // stompClient 연결 상태 추적
-
+    //됐음
     const today = new Date();
     const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, '');
 

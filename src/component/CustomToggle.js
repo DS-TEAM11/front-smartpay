@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import './CustomToggle.css';
 
 const CustomToggle = ({ onClick, isLeftActive }) => {
-    console.log(isLeftActive);
-
+    // console.log(isLeftActive);
     return (
         <div className="custom-toggle">
             <div className="switch-button">

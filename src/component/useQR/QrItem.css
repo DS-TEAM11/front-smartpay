@@ -50,6 +50,7 @@
 }
 .qrItem .qrCode > img {
     width: 150%;
+    max-width: 320px;
 }
 
 .payInformation {

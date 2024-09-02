@@ -59,11 +59,11 @@ const CardInfo = () => {
                     },
                 )
                 .then((response) => {
-                    console.log('byMember2 test', response.data);
+                    // console.log('byMember2 test', response.data);
                     // 데이터를 분리
                     const cards = response.data[0]; // 첫 번째 배열
                     const cardInfos = response.data[1]; // 두 번째 배열
-
+                    // console.log('cards', cards);
                     // cardCode를 기준으로 원하는 구조로 매핑
                     const sortedCards = cards.reduce((acc, card) => {
                         // cardInfos에서 card.cardCode에 맞는 정보를 찾음
@@ -75,6 +75,8 @@ const CardInfo = () => {
                             // cardCode를 키로, 필요한 정보를 객체로 저장
                             acc[card.cardCode] = {
                                 ...cardInfo,
+                                usagePriority: card.usagePriority,
+                                benefitPriority: card.benefitPriority,
                                 cardNick: card.cardNick,
                                 cardImage: cardInfo.cardImg, // card.cardImg가 아니라 card.cardImage로 수정
                                 regDate: card.regDate,
@@ -96,7 +98,7 @@ const CardInfo = () => {
                             (a, b) => a.usagePriority - b.usagePriority,
                         );
                     }
-
+                    // console.log(sortedCardArray);
                     // 가장 최근에 등록된 카드 선택
                     const mostRecentCard = sortedCardArray[0];
 
@@ -113,7 +115,7 @@ const CardInfo = () => {
                     setLoading(false); // 오류 발생 시에도 로딩 상태를 false로 설정
                 });
         }
-    }, [memberNo, isLeftActive]); // memberNo가 설정된 후에만 실행
+    }, [memberNo, isLeftActive]); // memberNo, isLeftActive가 설정된 후에만 실행
 
     if (loading) {
         return (

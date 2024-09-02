@@ -33,7 +33,7 @@ const CardEdit = () => {
                     },
                 )
                 .then((response) => {
-                    console.log('byMember2 test', response.data);
+                    // console.log('byMember2 test', response.data);
                     // 데이터를 분리
                     const cards = response.data[0]; // 첫 번째 배열
                     const cardInfos = response.data[1]; // 두 번째 배열
@@ -49,6 +49,7 @@ const CardEdit = () => {
                             // cardCode를 키로, 필요한 정보를 객체로 저장
                             acc[card.cardCode] = {
                                 ...cardInfo,
+                                cardNo: card.cardNo,
                                 cardNick: card.cardNick,
                                 cardImage: cardInfo.cardImg, // card.cardImg가 아니라 card.cardImage로 수정
                                 regDate: card.regDate,
@@ -60,7 +61,7 @@ const CardEdit = () => {
                         return acc;
                     }, {});
 
-                    console.log('sortedCards', sortedCards);
+                    // console.log('sortedCards', sortedCards);
 
                     // priority에 따라 정렬
                     const sortedCardArray = Object.values(sortedCards);
@@ -75,7 +76,6 @@ const CardEdit = () => {
                     }
 
                     setFetchedCards(sortedCardArray); // 정렬된 카드 데이터를 상태에 저장
-                    // console.log('selected', mostRecentCard);
                     setLoading(false); // 데이터 로드 완료 시 로딩 상태를 false로 설정
                 })
                 .catch((error) => {
@@ -108,9 +108,6 @@ const CardEdit = () => {
                         isLeftActive={isLeftActive}
                         cardList={fetchedCards}
                     />
-                </div>
-                <div className="py-3 d-flex justify-content-center">
-                    <Button text={'저장하기'} className={''}></Button>
                 </div>
             </div>
         </>

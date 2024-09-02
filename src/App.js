@@ -25,6 +25,7 @@ import Button from './component/Button';
 import NotFoundPage from './pages/404';
 import Test from './pages/Test';
 import PayHistory from './pages/PayHistory';
+import CardEdit from './pages/CardEdit';
 // import CheckPwd from './pages/CheckPwd';
 // import MemberPwd from './pages/MemberPwd';
 import BenefitTest from './pages/BenefitTest';
@@ -65,6 +66,7 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/signup" element={<Signup />} />
                         <Route path="/afterkakao" element={<Afterkakao />} />
+                        <Route path="/cardEdit" element={<CardEdit />} />
                         <Route path="*" element={<NotFoundPage />} />
                         <Route path="/history" element={<PayHistory />} />
                         <Route path="/benefitTest" element={<BenefitTest />} />

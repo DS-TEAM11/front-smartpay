@@ -1,0 +1,24 @@
+.my-card-list-container .first {
+    background-color: #4f46e5;
+    color: #fff;
+}
+.my-card-list-container .white {
+    color: #fff;
+}
+
+.my-card-list-container .cardName {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
+
+.my-card-list-container .priorityUpBtn {
+    filter: drop-shadow(2px 2px 2px black);
+    cursor: pointer;
+}
+
+.my-card-list-container .priorityUpBtn:hover,
+.my-card-list-container .priorityUpBtn:active {
+    opacity: 0.8;
+}

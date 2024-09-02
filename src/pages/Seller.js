@@ -20,7 +20,7 @@ const Seller = () => {
 
     //주문번호 생성
     const handleOrderNo = async () => {
-        try{
+        try {
             const url = 'http://localhost:8091/api/payment/pay';
             const data = {
                 product: formData.purchaseItems,
@@ -33,9 +33,9 @@ const Seller = () => {
             };
             console.log('Sending data:', data);
             const response = await axios.post(url, data, {
-                responseType:'json',
+                responseType: 'json',
             });
-            const orderNo = response.data; 
+            const orderNo = response.data;
             console.log('Order No:', orderNo);
 
             setFormData((prevData) => ({
@@ -43,10 +43,10 @@ const Seller = () => {
                 orderNo: orderNo,
             }));
             return orderNo;
-        }catch(error){
+        } catch (error) {
             console.error(error);
         }
-    }
+    };
 
     useEffect(() => {
         const socket = new SockJS('http://localhost:8091/ws');
@@ -66,7 +66,7 @@ const Seller = () => {
 
                     // 연결이 완료된 후에만 메시지 전송
                     stompClientRef.current.send(
-                        '/topic/sellinfo/'+memberNo,
+                        '/topic/sellinfo/' + memberNo,
                         {},
                         JSON.stringify({ message: 'seller enter' }),
                     );
@@ -83,7 +83,6 @@ const Seller = () => {
         } else {
             connectStompClient();
         }
-        
 
         // 컴포넌트 언마운트 시 연결 해제
         return () => {
@@ -96,42 +95,63 @@ const Seller = () => {
     }, []);
 
     const subscribeToTopic = () => {
-        stompClientRef.current.subscribe('/topic/sellinfo/'+memberNo, function (message) {
-            const body = JSON.parse(message.body);
-            console.log('message:', body);
-            if (body.message === 'purchase end') {
-                var confirm_ = window.confirm('결제가 완료되었습니다.');
-                if (confirm_) {
-                    window.location.href = 'http://localhost:3000/pay/receipt';
+        stompClientRef.current.subscribe(
+            '/topic/sellinfo/' + memberNo,
+            function (message) {
+                const body = JSON.parse(message.body);
+                console.log('message:', body);
+                if (body.message === 'purchase end') {
+                    var confirm_ = window.confirm('결제가 완료되었습니다.');
+                    if (confirm_) {
+                        window.location.href =
+                            'http://localhost:3000/pay/receipt';
+                    }
                 }
-            }
 
-            //구매자가 로딩화면 중에서 취소하기를 누르면
-            if(body.message === 'buyer exit'){
-                alert("구매자가 주문을 취소하였습니다.");
+                //구매자가 로딩화면 중에서 취소하기를 누르면
+                if (body.message === 'buyer exit') {
+                    alert('구매자가 주문을 취소하였습니다.');
 
-                //판매자 웹소켓 끊기(근데 새로고침 하면 다시 연결됨)
-                if (stompClientRef.current && isConnectedRef.current) {
-                    stompClientRef.current.disconnect(() => {
-                        console.log('Disconnected');
-                    });
+                    //판매자 웹소켓 끊기(근데 새로고침 하면 다시 연결됨)
+                    if (stompClientRef.current && isConnectedRef.current) {
+                        stompClientRef.current.disconnect(() => {
+                            console.log('Disconnected');
+                        });
+                    }
                 }
-            }
-        });
+            },
+        );
     };
-    const send_information =  async () => {
-        const { franchiseCode, franchiseType, franchiseName, purchaseItems, purchasePrice } = formData;
+    const send_information = async () => {
+        const {
+            franchiseCode,
+            franchiseType,
+            franchiseName,
+            purchaseItems,
+            purchasePrice,
+        } = formData;
 
         //모든 값을 입력해야 함
-        if (!franchiseCode || !franchiseType || !franchiseName || !purchaseItems || !purchasePrice) {
+        if (
+            !franchiseCode ||
+            !franchiseType ||
+            !franchiseName ||
+            !purchaseItems ||
+            !purchasePrice
+        ) {
             alert('모든 값을 입력해주세요');
-            return; 
+            return;
         }
 
         const orderNo = await handleOrderNo();
-        const purchase_data = { ...formData, memberNo: memberNo, payDate: formattedDate, orderNo: orderNo };
+        const purchase_data = {
+            ...formData,
+            memberNo: memberNo,
+            payDate: formattedDate,
+            orderNo: orderNo,
+        };
         stompClientRef.current.send(
-            '/topic/sellinfo/'+memberNo,
+            '/topic/sellinfo/' + memberNo,
             {},
             JSON.stringify({
                 message: 'purchase information',
@@ -171,7 +191,9 @@ const Seller = () => {
                     <img src="assets/images/logo.png" alt="SP Logo" />
                 </div>
                 {/* <img src={logo} alt="logo" className="logo" /> */}
-                <div className="page-title text-center fs-2 mb-4 fw-bold">판매자 페이지</div>
+                <div className="page-title text-center fs-2 mb-4 fw-bold">
+                    판매자 페이지
+                </div>
                 <form onSubmit={handleSubmit}>
                     <InputValue
                         placeholder="ex) 10000, 10001, 10002 ..."
@@ -209,13 +231,12 @@ const Seller = () => {
                         onChange={handleInputChange}
                         type="number"
                     />
-                    <div className='my-4 text-center'>
-                    <Button
-                        text={'결제 요청 전송'}
-                        onClick={send_information}
-                    ></Button>
+                    <div className="my-4 text-center">
+                        <Button
+                            text={'결제 요청 전송'}
+                            onClick={send_information}
+                        ></Button>
                     </div>
-                    
                 </form>
             </div>
         </div>

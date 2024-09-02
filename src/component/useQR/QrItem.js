@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Loading from '../Loading';
 import BlackContainer from '../BlackContainer';
@@ -27,29 +27,26 @@ function QrItem({ onRemove, cardCode }) {
         Stomp.over(new SockJS('http://localhost:8091/ws')),
     );
 
-    const stompClientRef = useRef(null);
-    const isConnectedRef = useRef(false); // stompClient 연결 상태 추적
-
     const wsConnect = () => {
         stompClient.connect({}, function (frame) {
-            // console.log('Connected: ' + frame);
-            if (!stompClientRef.current) {
-                stompClientRef.current = stompClient;
-            }
-            stompClient.subscribe('/topic/sellinfo/'+memberNo, function (message) {
-                const body = JSON.parse(message.body);
-                // console.log('message:', body);
-                if (body.message === 'seller enter') {
-                    // console.log('판매자 접속');
-                    setIsLoading(true);
-                    setIsQrVisible(false);
-                }
-                if (body.message === 'purchase information') {
-                    //일단 AI 전송
-                    setIsAIiLoading(true);
-                    cardRecommend(body.data);
-                }
-            });
+            console.log('연결된 소켓: ' + frame);
+            stompClient.subscribe(
+                '/topic/sellinfo/' + memberNo,
+                function (message) {
+                    const body = JSON.parse(message.body);
+                    // console.log('message:', body);
+                    if (body.message === 'seller enter') {
+                        // console.log('판매자 접속');
+                        setIsLoading(true);
+                        setIsQrVisible(false);
+                    }
+                    if (body.message === 'purchase information') {
+                        //일단 AI 전송
+                        setIsAIiLoading(true);
+                        cardRecommend(body.data);
+                    }
+                },
+            );
         });
     };
     const cardRecommend = (data) => {
@@ -81,20 +78,27 @@ function QrItem({ onRemove, cardCode }) {
     };
     const handleRemove = () => {
         //구매자가 취소하기 버튼 누르면 판매자에게 전송하고 웹소켓 끊기
-        stompClientRef.current.send(
-            '/topic/sellinfo/'+memberNo,
-            {},
-            JSON.stringify({ message: 'buyer exit' }),
-        );
-        // stompClient.disconnect()를 먼저 실행
-        if (stompClient && typeof stompClient.disconnect === 'function') {
-            stompClient.disconnect();
-            // console.log('pay logic disconnected');
-        }
+        if (stompClient) {
+            // stompClient.subscribe(
+            //     '/topic/sellinfo/' + memberNo,
+            //     function (message) {
+            //         stompClient.send(
+            //             '/topic/sellinfo/' + memberNo,
+            //             {},
+            //             JSON.stringify({ message: 'buyer exit' }),
+            //         );
+            //     },
+            // );
+            // stompClient.disconnect()를 먼저 실행
+            if (typeof stompClient.disconnect === 'function') {
+                stompClient.disconnect();
+                // console.log('pay logic disconnected');
+            }
 
-        // 이후에 onRemove 실행
-        if (onRemove && typeof onRemove === 'function') {
-            onRemove();
+            // 이후에 onRemove 실행
+            if (onRemove && typeof onRemove === 'function') {
+                onRemove();
+            }
         }
     };
     const createQr = () => {
@@ -129,7 +133,11 @@ function QrItem({ onRemove, cardCode }) {
         <>
             {/* //웹소켓 접속해서 판매자가 정보 입력 중일 때 */}
             {isLoading && !isAIiLoading && (
-                <Loading text={'사장님이 결제 정보를 입력하고 있어요.'} info={'pay'} onCancel={handleRemove}  />
+                <Loading
+                    text={'사장님이 결제 정보를 입력하고 있어요.'}
+                    info={'pay'}
+                    onCancel={handleRemove}
+                />
             )}
             {isLoading && isAIiLoading && (
                 <Loading
@@ -142,11 +150,7 @@ function QrItem({ onRemove, cardCode }) {
             {/* //QR 코드가 보이는 상태일 때 */}
             {isQrVisible && (
                 <div className="qrItem">
-                    <BlackContainer
-                        onClick={() => {
-                            handleRemove();
-                        }}
-                    />
+                    <BlackContainer onClick={handleRemove} />
                     <div
                         className="white-box"
                         style={{

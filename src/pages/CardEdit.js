@@ -94,6 +94,9 @@ const CardEdit = () => {
             <div className="container pt-4 pt-sm-5">
                 <div className="mb-3">
                     <h1 className="text-center">내 카드 관리</h1>
+                    <p className="text-center">
+                        먼저 사용하고 싶은 카드를 상단으로 올려주세요.
+                    </p>
                 </div>
 
                 <div className="py-3">

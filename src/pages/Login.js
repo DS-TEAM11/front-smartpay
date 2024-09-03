@@ -20,14 +20,14 @@ const Login = () => {
 
     const handleLogin = async (event) => {
         event.preventDefault();
-        console.log('로그인 호출');
+        // console.log('로그인 호출');
 
         const loginData = {
             email: email,
             password: password,
         };
 
-        console.log('이메일,비번 입력받은 값:', loginData);
+        // console.log('이메일,비번 입력받은 값:', loginData);
 
         try {
             const response = await axios.post(

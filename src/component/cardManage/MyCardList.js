@@ -157,7 +157,13 @@ const MyCardList = ({ isLeftActive, cardList }) => {
                             </div>
                         </div>
                     ))}
-                    <Button text={'저장하기'} onClick={btnClick}></Button>
+                    <div className="d-flex justify-content-center mt-5">
+                        <Button
+                            className={'w-5'}
+                            text={'저장하기'}
+                            onClick={btnClick}
+                        ></Button>
+                    </div>
                 </div>
             )}
         </>

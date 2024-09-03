@@ -103,7 +103,6 @@ export const PayProvider = ({ children }) => {
                 .catch((err) => {
                     console.log('Failed to fetch memberNo', err);
                     if (err.response.status === 500) {
-                        console.log(token, '500 에러 발생');
                         navigate('/login', { replace: true });
                     }
                 });

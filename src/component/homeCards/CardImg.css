@@ -22,6 +22,7 @@
     max-height: -webkit-fill-available;
 }
 
+/* 작은 리스트 */
 .cardImg.small img,
 .cardImg.small .benefit-container {
     width: clamp(40px, 15vw, 4rem);
@@ -29,7 +30,15 @@
     max-width: clamp(40px, 15vw, 4rem);
     max-height: clamp(40px, 15vw, 4rem);
 }
-
+/* 중간 리스트 */
+.cardImg.sm img,
+.cardImg.sm .benefit-container {
+    width: clamp(70px, 20vw, 7rem);
+    height: clamp(70px, 20vw, 7rem);
+    max-width: clamp(70px, 20vw, 7rem);
+    max-height: clamp(70px, 20vw, 7rem);
+}
+/* 큰 리스트 */
 .cardImg.medium img,
 .cardImg.medium .benefit-container {
     width: clamp(120px, 30vw, 10rem);
@@ -38,6 +47,7 @@
     max-height: clamp(120px, 30vw, 10rem);
 }
 
+/* 메인 이미지용 */
 .cardImg.large img.rotate,
 .cardImg.large .benefit-container {
     width: clamp(200px, 60vw, 350px);

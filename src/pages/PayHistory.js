@@ -15,9 +15,8 @@ function PayHistory() {
     const [page, setPage] = useState(1); // 페이지 번호 상태 추가
     const [size] = useState(10); // 페이지 크기 설정
     const [hasMore, setHasMore] = useState(true); // 추가 데이터가 있는지 여부
-
     const observer = useRef(); // IntersectionObserver를 위한 ref
-
+    const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
     const lastElementRef = useRef(); // 마지막 요소를 추적하기 위한 ref
 
     const handleRotateChange = (rotated, parentDiv, imgElement) => {
@@ -56,7 +55,7 @@ function PayHistory() {
                 `http://localhost:8091/api/payment/history?memberNo=${memberNo}&cardNo=${cardNo}&startDate=${startDate}&endDate=${endDate}&page=${page}&size=${size}`,
             )
             .then((res) => {
-                console.log(res.data);
+                // console.log(res.data);
                 setPaymentData((prevData) => [...prevData, ...res.data]); // 결제 데이터 저장
                 setHasMore(res.data.length > 0); // 추가 데이터가 더 있는지 확인
             })
@@ -71,7 +70,7 @@ function PayHistory() {
                 `http://localhost:8091/api/cards/byMember?memberNo=${memberNo}`,
             )
             .then((res) => {
-                console.log(res.data);
+                // console.log(res.data);
                 setCardListData(res.data); // 보유카드 리스트 저장
             })
             .catch((e) => {
@@ -191,7 +190,7 @@ function PayHistory() {
                                         (payment, index) => (
                                             <div
                                                 key={payment.orderNo}
-                                                className="table-row cssportal-grid border-bottom"
+                                                className="table-row cssportal-grid border-bottom py-2"
                                                 ref={
                                                     index ===
                                                     groupedData[dayName]
@@ -211,7 +210,7 @@ function PayHistory() {
                                                         className="small"
                                                         src={payment.cardImage}
                                                         alt="카드이미지"
-                                                        direction="horizontal"
+                                                        direction="vertical"
                                                         onRotateChange={
                                                             handleRotateChange
                                                         }

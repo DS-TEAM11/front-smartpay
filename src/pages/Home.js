@@ -54,10 +54,12 @@ const Home = () => {
                         {
                             imageSrc: image1,
                             description: `이번달 ${totalSavePrice.toLocaleString()}원 적립`,
+                            className: 'benefit-point',
                         },
                         {
                             imageSrc: image2,
                             description: `이번달 ${totalDiscountPrice.toLocaleString()}원 할인`,
+                            className: 'benefit-discount',
                         },
                     ]}
                     managementItems={[

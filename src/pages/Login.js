@@ -42,7 +42,7 @@ const Login = () => {
             // console.log('리프레시토큰 꺼내기');
             //console.log(response.headers.authorization-refresh);
             const accessToken = response.headers.authorization;
-            const refreshToken = response.headers['authorization-refresh'];
+            // const refreshToken = response.headers['authorization-refresh'];
             //console.log(refreshToken);
 
             if (accessToken) {
@@ -54,11 +54,7 @@ const Login = () => {
                     localStorage.removeItem('savedEmail');
                 }
 
-                if (autoLogin) {
-                    document.cookie = `refreshToken=${refreshToken}; path=/; httpOnly`;
-                }
 
-                alert('로그인 성공');
                 navigate('/home');
             } else {
                 alert('로그인에 실패했습니다.');

@@ -34,6 +34,7 @@ export const PayProvider = ({ children }) => {
     const navigate = useNavigate();
     const [token, setToken] = useState(localStorage.getItem('accessToken'));
     const [newRefreshToken, setNewRefreshToken] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         const fetchMemberNo = async () => {
             if (!token) {
@@ -98,9 +99,12 @@ export const PayProvider = ({ children }) => {
                 })
                 .catch((err) => {
                     console.log('Failed to fetch memberNo', err);
+                    if (err.status === 500) {
+                        console.log(token, '500 에러 발생');
+                    }
                 });
+            setIsLoading(false);
         };
-
         if (!excludedPaths.includes(location.pathname.toLowerCase())) {
             fetchMemberNo();
         }
@@ -108,6 +112,7 @@ export const PayProvider = ({ children }) => {
     //멤버 정보 없으면 로그인 페이지로 이동
     useEffect(() => {
         if (
+            !isLoading &&
             !excludedPaths.includes(location.pathname.toLowerCase()) &&
             !memberNo
         ) {

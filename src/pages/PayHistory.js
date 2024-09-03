@@ -15,7 +15,6 @@ function PayHistory() {
     const [page, setPage] = useState(1); // 페이지 번호 상태 추가
     const [size] = useState(10); // 페이지 크기 설정
     const [hasMore, setHasMore] = useState(true); // 추가 데이터가 있는지 여부
-
     const observer = useRef(); // IntersectionObserver를 위한 ref
 
     const lastElementRef = useRef(); // 마지막 요소를 추적하기 위한 ref
@@ -191,7 +190,7 @@ function PayHistory() {
                                         (payment, index) => (
                                             <div
                                                 key={payment.orderNo}
-                                                className="table-row cssportal-grid border-bottom"
+                                                className="table-row cssportal-grid border-bottom py-2"
                                                 ref={
                                                     index ===
                                                     groupedData[dayName]
@@ -211,7 +210,7 @@ function PayHistory() {
                                                         className="small"
                                                         src={payment.cardImage}
                                                         alt="카드이미지"
-                                                        direction="horizontal"
+                                                        direction="vertical"
                                                         onRotateChange={
                                                             handleRotateChange
                                                         }

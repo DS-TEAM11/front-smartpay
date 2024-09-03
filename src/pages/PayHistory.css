@@ -95,8 +95,8 @@
 .payhistory .data .table-container .dayTable .table-row .cardImg {
     width: 100%;
     height: 100%;
-    filter: drop-shadow(1px 3px 4px black);
     margin-right: 8px;
+    filter: none;
 }
 
 .payhistory .data .table-container .dayTable .table-row .cardImg img {

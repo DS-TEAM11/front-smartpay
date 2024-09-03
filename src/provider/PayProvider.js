@@ -104,7 +104,7 @@ export const PayProvider = ({ children }) => {
                     console.log('Failed to fetch memberNo', err);
                     if (err.response.status === 500) {
                         console.log(token, '500 에러 발생');
-                        // navigate('/login', { replace: true });
+                        navigate('/login', { replace: true });
                     }
                 });
             // console.log('axois 이후', memberNo);

@@ -17,7 +17,14 @@ const ShowQrContext = createContext({
     showQr: false,
     setShowQr: () => {},
 });
-
+const excludedPaths = [
+    '/',
+    '/login',
+    '/signup',
+    '/welcome',
+    '/seller',
+    '/test',
+];
 // Provider 컴포넌트
 export const PayProvider = ({ children }) => {
     const [memberNo, setMemberNo] = useState(null);
@@ -25,91 +32,85 @@ export const PayProvider = ({ children }) => {
     const [showQr, setShowQr] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-
+    const [token, setToken] = useState(localStorage.getItem('accessToken'));
+    const [newRefreshToken, setNewRefreshToken] = useState('');
     useEffect(() => {
-        const excludedPaths = [
-            '/',
-            '/login',
-            '/signup',
-            '/welcome',
-            '/seller',
-            '/test',
-        ];
         const fetchMemberNo = async () => {
-            try {
-                let token = localStorage.getItem('accessToken');
-
-                if (!token) {
-                    // 액세스 토큰이 없을 경우 쿠키에 있는 리프레시 토큰으로 재발급 요청
-                    const response = await axios.get(
-                        `${ConfigEnum.PAY_SERVER_URL}/member/jwt-test`,
-                        {
-                            withCredentials: true, // 쿠키 자동 전송
-                        },
-                    );
-
-                    // 상태 코드가 404일 경우 로그인 페이지로 리다이렉트
-                    if (response.status === 404) {
-                        console.log(
-                            '404 에러 발생, 로그인 페이지로 리다이렉트',
+            if (!token) {
+                // 액세스 토큰이 없을 경우 쿠키에 있는 리프레시 토큰으로 재발급 요청
+                await axios
+                    .get(`${ConfigEnum.PAY_SERVER_URL}/member/jwt-test`, {
+                        withCredentials: true, // 쿠키 자동 전송
+                    })
+                    .then((res) => {
+                        console.log('리프레시 토큰을 통한 재발급 요청', res);
+                        // 새로운 토큰들을 저장
+                        setToken(res.headers.authorization);
+                        setNewRefreshToken(
+                            res.headers['authorization-refresh'],
                         );
-                        navigate('/login', { replace: true }); // replace 옵션을 추가해 브라우저 기록을 남기지 않음
-                        return;
-                    }
-                    if (response.status === 500) {
-                        console.log(
-                            '500 에러 발생, 로그인 페이지로 리다이렉트',
-                        );
-                        navigate('/login', { replace: true }); // replace 옵션을 추가해 브라우저 기록을 남기지 않음
-                        return;
-                    }
+                        if (token) {
+                            localStorage.setItem('accessToken', token);
+                        }
 
-                    // 새로운 토큰들을 저장
-                    token = response.headers.authorization;
-                    const newRefreshToken =
-                        response.headers['authorization-refresh'];
-
-                    if (token) {
-                        localStorage.setItem('accessToken', token);
-                    }
-
-                    if (newRefreshToken) {
-                        document.cookie = `refreshToken=${newRefreshToken}; path=/; HttpOnly`;
-                    }
-                }
-
-                // 액세스 토큰으로 memberNo 가져오기
-                const memberResponse = await axios.get(
-                    `${ConfigEnum.PAY_SERVER_URL}/member/findMember`,
-                    {
-                        headers: {
-                            Authorization: token,
-                        },
-                    },
-                );
-
-                setMemberNo(memberResponse.data);
-            } catch (error) {
-                console.error('Failed to fetch memberNo', error);
-                if (error.response && error.response.status === 401) {
-                    // 인증 에러 발생 시 리프레시 토큰 삭제 및 로그인 페이지로 리다이렉트
-                    document.cookie = 'refreshToken=; Max-Age=0; path=/;';
-                    navigate('/login');
-                } else if (error.response && error.response.status === 404) {
-                    // 리프레시 토큰 요청 결과가 404일 경우 로그인 페이지로 리다이렉트
-                    console.log('404 에러 발생, 로그인 페이지로 리다이렉트');
-                    navigate('/login', { replace: true });
-                }
+                        if (newRefreshToken) {
+                            document.cookie = `refreshToken=${newRefreshToken}; path=/; HttpOnly`;
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.status === 401) {
+                            // 인증 에러 발생 시 리프레시 토큰 삭제 및 로그인 페이지로 리다이렉트
+                            document.cookie =
+                                'refreshToken=; Max-Age=0; path=/;';
+                            navigate('/login');
+                        }
+                        if (err.status === 404) {
+                            console.log(
+                                '404 에러 발생, 로그인 페이지로 리다이렉트',
+                            );
+                            navigate('/login', {
+                                replace: true,
+                            }); // replace 옵션을 추가해 브라우저 기록을 남기지 않음
+                            return;
+                        }
+                        if (err.status === 500) {
+                            console.log(
+                                '500 에러 발생, 로그인 페이지로 리다이렉트',
+                            );
+                            navigate('/login', {
+                                replace: true,
+                            }); // replace 옵션을 추가해 브라우저 기록을 남기지 않음
+                            return;
+                        }
+                    });
             }
+            console.log('액세스 토큰:', token);
+            console.log('액세스 토큰으로 memberNo 가져오기');
+            // 액세스 토큰으로 memberNo 가져오기
+            await axios
+                .get(`${ConfigEnum.PAY_SERVER_URL}/member/findMember`, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then((res) => {
+                    setMemberNo(res.data);
+                })
+                .catch((err) => {
+                    console.log('Failed to fetch memberNo', err);
+                });
         };
 
         if (!excludedPaths.includes(location.pathname.toLowerCase())) {
             fetchMemberNo();
         }
     }, [location.pathname, navigate]);
-    //멤버 정보 없으면 로그인 페이지로 이동(임시)
+    //멤버 정보 없으면 로그인 페이지로 이동
     useEffect(() => {
-        if (!memberNo) {
+        if (
+            !excludedPaths.includes(location.pathname.toLowerCase()) &&
+            !memberNo
+        ) {
             navigate('/login');
         }
     }, [memberNo]);

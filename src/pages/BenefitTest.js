@@ -7,6 +7,7 @@ const BenefitTest = () => {
     const memberNo = useMemberNo();
     const [cards, setCards] = useState([]);
     const [cardPayInfos, setCardPayInfos] = useState({});
+    const [cardData, setCardData] = useState({});
     const [totalSavePrice, setTotalSavePrice] = useState(0);
     const [totalDiscountPrice, setTotalDiscountPrice] = useState(0);
     const [totalBenefitPrice, setTotalBenefitPrice] = useState(0);
@@ -33,6 +34,13 @@ const BenefitTest = () => {
                     });
                     setCardPayInfos(payInfos);
 
+                    const cardDataInfos = {};
+                    response.data.cards.forEach((card) => {
+                        cardDataInfos[card.cardNo] =
+                            response.data['cardData_' + card.cardNo];
+                    });
+                    setCardData(cardDataInfos);
+
                     // 총 적립금액, 총 할인금액, 총 혜택금액 설정
                     setTotalSavePrice(response.data.totalSavePrice);
                     setTotalDiscountPrice(response.data.totalDiscountPrice);
@@ -50,6 +58,31 @@ const BenefitTest = () => {
         return <div>Loading...</div>; // memberNo가 없으면 로딩 표시
     }
 
+    const renderCardGoals = (card) => {
+        const data = cardData[card.cardNo] || {};
+
+        if (!data.cardGoal1) {
+            return <h3>목표 실적: 0원</h3>;
+        } else if (!data.cardGoal2) {
+            return <h3>목표 실적 1구간: {data.cardGoal1}원</h3>;
+        } else if (!data.cardGoal3) {
+            return (
+                <>
+                    <h3>목표 실적 1구간: {data.cardGoal1}원</h3>
+                    <h3>목표 실적 2구간: {data.cardGoal2}원</h3>
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <h3>목표 실적 1구간: {data.cardGoal1}원</h3>
+                    <h3>목표 실적 2구간: {data.cardGoal2}원</h3>
+                    <h3>목표 실적 3구간: {data.cardGoal3}원</h3>
+                </>
+            );
+        }
+    };
+
     return (
         <div className="benefittest-container">
             <h1>테스트맨의 이번달 혜택내역</h1>
@@ -58,6 +91,10 @@ const BenefitTest = () => {
                     <div key={card.cardNo} className="card-item">
                         <img src={card.cardImage} alt={card.cardNick} />
                         <h2>{card.cardNick}</h2>
+
+                        {/* 목표 실적 출력 함수 호출 */}
+                        {renderCardGoals(card)}
+
                         <p>이번달 사용금액: {card.totalCardPrice}원</p>
                         {cardPayInfos[card.cardNo] &&
                         cardPayInfos[card.cardNo].length > 0 ? (

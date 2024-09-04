@@ -18,27 +18,21 @@ function PayHistory() {
     const [isLoading, setIsLoading] = useState(false);
     const scrollParentRef = useRef();
     const memberNo = useMemberNo();
-
     const [dateRange, setDateRange] = useState([
         new Date(new Date().getFullYear(), new Date().getMonth(), 1),
         new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
     ]);
 
-    // 카드 선택 핸들러
-    const onChangeCardNo = (e) => {
-        setCardNo(e.target.value);
-        setPage(1);
-        setPaymentData([]);
+    // 핸들러 함수 정의
+    const handleRotateChange = (rotated, parentDiv, imgElement) => {
+        setIsRotated(rotated);
+        if (parentDiv) {
+            parentDiv.style.height = imgElement.width + 'px';
+            parentDiv.style.width = imgElement.height + 'px';
+        }
     };
 
-    // 날짜 범위 변경 핸들러
-    const onChangeDateRange = (dateRange) => {
-        setDateRange(dateRange);
-        setPage(1);
-        setPaymentData([]);
-    };
-
-    // 결제 데이터 요청 함수
+    // 데이터 요청 함수
     const fetchPayments = (isNewSearch = false) => {
         if (isLoading) return;
 
@@ -59,13 +53,20 @@ function PayHistory() {
             })
             .then((res) => {
                 console.log('API Response:', res.data);
+
                 const newData = res.data;
+
                 setPaymentData((prevData) =>
                     isNewSearch ? newData : [...prevData, ...newData],
                 );
                 setHasMore(newData.length === size);
                 setIsLoading(false);
-                if (isNewSearch) setPage(2);
+
+                if (isNewSearch) {
+                    setPage(2);
+                } else {
+                    setPage((prevPage) => prevPage + 1);
+                }
             })
             .catch((error) => {
                 console.error('결제 데이터 요청 에러', error);
@@ -86,6 +87,32 @@ function PayHistory() {
                 console.error('보유카드 요청 에러', error);
             });
     };
+
+    // 날짜 범위 변경 핸들러
+    const onChangeDateRange = (dateRange) => {
+        setDateRange(dateRange);
+        setPage(1); // 날짜 범위 변경 시 페이지 번호 초기화
+        fetchPayments(true); // 새로운 날짜 범위로 데이터 로드
+    };
+
+    // 카드 번호 변경 핸들러
+    const onChangeCardNo = (e) => {
+        setCardNo(e.target.value);
+        setPage(1); // 카드 번호 변경 시 페이지 번호 초기화
+        fetchPayments(true); // 새로운 카드 번호로 데이터 로드
+    };
+
+    useEffect(() => {
+        if (memberNo) {
+            fetchCardList();
+        }
+    }, [memberNo]);
+
+    useEffect(() => {
+        if (memberNo) {
+            fetchPayments(true); // 페이지 초기화가 필요한 경우
+        }
+    }, [dateRange, cardNo, memberNo]);
 
     // 날짜 포맷 함수
     const formatDate = (date) => {
@@ -111,7 +138,8 @@ function PayHistory() {
 
     // 통화 형식 변환 함수
     const formatCurrency = (amount) => {
-        return `${(amount ?? 0).toLocaleString()}원`;
+        const validAmount = amount ?? 0;
+        return `${validAmount.toLocaleString()}원`;
     };
 
     // 데이터 그룹화 함수
@@ -134,18 +162,6 @@ function PayHistory() {
             fetchPayments();
         }
     };
-
-    useEffect(() => {
-        if (memberNo) {
-            fetchCardList();
-        }
-    }, [memberNo]);
-
-    useEffect(() => {
-        if (memberNo) {
-            fetchPayments(true); // 페이지 초기화 및 새 데이터 로드
-        }
-    }, [dateRange, cardNo, memberNo]);
 
     return (
         <>

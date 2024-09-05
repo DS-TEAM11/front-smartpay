@@ -182,7 +182,7 @@ function PayHistory() {
                                             </div>
                                             <div className="item2">
                                                 <CardImg
-                                                    className="small"
+                                                    className="sm"
                                                     src={payment.cardImage}
                                                     alt="카드이미지"
                                                     direction="vertical"

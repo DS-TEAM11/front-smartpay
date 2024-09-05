@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Button from '../Button';
-
+import './InputValue.css';
 const InputValue = React.memo(({ title, ...props }) => {
     const {
         placeholder,
@@ -31,7 +31,7 @@ const InputValue = React.memo(({ title, ...props }) => {
     };
 
     return (
-        <div className="form-group">
+        <div className="form-group custom-input-container">
             {title ? (
                 <label className="form-label" htmlFor={id}>
                     {title}
@@ -60,7 +60,7 @@ const InputValueWithBtn = React.memo(
         };
 
         return (
-            <div className="form-group">
+            <div className="form-group custom-input-container">
                 {title ? (
                     <label className="form-label" htmlFor={id}>
                         {title}

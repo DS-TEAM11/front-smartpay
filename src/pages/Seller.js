@@ -223,12 +223,13 @@ const Seller = () => {
                         onChange={handleInputChange}
                         type="number"
                     />
-                    <div className="my-4 text-center">
+                    <div className="my-4 text-center d-flex justify-content-center flex-column">
                         <Button
                             text={'결제 요청 전송'}
                             onClick={sendInformation}
                         ></Button>
                         <Button
+                            className={'white mt-2'}
                             text={'재접속 신호 전송'}
                             onClick={(e) => {
                                 e.preventDefault();

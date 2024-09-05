@@ -75,6 +75,7 @@ function App() {
                         {/* <Route path="/memberPwd" element={<MemberPwd />} />
                         <Route path="/checkPwd" element={<CheckPwd />} /> */}
                         <Route path="/idpwCheck" element={<IdPwCheck />} />
+                        <Route path="/mypage" element={<MyPage />} />
                     </Routes>
                 </PayProvider>
             </Router>

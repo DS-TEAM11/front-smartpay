@@ -3,22 +3,25 @@ import axios from 'axios';
 import Header from '../component/Header';
 import './Home.css';
 import CardInfo from '../component/homeCards/CardInfo2';
-import BenefitsAndManagement from '../component/BenefitsAndManagement'; // 컴포넌트를 모듈화
+import BenefitsAndManagement from '../component/BenefitsAndManagement';
 import image1 from '../img/home1.png';
 import image2 from '../img/home2.png';
 import image3 from '../img/home3.png';
 import image4 from '../img/home4.png';
 import image5 from '../img/home5.png';
 import image6 from '../img/home6.png';
-import { useNavigate } from 'react-router-dom'; // useNavigate 추가
+import { useNavigate } from 'react-router-dom';
 import { useMemberNo, useWebSocket } from '../provider/PayProvider';
+import CardDeletePicker from '../component/CardDeletePicker'; // CardDeletePicker 추가
 
 const Home = () => {
     const memberNo = useMemberNo();
-    const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
-    const navigate = useNavigate(); // useNavigate 훅 사용
-    const [totalSavePrice, setTotalSavePrice] = useState(0); //이번달 총 적립금액
-    const [totalDiscountPrice, setTotalDiscountPrice] = useState(0); //이번달 총 할인금액
+    const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
+    const [totalSavePrice, setTotalSavePrice] = useState(0);
+    const [totalDiscountPrice, setTotalDiscountPrice] = useState(0);
+    const [cards, setCards] = useState([]); // 사용자가 소유한 카드 목록
+    const [showCardDeletePicker, setShowCardDeletePicker] = useState(false); // 카드 삭제 모달 상태
     const { wsConnect, wsDisconnect, wsSubscribe, wsSendMessage } =
         useWebSocket();
 
@@ -26,19 +29,28 @@ const Home = () => {
         const fetchData = async () => {
             if (memberNo) {
                 try {
-                    const response = await axios.get(
+                    const benefitResponse = await axios.get(
                         'http://localhost:8091/member/getBenefit',
                         {
                             params: { memberNo: memberNo },
                         },
                     );
+                    setTotalSavePrice(benefitResponse.data.totalSavePrice);
+                    setTotalDiscountPrice(
+                        benefitResponse.data.totalDiscountPrice,
+                    );
 
-                    setTotalSavePrice(response.data.totalSavePrice);
-                    setTotalDiscountPrice(response.data.totalDiscountPrice);
+                    const cardResponse = await axios.get(
+                        `http://localhost:8091/api/cards/details/byMember`,
+                        {
+                            params: { memberNo: memberNo },
+                        },
+                    );
+                    setCards(cardResponse.data);
                 } catch (error) {
                     console.error('Failed to fetch benefit data', error);
                 } finally {
-                    setIsLoading(false); // 데이터 로딩이 완료되면 로딩 상태를 false로 설정
+                    setIsLoading(false);
                 }
             }
         };
@@ -63,11 +75,19 @@ const Home = () => {
         };
     }, [memberNo]);
 
+    const handleCardDelete = (deletedCard) => {
+        setCards((prevCards) =>
+            prevCards.filter((card) => card.cardNo !== deletedCard.cardNo),
+        );
+    };
     return (
         <>
             <Header />
             <div className="main-container">
-                <CardInfo />
+                <CardInfo
+                    cards={cards}
+                    onDeleteCard={handleCardDelete} // onDeleteCard 전달
+                />
                 <BenefitsAndManagement
                     benefits={[
                         {
@@ -107,10 +127,18 @@ const Home = () => {
                                     등록된 카드 <br /> 삭제하기
                                 </>
                             ),
-                            onClick: () => navigate('/cardDelete'),
+                            onClick: () => setShowCardDeletePicker(true), // 모달 표시
                         },
                     ]}
                 />
+                {showCardDeletePicker && (
+                    <CardDeletePicker
+                        title="삭제할 카드를 선택하세요"
+                        cards={cards}
+                        onRemove={() => setShowCardDeletePicker(false)} // 모달 닫기
+                        onDeleteCard={handleCardDelete} // 카드 삭제 핸들러
+                    />
+                )}
             </div>
         </>
     );

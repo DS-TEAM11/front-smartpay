@@ -101,7 +101,6 @@ function PwdItem({ Success }) {
             .then((response) => {
                 if (response.status === 200) {
                     // console.log('Data sent:', payload);
-                    Success(true);
                 }
             })
             .catch((error) => {

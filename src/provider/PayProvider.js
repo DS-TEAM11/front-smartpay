@@ -8,7 +8,6 @@ const ConfigEnum = Object.freeze({
     COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
 });
 const ConfigContext = createContext(ConfigEnum); // ConfigContext 생성
-
 // Context 생성
 const MemberContext = createContext(null);
 const SelectedCardContext = createContext({
@@ -26,6 +25,7 @@ const excludedPaths = [
     '/welcome',
     '/seller',
     '/test',
+    '/idpwcheck',
 ];
 // Provider 컴포넌트
 let memberNo = null;
@@ -60,7 +60,6 @@ export const PayProvider = ({ children }) => {
                         // console.log('리프레시 토큰을 통한 재발급 요청', res);
                         token = res.headers['authorization'];
                         newRefreshToken = res.headers['authorization-refresh'];
-
                         // 새로운 토큰들을 저장
                         if (token) {
                             localStorage.setItem('accessToken', token);
@@ -101,7 +100,6 @@ export const PayProvider = ({ children }) => {
             // console.log('리프레시 토큰:', newRefreshToken);
             // console.log('액세스 토큰으로 memberNo 가져오기');
             // 액세스 토큰으로 memberNo 가져오기
-
             memberNo = await axios
                 .get(`${ConfigEnum.PAY_SERVER_URL}/member/findMember`, {
                     headers: {
@@ -182,12 +180,10 @@ export const PayProvider = ({ children }) => {
         </ConfigContext.Provider>
     );
 };
-
 // Custom Hooks for accessing contexts
 const useMemberNo = () => {
     return useContext(MemberContext);
 };
-
 const useSelectedCard = () => {
     const context = useContext(SelectedCardContext);
     if (!context) {
@@ -195,7 +191,6 @@ const useSelectedCard = () => {
     }
     return context;
 };
-
 const useShowQr = () => {
     const context = useContext(ShowQrContext);
     if (!context) {
@@ -203,7 +198,6 @@ const useShowQr = () => {
     }
     return context;
 };
-
 const useConfig = () => {
     const context = useContext(ConfigContext);
     if (!context) {

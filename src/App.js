@@ -30,6 +30,7 @@ import MyPage from './pages/MyPage';
 // import CheckPwd from './pages/CheckPwd';
 // import MemberPwd from './pages/MemberPwd';
 import BenefitTest from './pages/BenefitTest';
+import IdPwCheck from './pages/IdPwCheck';
 const SplashScreen = () => {
     const navigate = useNavigate();
 
@@ -71,9 +72,10 @@ function App() {
                         <Route path="*" element={<NotFoundPage />} />
                         <Route path="/history" element={<PayHistory />} />
                         <Route path="/benefitTest" element={<BenefitTest />} />
-                        <Route path="/mypage" element={<MyPage />} />
                         {/* <Route path="/memberPwd" element={<MemberPwd />} />
                         <Route path="/checkPwd" element={<CheckPwd />} /> */}
+                        <Route path="/idpwCheck" element={<IdPwCheck />} />
+                        <Route path="/mypage" element={<MyPage />} />
                     </Routes>
                 </PayProvider>
             </Router>

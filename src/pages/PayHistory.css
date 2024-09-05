@@ -3,7 +3,6 @@
     height: 100%;
     /* 전체 화면 높이 */
     margin: 0 auto;
-    padding-top: 15%;
     box-sizing: border-box;
     overflow: auto;
     display: flex;
@@ -11,6 +10,7 @@
     flex-direction: column;
     /* justify-content: flex-start; */
     align-items: center;
+    padding: 1%;
 }
 
 .payhistory .condition-box {
@@ -24,17 +24,13 @@
 }
 
 .payhistory .data .table-container .dayTable {
-    border: 1px solid #ccc; /* 경계선 두께와 색상 설정 */
-    border-radius: 8px; /* 모서리 둥글게 */
-    padding: 10px; /* 내용과 경계선 사이에 패딩 추가 */
-    margin-bottom: 15px; /* 각 dayTable 간의 간격 */
+    border-bottom: 0.3rem solid rgb(79, 70, 229, 0.2); /* 경계선 두께와 색상 설정 */
+    border-radius: 0.8rem; /* 모서리 둥글게 */
+     padding: 0.5rem; /*내용과 경계선 사이에 패딩 추가 */
+    /* margin-bottom: 15px; 각 dayTable 간의 간격 */
     margin: 1%;
 }
-.payhistory .data .table-container .dayTable .dayName {
-    margin: 0 5% 5%;
-    font-weight: bold;
-    text-align: left;
-}
+
 
 /* cssportal-grid 구조  */
 .payhistory .data .table-container .dayTable .table-row {
@@ -48,12 +44,11 @@
 }
 
 /* 하위 선택자 구조화 */
-.payhistory .data .table-container .dayTable .table-row .item1 {
+.payhistory .data .table-container .dayTable .table-row  {
     grid-area: 1/1/2/3;
     font-size: 25px;
     font-weight: bold;
     text-align: left;
-    margin-left: 5%;
     align-content: end;
     overflow: hidden;
     white-space: nowrap;
@@ -63,7 +58,6 @@
 
 .payhistory .data .table-container .dayTable .table-row .item2 {
     grid-area: 2/1/3/3;
-    margin-left: 5%;
     display: flex;
     align-items: center;
     font-weight: bold;
@@ -102,4 +96,12 @@
 .payhistory .data .table-container .dayTable .table-row .cardImg img {
     max-width: 2rem;
     height: 2rem;
+}
+
+.table-container{
+    margin: 3%;
+}
+.dayName{
+    font-weight: bold;
+    text-align: left;
 }

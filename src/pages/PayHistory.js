@@ -139,7 +139,7 @@ function PayHistory() {
             <Header />
             <div className="payhistory">
                 <div className="header"></div>
-                <div className="title">
+                <div className="title my-2">
                     <p>결제내역</p>
                 </div>
                 <div className="condition-box">
@@ -168,24 +168,24 @@ function PayHistory() {
                     {Object.keys(groupedData).length > 0 ? (
                         <div className="table-container">
                             {Object.keys(groupedData).map((dayName) => (
-                                <div className="dayTable" key={dayName}>
-                                    <div className="dayName">{dayName}</div>
+                                <div className="dayTable mb-3 shadow" key={dayName}>
+                                    <div className="dayName px-2 py-1">{dayName}</div>
                                     {groupedData[dayName].map((payment) => (
                                         <div
                                             key={payment.orderNo}
-                                            className="table-row cssportal-grid border-bottom py-2"
+                                            className="table-row cssportal-grid border-bottom p-2"
                                         >
-                                            <div className="item1">
+                                            <div className="item1 fs-4 fw-medium">
                                                 <span className="franchiseName">
                                                     {payment.franchiseName}
                                                 </span>
                                             </div>
-                                            <div className="item2">
+                                            <div className="item2 fs-6">
                                                 <CardImg
                                                     className="small"
                                                     src={payment.cardImage}
                                                     alt="카드이미지"
-                                                    direction="vertical"
+                                                    direction="horizontal"
                                                     onRotateChange={
                                                         handleRotateChange
                                                     }

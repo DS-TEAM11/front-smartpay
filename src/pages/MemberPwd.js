@@ -47,7 +47,7 @@ function MemberPwd({ Success }) {
             newPin[activePinIndex] = value;
             setPin(newPin);
             setActivePinIndex(activePinIndex + 1);
-        } 
+        }
     };
 
     const submitPin = () => {
@@ -134,7 +134,7 @@ function MemberPwd({ Success }) {
                     onClick={submitPin}
                     text="비밀번호 설정"
                     className="wide-button"
-                    disabled={pin.join('').length < 6} 
+                    disabled={pin.join('').length < 6}
                 />
             </div>
         </div>

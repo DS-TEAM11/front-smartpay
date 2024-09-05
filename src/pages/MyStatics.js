@@ -28,16 +28,16 @@ function MyStatics() {
 
     // 가맹점 코드와 이미지 경로를 매핑하는 객체
     const franchiseImageMap = {
-        10000: '../img/general_store.png',
-        10001: '../img/bill_payment.png',
-        10002: '../img/gas_station.png',
-        10003: '../img/convenience_store.png',
-        10004: '../img/cafe.png',
-        10005: '../img/mart.png',
-        10006: '../img/shopping.png',
-        10007: '../img/airline.png',
-        10008: '../img/restaurant.png',
-        10009: '../img/public_transport.png',
+        10000: 'assets/images/general_store.png',
+        10001: 'assets/images/bill_payment.png',
+        10002: 'assets/images/gas_station.png',
+        10003: 'assets/images/convenience_store.png',
+        10004: 'assets/images/cafe.png',
+        10005: 'assets/images/mart.png',
+        10006: 'assets/images/shopping.png',
+        10007: 'assets/images/airline.png',
+        10008: 'assets/images/restaurant.png',
+        10009: 'assets/images/public_transport.png',
     };
 
 

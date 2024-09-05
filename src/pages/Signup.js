@@ -149,16 +149,10 @@ const Signup = () => {
                     setIsEmailDuplicate(true);
                     setEmail('');
                     setEmailSuccess('');
-                    if (emailInputRef.current) {
-                        emailInputRef.current.focus(); // 이메일 입력 필드로 포커스를 이동
-                    }
                 } else {
                     setEmailError('');
                     setEmailSuccess('이메일이 사용 가능합니다.');
                     setIsEmailDuplicate(false);
-                    if (passwordInputRef.current) {
-                        passwordInputRef.current.focus();
-                    }
                 }
             })
             .catch((error) => {
@@ -317,7 +311,6 @@ const Signup = () => {
                             className="form-control"
                             placeholder="Email"
                             value={email}
-                            ref={emailInputRef}
                             onChange={(e) => {
                                 setEmail(e.target.value);
                                 setIsEmailDuplicate(false); // 이메일 변경 시 중복 상태 초기화

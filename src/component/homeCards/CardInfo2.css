@@ -8,8 +8,15 @@
     flex-direction: column;
     align-items: center;
     background: #fbfbfb;
+    justify-content: center;
 }
-
+.cardText {
+    height: 430px;
+    width: 100%;
+    display: block;
+    align-content: center;
+    text-align: center;
+}
 .card-info-container .card-main-container {
     flex: 0 1 70%;
     height: 70%;

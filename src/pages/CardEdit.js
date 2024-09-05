@@ -88,6 +88,10 @@ const CardEdit = () => {
         }
     }, [memberNo, isLeftActive]); // memberNo가 설정된 후에만 실행
 
+    const handleCardNickUpdate = (updateCards) => {
+        setFetchedCards(updateCards);
+    };
+
     return (
         <>
             <Header />
@@ -110,6 +114,7 @@ const CardEdit = () => {
                     <MyCardList
                         isLeftActive={isLeftActive}
                         cardList={fetchedCards}
+                        onCardNickUpdate={handleCardNickUpdate}
                     />
                 </div>
             </div>

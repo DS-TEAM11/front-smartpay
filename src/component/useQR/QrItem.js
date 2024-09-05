@@ -19,6 +19,7 @@ function QrItem({ onRemove, cardCode, subscription, subMessage }) {
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isAIiLoading, setIsAIiLoading] = useState(false);
+    const [isFirst, setIsFirst] = useState(true);
     const [isEnd, setIsEnd] = useState(false);
     const [boxHeight, setBoxHeight] = useState('60vh');
     const [boxTop, setBoxTop] = useState('40vh');
@@ -85,11 +86,11 @@ function QrItem({ onRemove, cardCode, subscription, subMessage }) {
 
     useEffect(() => {
         createQr();
-        // console.log('받아온 ref', subscriptionRef.current);
-        // console.log('받아온 subMessage', subMessage);
+        console.log('받아온 ref', subscriptionRef.current);
+        console.log('받아온 subMessage', subMessage);
         //기존 구독이 있을 때만 체크
         if (subscriptionRef.current && subMessage) {
-            console.log('구독 후 ref', subscriptionRef.current);
+            // console.log('구독 후 ref', subscriptionRef.current);
             console.log('Home-QrItem에서 받음 Received message:', subMessage);
             const { action, from, to, data } = subMessage;
             if (from === 'seller') {
@@ -103,7 +104,7 @@ function QrItem({ onRemove, cardCode, subscription, subMessage }) {
                     });
                 }
                 if (isLoading && action === 'fillout') {
-                    setIsLoading(false);
+                    setIsQrVisible(false);
                     setIsAIiLoading(true);
                     wsSendMessage(`/topic/sellinfo`, {
                         action: 'aiRecommend',
@@ -115,13 +116,15 @@ function QrItem({ onRemove, cardCode, subscription, subMessage }) {
                 }
             }
         }
-
-        // 접속 완료 메시지 전송
-        wsSendMessage(`/topic/sellinfo`, {
-            action: 'createQR',
-            from: memberNo,
-            to: 'seller',
-        });
+        if (isFirst) {
+            setIsFirst(false);
+            // 접속 완료 메시지 전송
+            wsSendMessage(`/topic/sellinfo`, {
+                action: 'createQR',
+                from: memberNo,
+                to: 'seller',
+            });
+        }
 
         return () => {
             if (!isEnd) {
@@ -129,14 +132,21 @@ function QrItem({ onRemove, cardCode, subscription, subMessage }) {
             }
             handleRemove();
         };
-    }, [subMessage, location.pathname]);
+    }, [subMessage, subscriptionRef.current]);
 
     const handleRemove = () => {
+        console.log('handleREMOVER 실행 ');
         setIsQrVisible(false);
         setIsFullScreen(false);
         setIsLoading(false);
         setIsAIiLoading(false);
         setIsEnd(false);
+        // 취소 메시지 전송
+        wsSendMessage(`/topic/sellinfo`, {
+            action: 'cancel',
+            from: memberNo,
+            to: 'seller',
+        });
         if (onRemove && typeof onRemove === 'function') {
             onRemove();
         }

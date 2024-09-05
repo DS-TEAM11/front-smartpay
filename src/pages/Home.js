@@ -10,14 +10,15 @@ import image3 from '../img/home3.png';
 import image4 from '../img/home4.png';
 import image5 from '../img/home5.png';
 import image6 from '../img/home6.png';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useMemberNo, useWebSocket } from '../provider/PayProvider';
 import CardDeletePicker from '../component/CardDeletePicker'; // CardDeletePicker 추가
-
 const Home = () => {
     const memberNo = useMemberNo();
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
+    const location = useLocation();
+    const [isFirst, setIsFirst] = useState(true);
     const [totalSavePrice, setTotalSavePrice] = useState(0);
     const [totalDiscountPrice, setTotalDiscountPrice] = useState(0);
     const [cards, setCards] = useState([]); // 사용자가 소유한 카드 목록
@@ -84,13 +85,13 @@ const Home = () => {
             });
         });
         // 컴포넌트가 언마운트될 때 구독 해제 및 WebSocket 연결 해제
-        return () => {
-            if (subscriptionRef.current) {
-                subscriptionRef.current.unsubscribe(); // 구독 해제
-            }
-            wsDisconnect(); // WebSocket 연결 해제
-        };
-    }, [memberNo]);
+        // return () => {
+        //     if (subscriptionRef.current) {
+        //         subscriptionRef.current.unsubscribe(); // 구독 해제
+        //     }
+        //     wsDisconnect(); // WebSocket 연결 해제
+        // };
+    }, [memberNo, location.pathname]);
 
     const handleCardDelete = (deletedCard) => {
         setCards((prevCards) =>
@@ -99,7 +100,10 @@ const Home = () => {
     };
     return (
         <>
-            <Header />
+            <Header
+                subscription={subscriptionRef.current}
+                subMessage={subMessage}
+            />
             <div className="main-container">
                 <CardInfo
                     cards={cards}

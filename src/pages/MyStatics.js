@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useMemberNo } from '../provider/PayProvider';
 import Header from '../component/Header';
 import { BarChart } from '@mui/x-charts/BarChart';
+import './MyStatics.css'
 
 function MyStatics() {
     const memberNo = useMemberNo();
@@ -118,8 +119,8 @@ function MyStatics() {
                     </div>
                     <div>
                         {data.map((item) => (
-                            <div key={item.franchiseCode}>
-                                <div>
+                            <div className='table-container' key={item.franchiseCode}>
+                                <div className='row-img'>
                                     {/* 이미지 경로를 franchiseCode에 맞춰 동적으로 설정 */}
                                     <img 
                                         src={franchiseImageMap[item.franchiseCode]} 
@@ -127,14 +128,14 @@ function MyStatics() {
                                         style={{ width: '50px', height: '50px' }}
                                     />
                                 </div>
-                                <div>
+                                <div className='row-name'>
                                     {franchiseMap[item.franchiseCode]}
                                 </div>
-                                <div>
+                                <div className='row-percent'>
                                     {/* 백분율 계산 (소수점 한 자리까지 표시) */}
                                     {((item.thisMonth / item.thisMonthTotal) * 100).toFixed(1)}%
                                 </div>
-                                <div>
+                                <div className='row-price'>
                                     {item.thisMonth.toLocaleString()}원
                                 </div>
                             </div>

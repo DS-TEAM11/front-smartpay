@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { InputValue } from '../component/common/InputValue'; // InputValue 컴포넌트 임포트
 import './Signup.css';
 import logoImage from '../img/logo3.png'; // 로고 이미지 임포트
-
+import CustomModal from '../component/common/Modal';
 const Signup = () => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -27,6 +27,16 @@ const Signup = () => {
     const [isSmsSent, setIsSmsSent] = useState(false);
     const [isPolicyVisible, setIsPolicyVisible] = useState(false);
     const navigate = useNavigate();
+
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
+    const [checkModal, setCheckModal] = useState(true); // 버튼 표시 여부
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setCheckModal(false); 
+    };
 
     const validatePhone = (phone) => {
         const re = /^\d{11}$/; // 기본 전화번호 형식 검증
@@ -64,14 +74,26 @@ const Signup = () => {
                 .then((response) => {
                     setVerificationCode(response.data); // 서버에서 받은 인증번호 설정
                     setIsSmsSent(true);
-                    alert('인증번호가 발송되었습니다.');
+                    // alert('인증번호가 발송되었습니다.');
+                    setModalTitle('인증번호 발송');
+                    setModalContent('인증번호가 발송되었습니다.');
+                    setShowModal(true);
+                    setCheckModal(false);
                 })
                 .catch((error) => {
                     console.error('인증번호 생성 실패:', error);
-                    alert('인증번호 생성에 실패했습니다.');
+                    // alert('인증번호 생성에 실패했습니다.');
+                    setModalTitle('알림');
+                    setModalContent('인증번호 생성에 실패했습니다.');
+                    setShowModal(true);
+                    setCheckModal(true);
                 });
         } else {
-            alert('전화번호를 올바르게 입력해주세요.');
+            // alert('전화번호를 올바르게 입력해주세요.');
+            setModalTitle('알림');
+            setModalContent('전화번호를 올바르게 입력해주세요.');
+            setShowModal(true);
+            setCheckModal(true);
         }
     };
 
@@ -85,14 +107,26 @@ const Signup = () => {
                 })
                 .then((response) => {
                     setIsSmsSent(true);
-                    alert('인증번호가 발송되었습니다.');
+                    // alert('인증번호가 발송되었습니다.');
+                    setModalTitle('알림');
+                    setModalContent('인증번호가 발송되었습니다.');
+                    setShowModal(true);
+                    setCheckModal(false);
                 })
                 .catch((error) => {
                     console.error('인증번호 생성 실패:', error);
-                    alert('인증번호 생성에 실패했습니다.');
+                    // alert('인증번호 생성에 실패했습니다.');
+                    setModalTitle('알림');
+                    setModalContent('인증번호 생성에 실패했습니다.');
+                    setShowModal(true);
+                    setCheckModal(true);
                 });
         } else {
-            alert('전화번호를 올바르게 입력해주세요.');
+            // alert('전화번호를 올바르게 입력해주세요.');
+            setModalTitle('알림');
+            setModalContent('전화번호를 올바르게 입력해주세요.');
+            setShowModal(true);
+            setCheckModal(true);
         }
     };
 
@@ -104,9 +138,17 @@ const Signup = () => {
 
         if (trimmedInputCode === verificationCodeString) {
             setIsVerified(true);
-            alert('인증이 완료되었습니다.');
+            // alert('인증이 완료되었습니다.');
+            setModalTitle('알림');
+            setModalContent('인증이 완료되었습니다.');
+            setShowModal(true);
+            setCheckModal(false);
         } else {
-            alert('인증번호가 올바르지 않습니다.');
+            // alert('인증번호가 올바르지 않습니다.');
+            setModalTitle('알림');
+            setModalContent('인증번호가 올바르지 않습니다.');
+            setShowModal(true);
+            setCheckModal(true);
         }
     };
 
@@ -121,14 +163,26 @@ const Signup = () => {
                 })
                 .then((response) => {
                     setIsVerified(true);
-                    alert('인증이 완료되었습니다.');
+                    // alert('인증이 완료되었습니다.');
+                    setModalTitle('알림');
+                    setModalContent('인증이 완료되었습니다.');
+                    setShowModal(true);
+                    setCheckModal(false);
                 })
                 .catch((error) => {
                     console.error('인증 실패:', error);
-                    alert('인증에 실패했습니다.');
+                    // alert('인증에 실패했습니다.');
+                    setModalTitle('알림');
+                    setModalContent('인증에 실패했습니다.');
+                    setShowModal(true);
+                    setCheckModal(true);
                 });
         } else {
-            alert('전화번호를 올바르게 입력해주세요.');
+            // alert('전화번호를 올바르게 입력해주세요.');
+            setModalTitle('알림');
+            setModalContent('전화번호를 올바르게 입력해주세요.');
+            setShowModal(true);
+            setCheckModal(true);
         }
     };
 
@@ -166,12 +220,20 @@ const Signup = () => {
         }
 
         if (!isVerified) {
-            alert('전화번호 인증을 완료해주세요.');
+            // alert('전화번호 인증을 완료해주세요.');
+            setModalTitle('알림');
+            setModalContent('전화번호 인증을 완료해주세요.');
+            setShowModal(true);
+            setCheckModal(true);
             return;
         }
 
         if (!termsAccepted) {
-            alert('사이트 이용약관에 동의해주세요.');
+            // alert('사이트 이용약관에 동의해주세요.');
+            setModalTitle('알림');
+            setModalContent('사이트 이용약관에 동의해주세요.');
+            setShowModal(true);
+            setCheckModal(false);
             return;
         }
 
@@ -374,6 +436,15 @@ const Signup = () => {
                     disabled={!termsAccepted || !isVerified}
                 />
             </form>
+            {showModal && (
+               <CustomModal
+               key={modalTitle + modalContent} 
+               title={modalTitle}
+               content={modalContent}
+               check={checkModal}
+               onClose={handleCloseModal}
+           />
+            )}
         </div>
     );
 };

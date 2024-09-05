@@ -6,6 +6,7 @@ import { InputValue } from '../component/common/InputValue';
 import './Login.css';
 import logoImage from '../img/logo3.png';
 import kakaoLogoSmall from '../img/kakao_login_small.png'; // 카카오 로고 이미지 import
+import CustomModal  from '../component/common/Modal';
 
 const Login = () => {
     const [email, setEmail] = useState(
@@ -18,6 +19,13 @@ const Login = () => {
     const [autoLogin, setAutoLogin] = useState(false);
     const navigate = useNavigate();
 
+
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
+    const [checkModal, setCheckModal] = useState(true); // 버튼 표시 여부
+
+    
     const handleLogin = async (event) => {
         event.preventDefault();
         // console.log('로그인 호출');
@@ -57,20 +65,31 @@ const Login = () => {
 
                 navigate('/home');
             } else {
-                alert('로그인에 실패했습니다.');
+                setModalTitle('알림');
+                setModalContent('로그인에 실패했습니다.');
+                setShowModal(true);
+                setCheckModal(false);
             }
         } catch (error) {
             console.error(
                 '로그인 실패:',
                 error.response ? error.response.data : error.message,
             );
-            alert('로그인에 실패했습니다.');
+            setModalTitle('알림');
+            setModalContent('로그인에 실패했습니다.');
+            setShowModal(true);
+            setCheckModal(false);
         }
     };
 
     const handleKakaoLogin = () => {
         window.location.href =
             'http://localhost:8091/oauth2/authorization/kakao';
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setCheckModal(true); 
     };
 
     return (
@@ -136,6 +155,15 @@ const Login = () => {
                     className="kakao-logo"
                 />
             </Button>
+            {showModal && (
+               <CustomModal
+               key={modalTitle + modalContent} 
+               title={modalTitle}
+               content={modalContent}
+               check={checkModal}
+               onClose={handleCloseModal}
+           />
+            )}
         </div>
     );
 };

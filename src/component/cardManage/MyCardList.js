@@ -4,13 +4,20 @@ import './MyCardList.css';
 import CardImg from '../homeCards/CardImg';
 import Button from '../Button';
 import axios from 'axios';
+import CustomModal from '../common/Modal';
+import { InputValue } from '../common/InputValue';
+
 // 모바일에서만 드래그 작동함
-const MyCardList = ({ isLeftActive, cardList }) => {
+const MyCardList = ({ isLeftActive, cardList, onCardNickUpdate }) => {
     // console.log('MyCardList', cardList);
     const navigate = useNavigate();
     const [notCard, setNotCard] = useState(false);
     const [editCardList, setEditCardList] = useState(cardList);
     const [draggedIndex, setDraggedIndex] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedCard, setSelectedCard] = useState(null);
+    const [newCardNick, setNewCardNick] = useState('');
+
     const draggingItemRef = useRef(null);
     const touchStartY = useRef(0);
     useEffect(() => {
@@ -58,6 +65,51 @@ const MyCardList = ({ isLeftActive, cardList }) => {
             draggingItemRef.current.style.transition = 'transform 0.2s ease';
             setDraggedIndex(null);
             draggingItemRef.current = null;
+        }
+    };
+
+    const openModal = (card) => {
+        setSelectedCard(card);
+        setNewCardNick(card.cardNick);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        handleSaveNewNick();
+        setIsModalOpen(false);
+    };
+
+    const handleSaveNewNick = () => {
+        if (selectedCard) {
+            console.log('Selected Card:', selectedCard); // 선택된 카드 확인
+            console.log('New Card Nick:', newCardNick); // 새로운 별칭 확인
+
+            // 수정된 별칭을 DB에 저장하는 API 요청
+            axios
+                .post('http://localhost:8091/api/cards/updateNickname', {
+                    cardNo: selectedCard.cardNo, // 카드 번호로 카드 식별
+                    newCardNick: newCardNick, // 변경된 별칭
+                })
+                .then((response) => {
+                    console.log('API Response:', response.data); // 서버 응답 확인
+
+                    // 서버 응답이 성공적일 때 로컬 상태 업데이트
+                    const updatedList = cardList.map((card) =>
+                        card.cardNo === selectedCard.cardNo
+                            ? { ...card, cardNick: newCardNick }
+                            : card,
+                    );
+
+                    console.log('Updated Card List:', updatedList); // 업데이트된 카드 리스트 확인
+
+                    // 상위 컴포넌트에 수정된 별칭을 전달
+                    onCardNickUpdate(updatedList);
+                    alert('별칭이 성공적으로 수정되었습니다.');
+                })
+                .catch((error) => {
+                    console.error('별칭 수정 중 오류가 발생했습니다.', error); // 에러 출력
+                    alert('별칭 수정에 실패했습니다.');
+                });
         }
     };
 
@@ -129,7 +181,10 @@ const MyCardList = ({ isLeftActive, cardList }) => {
                                     />
                                 </div>
                                 <div className="col-5 pt-2">
-                                    <p className="fs-5 my-0 fw-medium cardName">
+                                    <p
+                                        className="fs-5 my-0 fw-medium cardName"
+                                        onClick={() => openModal(item)}
+                                    >
                                         {item.cardNick}({item.cardName})
                                     </p>
                                     <p className="fs-7 my-0 fw-medium">
@@ -165,6 +220,24 @@ const MyCardList = ({ isLeftActive, cardList }) => {
                         ></Button>
                     </div>
                 </div>
+            )}
+            {/*모달 열기닫기 */}
+            {isModalOpen && (
+                <CustomModal
+                    title="별칭 수정"
+                    content={
+                        <>
+                            <p>현재 별칭 : {selectedCard.cardNick}</p>
+                            <InputValue
+                                type="text"
+                                value={newCardNick}
+                                onChange={(e) => setNewCardNick(e.target.value)}
+                            />
+                        </>
+                    }
+                    check={true}
+                    onClose={closeModal}
+                />
             )}
         </>
     );

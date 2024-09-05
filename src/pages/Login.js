@@ -131,7 +131,7 @@ const Login = () => {
                         />
                         자동로그인
                     </label>
-                    <Link to="#" className="find-id-pw">
+                    <Link to="/idpwCheck" className="find-id-pw">
                         ID/PW 찾기
                     </Link>
                 </div>

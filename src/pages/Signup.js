@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import Policy from '../component/Policy'; // Policy 컴포넌트 추가
 import Button from '../component/Button';
@@ -13,6 +13,8 @@ import CustomModal from '../component/common/Modal';
 const Signup = () => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
+    const [emailSuccess, setEmailSuccess] = useState(''); // 이메일 사용 가능 메시지 상태 추가
+    const [isEmailDuplicate, setIsEmailDuplicate] = useState(false);
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -35,7 +37,7 @@ const Signup = () => {
 
     const handleCloseModal = () => {
         setShowModal(false);
-        setCheckModal(false); 
+        setCheckModal(false);
     };
 
     const validatePhone = (phone) => {
@@ -64,6 +66,9 @@ const Signup = () => {
         const onlyNums = value.replace(/[^0-9]/g, '');
         setPhone(onlyNums);
     };
+
+    const passwordInputRef = useRef(null);
+    const emailInputRef = useRef(null);
 
     // 현재 방식
     const handleSendSmsCurrent = (e) => {
@@ -128,6 +133,33 @@ const Signup = () => {
             setShowModal(true);
             setCheckModal(true);
         }
+    };
+
+    const checkEmailDuplicate = () => {
+        if (!validateEmail(email)) {
+            setEmailError('올바른 이메일 형식을 입력해주세요.');
+            return;
+        }
+
+        axios
+            .get(`http://localhost:8091/member/checkEmail?email=${email}`)
+            .then((response) => {
+                if (response.data) {
+                    setEmailError('이미 사용중인 이메일입니다.');
+                    setIsEmailDuplicate(true);
+                    setEmail('');
+                    setEmailSuccess('');
+                } else {
+                    setEmailError('');
+                    setEmailSuccess('이메일이 사용 가능합니다.');
+                    setIsEmailDuplicate(false);
+                }
+            })
+            .catch((error) => {
+                console.error('이메일 검사 중복 실패', error);
+                setEmailError('이메일 검사 중 오류가 발생했습니다.');
+                setEmailSuccess(''); // 성공 메시지 초기화
+            });
     };
 
     // 현재 방식
@@ -271,22 +303,35 @@ const Signup = () => {
             <img src={logoImage} alt="SP Logo" className="signup-logo" />
             <h2 className="signup-title">회원가입하고 똑똑하게 혜택 챙기기</h2>
             <form onSubmit={handleSignup}>
-                <InputValue
-                    type="email"
-                    placeholder="Email"
-                    title="이메일"
-                    value={email}
-                    onChange={(e) => {
-                        setEmail(e.target.value);
-                        if (!validateEmail(e.target.value)) {
-                            setEmailError('올바른 이메일 형식을 입력해주세요.');
-                        } else {
-                            setEmailError('');
-                        }
-                    }}
-                    required
-                />
-                {emailError && <p className="error-message">{emailError}</p>}
+                <div className="form-group1">
+                    <label>이메일</label>
+                    <div className="verification-group">
+                        <input
+                            type="email"
+                            className="form-control"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                setIsEmailDuplicate(false); // 이메일 변경 시 중복 상태 초기화
+                                setEmailError(''); // 이메일 변경 시 오류 메시지 초기화
+                                setEmailSuccess(''); // 성공 메시지 초기화
+                            }}
+                            required
+                        />
+                        <Button
+                            text="중복 확인"
+                            onClick={checkEmailDuplicate}
+                            disabled={!validateEmail(email)}
+                        />
+                    </div>
+                </div>
+                {emailError && <p className="error-message1">{emailError}</p>}
+                {emailSuccess && (
+                    <p className="error-message1" style={{ color: 'green' }}>
+                        {emailSuccess}
+                    </p>
+                )}
 
                 <InputValue
                     type="password"
@@ -437,13 +482,13 @@ const Signup = () => {
                 />
             </form>
             {showModal && (
-               <CustomModal
-               key={modalTitle + modalContent} 
-               title={modalTitle}
-               content={modalContent}
-               check={checkModal}
-               onClose={handleCloseModal}
-           />
+                <CustomModal
+                    key={modalTitle + modalContent}
+                    title={modalTitle}
+                    content={modalContent}
+                    check={checkModal}
+                    onClose={handleCloseModal}
+                />
             )}
         </div>
     );

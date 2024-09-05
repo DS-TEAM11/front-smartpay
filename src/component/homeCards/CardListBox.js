@@ -23,7 +23,7 @@ const CardListBox = ({ card, onSelect }) => {
                 src={card.cardImg || card.cardImage}
                 alt={card.cardName}
                 direction="horizontal"
-                className="small"
+                className="sm"
                 onRotateChange={handleRotateChange}
             />
             <div className="card-info">

@@ -6,14 +6,12 @@ import Timer from './Timer';
 import './QrItem.css';
 import qrUpBtn from '../../img/qrUpBtn.png';
 import $ from 'jquery';
-import { Stomp } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
-import { useNavigate } from 'react-router-dom';
-import { useMemberNo } from '../../provider/PayProvider';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useMemberNo, useWebSocket } from '../../provider/PayProvider';
 
-function QrItem({ onRemove, cardCode }) {
+function QrItem({ onRemove, cardCode, subscription, subMessage }) {
     // console.log(cardCode, 'QrItem으로 받아온 카드코드');
-
+    const location = useLocation();
     const navigate = useNavigate();
     const memberNo = useMemberNo();
     const [qrCodeUrl, setQrCodeUrl] = useState('');
@@ -21,34 +19,13 @@ function QrItem({ onRemove, cardCode }) {
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isAIiLoading, setIsAIiLoading] = useState(false);
+    const [isEnd, setIsEnd] = useState(false);
     const [boxHeight, setBoxHeight] = useState('60vh');
     const [boxTop, setBoxTop] = useState('40vh');
-    const [stompClient, setStompClient] = useState(
-        Stomp.over(new SockJS('http://localhost:8091/ws')),
-    );
-
-    const wsConnect = () => {
-        stompClient.connect({}, function (frame) {
-            console.log('연결된 소켓: ' + frame);
-            stompClient.subscribe(
-                '/topic/sellinfo/' + memberNo,
-                function (message) {
-                    const body = JSON.parse(message.body);
-                    // console.log('message:', body);
-                    if (body.message === 'seller enter') {
-                        // console.log('판매자 접속');
-                        setIsLoading(true);
-                        setIsQrVisible(false);
-                    }
-                    if (body.message === 'purchase information') {
-                        //일단 AI 전송
-                        setIsAIiLoading(true);
-                        cardRecommend(body.data);
-                    }
-                },
-            );
-        });
-    };
+    const { wsConnect, wsDisconnect, wsSubscribe, wsSendMessage } =
+        useWebSocket();
+    // Ref를 사용하여 subscription을 관리
+    const subscriptionRef = useRef(subscription);
     const cardRecommend = (data) => {
         const url = 'http://localhost:8091/api/payment/ai';
         const params = {
@@ -64,6 +41,11 @@ function QrItem({ onRemove, cardCode }) {
                 // console.log('추천 결과:', response.data);
                 // cardCode도 같이 보내게 수정
                 // console.log(cardCode);
+                wsSendMessage(`/topic/sellinfo`, {
+                    action: 'aiDone',
+                    from: memberNo,
+                    to: 'seller',
+                });
                 navigate('/pay', {
                     state: {
                         purchaseData: data,
@@ -75,31 +57,6 @@ function QrItem({ onRemove, cardCode }) {
             .catch((error) => {
                 console.error(error);
             });
-    };
-    const handleRemove = () => {
-        //구매자가 취소하기 버튼 누르면 판매자에게 전송하고 웹소켓 끊기
-        if (stompClient) {
-            // stompClient.subscribe(
-            //     '/topic/sellinfo/' + memberNo,
-            //     function (message) {
-            //         stompClient.send(
-            //             '/topic/sellinfo/' + memberNo,
-            //             {},
-            //             JSON.stringify({ message: 'buyer exit' }),
-            //         );
-            //     },
-            // );
-            // stompClient.disconnect()를 먼저 실행
-            if (typeof stompClient.disconnect === 'function') {
-                stompClient.disconnect();
-                // console.log('pay logic disconnected');
-            }
-
-            // 이후에 onRemove 실행
-            if (onRemove && typeof onRemove === 'function') {
-                onRemove();
-            }
-        }
     };
     const createQr = () => {
         if (qrCodeUrl != '') {
@@ -121,14 +78,69 @@ function QrItem({ onRemove, cardCode }) {
             });
     };
     useEffect(() => {
-        setBoxHeight(isFullScreen ? '100vh' : '60vh');
-        setBoxTop(isFullScreen ? '0' : '40vh');
+        setBoxHeight(isFullScreen ? '100%' : '60%');
+        setBoxTop(isFullScreen ? '0' : '40%');
     }, [isFullScreen]);
     //QR 생성 버튼 처음 눌렀을 때만 생김
 
     useEffect(() => {
         createQr();
-    }, []);
+        // console.log('받아온 ref', subscriptionRef.current);
+        // console.log('받아온 subMessage', subMessage);
+        //기존 구독이 있을 때만 체크
+        if (subscriptionRef.current && subMessage) {
+            console.log('구독 후 ref', subscriptionRef.current);
+            console.log('Home-QrItem에서 받음 Received message:', subMessage);
+            const { action, from, to, data } = subMessage;
+            if (from === 'seller') {
+                if (action === 'enter') {
+                    setIsQrVisible(false);
+                    setIsLoading(true);
+                    wsSendMessage(`/topic/sellinfo`, {
+                        action: 'matched',
+                        from: memberNo,
+                        to: 'seller',
+                    });
+                }
+                if (isLoading && action === 'fillout') {
+                    setIsLoading(false);
+                    setIsAIiLoading(true);
+                    wsSendMessage(`/topic/sellinfo`, {
+                        action: 'aiRecommend',
+                        from: memberNo,
+                        to: 'seller',
+                    });
+                    setIsEnd(true);
+                    cardRecommend(data);
+                }
+            }
+        }
+
+        // 접속 완료 메시지 전송
+        wsSendMessage(`/topic/sellinfo`, {
+            action: 'createQR',
+            from: memberNo,
+            to: 'seller',
+        });
+
+        return () => {
+            if (!isEnd) {
+                return;
+            }
+            handleRemove();
+        };
+    }, [subMessage, location.pathname]);
+
+    const handleRemove = () => {
+        setIsQrVisible(false);
+        setIsFullScreen(false);
+        setIsLoading(false);
+        setIsAIiLoading(false);
+        setIsEnd(false);
+        if (onRemove && typeof onRemove === 'function') {
+            onRemove();
+        }
+    };
     return (
         <>
             {/* //웹소켓 접속해서 판매자가 정보 입력 중일 때 */}

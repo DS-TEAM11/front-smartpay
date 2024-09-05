@@ -1,6 +1,6 @@
 .owned-cards-list {
     position: relative;
-    width: 100vw;
+    width: 100%;
     height: fit-content;
 }
 
@@ -23,7 +23,7 @@
 
 .spread_cards img {
     position: absolute;
-    width: 60vw;
+    width: 16rem;
     height: auto;
     object-fit: contain;
     border-radius: 8px;
@@ -33,7 +33,7 @@
 .spread_cards img.rotate {
     position: absolute;
     width: auto;
-    height: 60vw;
+    height: 16rem;
     object-fit: contain;
     border-radius: 8px;
     max-width: fit-content;

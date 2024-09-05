@@ -17,7 +17,7 @@ import {
     useMemberNo,
 } from '../../provider/PayProvider';
 
-const CardInfo = () => {
+const CardInfo = ({ subscription, subMessage }) => {
     const navigate = useNavigate();
     const memberNo = useMemberNo();
     const [fetchedCards, setFetchedCards] = useState([]); // API에서 가져온 카드 목록 상태
@@ -137,13 +137,15 @@ const CardInfo = () => {
             </div>
         );
     }
-
+    // console.log(subMessage, 'cardInfo submessage');
     return (
         <>
             {showQr && (
                 <QrItem
                     onRemove={removeQrItem}
                     cardCode={selectedCard.cardCode}
+                    subscription={subscription}
+                    subMessage={subMessage}
                 />
             )}
             {cardPicker && (

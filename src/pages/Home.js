@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Header from '../component/Header';
 import './Home.css';
@@ -11,7 +11,7 @@ import image4 from '../img/home4.png';
 import image5 from '../img/home5.png';
 import image6 from '../img/home6.png';
 import { useNavigate } from 'react-router-dom';
-import { useMemberNo } from '../provider/PayProvider';
+import { useMemberNo, useWebSocket } from '../provider/PayProvider';
 import CardDeletePicker from '../component/CardDeletePicker'; // CardDeletePicker 추가
 
 const Home = () => {
@@ -22,38 +22,74 @@ const Home = () => {
     const [totalDiscountPrice, setTotalDiscountPrice] = useState(0);
     const [cards, setCards] = useState([]); // 사용자가 소유한 카드 목록
     const [showCardDeletePicker, setShowCardDeletePicker] = useState(false); // 카드 삭제 모달 상태
+    const { wsConnect, wsDisconnect, wsSubscribe, wsSendMessage } =
+        useWebSocket();
+    // Ref를 사용하여 subscription을 관리
+    const subscriptionRef = useRef(null);
+    const [subMessage, setSubMessage] = useState(null);
+    const fetchData = async () => {
+        if (memberNo) {
+            try {
+                const benefitResponse = await axios.get(
+                    'http://localhost:8091/member/getBenefit',
+                    {
+                        params: { memberNo: memberNo },
+                    },
+                );
+                setTotalSavePrice(benefitResponse.data.totalSavePrice);
+                setTotalDiscountPrice(benefitResponse.data.totalDiscountPrice);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (memberNo) {
-                try {
-                    const benefitResponse = await axios.get(
-                        'http://localhost:8091/member/getBenefit',
-                        {
-                            params: { memberNo: memberNo },
-                        },
-                    );
-                    setTotalSavePrice(benefitResponse.data.totalSavePrice);
-                    setTotalDiscountPrice(
-                        benefitResponse.data.totalDiscountPrice,
-                    );
-
-                    const cardResponse = await axios.get(
-                        `http://localhost:8091/api/cards/details/byMember`,
-                        {
-                            params: { memberNo: memberNo },
-                        },
-                    );
-                    setCards(cardResponse.data);
-                } catch (error) {
-                    console.error('Failed to fetch benefit data', error);
-                } finally {
-                    setIsLoading(false);
-                }
+                const cardResponse = await axios.get(
+                    `http://localhost:8091/api/cards/details/byMember`,
+                    {
+                        params: { memberNo: memberNo },
+                    },
+                );
+                setCards(cardResponse.data);
+            } catch (error) {
+                console.error('Failed to fetch benefit data', error);
+            } finally {
+                setIsLoading(false);
             }
-        };
-
+        }
+    };
+    useEffect(() => {
         fetchData();
+        if (!memberNo) return;
+        // WebSocket 연결 후 구독 설정
+        wsConnect(() => {
+            // console.log('WebSocket 연결 successfully');
+            // 구독 시도
+            try {
+                subscriptionRef.current = wsSubscribe(
+                    `/topic/sellinfo`,
+                    (message) => {
+                        // console.log('홈 받은 값 ', message);
+                        if (message.to === memberNo) {
+                            setSubMessage(message);
+                        }
+                    },
+                );
+                // console.log('Subscribed to /topic/sellinfo successfully');
+            } catch (error) {
+                console.error('Failed to subscribe:', error);
+            }
+
+            // 메시지 전송
+            // console.log('Sending enter message to /topic/sellinfo');
+            wsSendMessage(`/topic/sellinfo`, {
+                action: 'enter',
+                from: memberNo,
+                to: 'seller',
+            });
+        });
+        // 컴포넌트가 언마운트될 때 구독 해제 및 WebSocket 연결 해제
+        return () => {
+            if (subscriptionRef.current) {
+                subscriptionRef.current.unsubscribe(); // 구독 해제
+            }
+            wsDisconnect(); // WebSocket 연결 해제
+        };
     }, [memberNo]);
 
     const handleCardDelete = (deletedCard) => {
@@ -68,6 +104,8 @@ const Home = () => {
                 <CardInfo
                     cards={cards}
                     onDeleteCard={handleCardDelete} // onDeleteCard 전달
+                    subscription={subscriptionRef.current}
+                    subMessage={subMessage}
                 />
                 <BenefitsAndManagement
                     benefits={[

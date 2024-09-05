@@ -46,7 +46,7 @@ export const PayProvider = ({ children }) => {
     const navigate = useNavigate();
     let token = localStorage.getItem('accessToken');
     let newRefreshToken = null;
-
+    console.log('현재 접속 페이지: ', location.pathname);
     useEffect(() => {
         const fetchMemberNo = async () => {
             if (!token) {

@@ -34,7 +34,7 @@ class WebSocketService {
         if (this.connected && this.stompClient) {
             // console.log(`구독 시작: ${destination}`); // 구독 시작 로그
             return this.stompClient.subscribe(destination, (message) => {
-                // console.log('서버가 받은 메시지: ', JSON.parse(message.body)); // 메시지 수신 로그
+                console.log('서버가 받은 메시지: ', JSON.parse(message.body)); // 메시지 수신 로그
                 callback(JSON.parse(message.body));
             });
         } else {

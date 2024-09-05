@@ -7,6 +7,8 @@ class WebSocketService {
     }
 
     connect = (onConnectCallback) => {
+        // console.log('현재 websocket 상태 connected', this.connected);
+        // console.log('현재 websocket 상태 stompClient', this.stompClient);
         if (!this.stompClient || !this.connected) {
             const socket = new SockJS('http://localhost:8091/ws');
             this.stompClient = Stomp.over(socket);
@@ -30,9 +32,9 @@ class WebSocketService {
     // WebSocket 구독
     subscribe = (destination, callback) => {
         if (this.connected && this.stompClient) {
-            console.log(`구독 시작: ${destination}`); // 구독 시작 로그
+            // console.log(`구독 시작: ${destination}`); // 구독 시작 로그
             return this.stompClient.subscribe(destination, (message) => {
-                console.log('서버가 받은 메시지: ', JSON.parse(message.body)); // 메시지 수신 로그
+                // console.log('서버가 받은 메시지: ', JSON.parse(message.body)); // 메시지 수신 로그
                 callback(JSON.parse(message.body));
             });
         } else {

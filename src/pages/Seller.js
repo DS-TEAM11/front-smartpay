@@ -1,10 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import Header from '../component/Header';
-import SockJS from 'sockjs-client';
-import { Client, Stomp } from '@stomp/stompjs';
 import Button from '../component/Button';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 // import { InputValue, InputValueWithBtn } from '../component/common/InputValue';
 import { InputValue } from '../component/common/InputValue';
 import { useWebSocket } from '../provider/PayProvider';
@@ -13,10 +10,12 @@ const Seller = () => {
     const queryParams = new URLSearchParams(location.search);
     const memberNo = queryParams.get('memberNo');
     const [orderNo, setOrderNo] = useState(null);
+    const [isMatched, setIsMatched] = useState(false);
     const { wsConnect, wsDisconnect, wsSubscribe, wsSendMessage } =
         useWebSocket();
     // Ref를 사용하여 subscription을 관리
     const subscriptionRef = useRef(null);
+    const navigate = useNavigate();
     // WebSocket 연결 및 구독 처리
     useEffect(() => {
         if (!memberNo) return;
@@ -28,33 +27,44 @@ const Seller = () => {
             try {
                 subscriptionRef.current = wsSubscribe(
                     `/topic/sellinfo`,
-                    (message) => {
-                        // if (message.action === 'purchase end') {
-                        //     const confirm_ =
-                        //         window.confirm('결제가 완료되었습니다.');
-                        //     if (confirm_) {
-                        //         window.location.href =
-                        //             'http://localhost:3000/pay/receipt';
-                        //     }
-                        // } else if (message.action === 'buyer exit') {
-                        //     alert('구매자가 주문을 취소하였습니다.');
-                        //     if (subscriptionRef.current) {
-                        //         subscriptionRef.current.unsubscribe(); // 구독 해제
-                        //     }
-                        //     wsDisconnect(); // WebSocket 연결 해제
-                        // }
-                        //메시지 처리 필요함 -> 구매자가 어떤 정보 보내냐
+                    (data) => {
+                        const { action, buyer, message } = data;
+                        if (buyer === memberNo) {
+                            if (action === 'createQR') {
+                                console.log('구매자가 QR 코드를 생성했습니다.');
+                                setIsMatched(true);
+                            }
+                            if (action === 'matched') {
+                                console.log('구매자와 매칭되었습니다.');
+                                setIsMatched(true);
+                            }
+                            if (isMatched && action === 'end') {
+                                console.log('결제가 완료되었습니다.');
+                                setIsMatched(false);
+                                if (subscriptionRef.current) {
+                                    subscriptionRef.current.unsubscribe(); // 구독 해제
+                                }
+                                wsDisconnect(); // WebSocket 연결 해제
+                                navigate('/pay/receipt?orderNo=' + orderNo, {
+                                    replace: true,
+                                });
+                            }
+                            if (isMatched && action === 'cancel') {
+                                console.log('구매자가 주문을 취소했습니다.');
+                                setIsMatched(false);
+                            }
+                        }
                     },
                 );
             } catch (error) {
                 console.error('Failed to subscribe:', error);
             }
 
-            // 메시지 전송
+            // 판매자 접속 메시지 전송
             wsSendMessage(`/topic/sellinfo`, {
                 action: 'enter',
-                message: 'seller',
-                memberNo: memberNo,
+                to: memberNo,
+                from: 'seller',
             });
         });
 
@@ -82,7 +92,7 @@ const Seller = () => {
                 franchiseCode: formData.franchiseCode,
                 memberNo: memberNo,
             };
-            console.log('Sending data:', data);
+            // console.log('Sending data:', data);
             const response = await axios.post(url, data, {
                 responseType: 'json',
             });
@@ -99,7 +109,11 @@ const Seller = () => {
         }
     };
     // 메시지 전송 함수
-    const send_information = async () => {
+    const sendInformation = async () => {
+        if (!isMatched) {
+            alert('구매자와 매칭되지 않았습니다.');
+            return;
+        }
         const {
             franchiseCode,
             franchiseType,
@@ -131,9 +145,10 @@ const Seller = () => {
 
         // WebSocket을 통해 메시지 전송
         wsSendMessage(`/topic/sellinfo`, {
-            action: 'purchase information',
-            memberNo: memberNo,
-            message: purchase_data,
+            action: 'fillout',
+            to: memberNo,
+            from: 'seller',
+            data: purchase_data,
         });
     };
     //웹소켓 관련 코드 끝------------------------------------------------------------
@@ -211,7 +226,18 @@ const Seller = () => {
                     <div className="my-4 text-center">
                         <Button
                             text={'결제 요청 전송'}
-                            onClick={send_information}
+                            onClick={sendInformation}
+                        ></Button>
+                        <Button
+                            text={'재접속 신호 전송'}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                wsSendMessage(`/topic/sellinfo`, {
+                                    action: 'enter',
+                                    to: memberNo,
+                                    from: 'seller',
+                                });
+                            }}
                         ></Button>
                     </div>
                 </form>

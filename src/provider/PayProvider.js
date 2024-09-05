@@ -108,6 +108,7 @@ export const PayProvider = ({ children }) => {
                 })
                 .then((res) => {
                     // console.log('axios 내부', res.data);
+                    setIsLoading(false);
                     return res.data;
                 })
                 .catch((err) => {
@@ -117,7 +118,6 @@ export const PayProvider = ({ children }) => {
                     }
                 });
             // console.log('axois 이후', memberNo);
-            setIsLoading(false);
         };
         if (
             !excludedPaths.includes(location.pathname.toLowerCase()) &&
@@ -125,18 +125,16 @@ export const PayProvider = ({ children }) => {
         ) {
             fetchMemberNo();
         }
-    }, [location.pathname, navigate]);
-    //멤버 정보 없으면 로그인 페이지로 이동
-    useEffect(() => {
+        //멤버 정보 없으면 로그인 페이지로 이동
         if (
             !isLoading &&
             !excludedPaths.includes(location.pathname.toLowerCase()) &&
             !memberNo
         ) {
+            console.log(isLoading, memberNo);
             navigate('/login', { replace: true });
         }
     }, [location.pathname, navigate]);
-    // console.log(' 최종 멤버번호:', memberNo);
 
     // WebSocket 연결 함수
     const connectWebSocket = (callback) => {

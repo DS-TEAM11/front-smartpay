@@ -6,14 +6,12 @@ import Timer from './Timer';
 import './QrItem.css';
 import qrUpBtn from '../../img/qrUpBtn.png';
 import $ from 'jquery';
-import { Stomp } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useMemberNo, useWebSocket } from '../../provider/PayProvider';
 
-function QrItem({ onRemove, cardCode }) {
+function QrItem({ onRemove, cardCode, subscription, subMessage }) {
     // console.log(cardCode, 'QrItem으로 받아온 카드코드');
-
+    const location = useLocation();
     const navigate = useNavigate();
     const memberNo = useMemberNo();
     const [qrCodeUrl, setQrCodeUrl] = useState('');
@@ -21,13 +19,13 @@ function QrItem({ onRemove, cardCode }) {
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isAIiLoading, setIsAIiLoading] = useState(false);
+    const [isEnd, setIsEnd] = useState(false);
     const [boxHeight, setBoxHeight] = useState('60vh');
     const [boxTop, setBoxTop] = useState('40vh');
     const { wsConnect, wsDisconnect, wsSubscribe, wsSendMessage } =
         useWebSocket();
     // Ref를 사용하여 subscription을 관리
-    const subscriptionRef = useRef(null);
-
+    const subscriptionRef = useRef(subscription);
     const cardRecommend = (data) => {
         const url = 'http://localhost:8091/api/payment/ai';
         const params = {
@@ -43,6 +41,11 @@ function QrItem({ onRemove, cardCode }) {
                 // console.log('추천 결과:', response.data);
                 // cardCode도 같이 보내게 수정
                 // console.log(cardCode);
+                wsSendMessage(`/topic/sellinfo`, {
+                    action: 'aiDone',
+                    from: memberNo,
+                    to: 'seller',
+                });
                 navigate('/pay', {
                     state: {
                         purchaseData: data,
@@ -75,61 +78,65 @@ function QrItem({ onRemove, cardCode }) {
             });
     };
     useEffect(() => {
-        setBoxHeight(isFullScreen ? '100vh' : '60vh');
-        setBoxTop(isFullScreen ? '0' : '40vh');
+        setBoxHeight(isFullScreen ? '100%' : '60%');
+        setBoxTop(isFullScreen ? '0' : '40%');
     }, [isFullScreen]);
     //QR 생성 버튼 처음 눌렀을 때만 생김
 
     useEffect(() => {
         createQr();
-        // WebSocket 연결 후 구독 설정
-        wsConnect(() => {
-            // console.log('WebSocket 연결 successfully');
-            // 구독 시도
-            try {
-                subscriptionRef.current = wsSubscribe(
-                    `/topic/sellinfo`,
-                    (message) => {
-                        // if (message.action === 'purchase end') {
-                        //     const confirm_ =
-                        //         window.confirm('결제가 완료되었습니다.');
-                        //     if (confirm_) {
-                        //         window.location.href =
-                        //             'http://localhost:3000/pay/receipt';
-                        //     }
-                        // } else if (message.action === 'buyer exit') {
-                        //     alert('구매자가 주문을 취소하였습니다.');
-                        //     if (subscriptionRef.current) {
-                        //         subscriptionRef.current.unsubscribe(); // 구독 해제
-                        //     }
-                        //     wsDisconnect(); // WebSocket 연결 해제
-                        // }
-                        //메시지 처리 필요함 -> 구매자가 어떤 정보 보내냐
-                    },
-                );
-            } catch (error) {
-                console.error('Failed to subscribe:', error);
+        // console.log('받아온 ref', subscriptionRef.current);
+        // console.log('받아온 subMessage', subMessage);
+        //기존 구독이 있을 때만 체크
+        if (subscriptionRef.current && subMessage) {
+            console.log('구독 후 ref', subscriptionRef.current);
+            console.log('Home-QrItem에서 받음 Received message:', subMessage);
+            const { action, from, to, data } = subMessage;
+            if (from === 'seller') {
+                if (action === 'enter') {
+                    setIsQrVisible(false);
+                    setIsLoading(true);
+                    wsSendMessage(`/topic/sellinfo`, {
+                        action: 'matched',
+                        from: memberNo,
+                        to: 'seller',
+                    });
+                }
+                if (isLoading && action === 'fillout') {
+                    setIsLoading(false);
+                    setIsAIiLoading(true);
+                    wsSendMessage(`/topic/sellinfo`, {
+                        action: 'aiRecommend',
+                        from: memberNo,
+                        to: 'seller',
+                    });
+                    setIsEnd(true);
+                    cardRecommend(data);
+                }
             }
+        }
 
-            // 메시지 전송
-            wsSendMessage(`/topic/sellinfo`, {
-                action: 'enter',
-                message: 'seller',
-                memberNo: memberNo,
-            });
+        // 접속 완료 메시지 전송
+        wsSendMessage(`/topic/sellinfo`, {
+            action: 'createQR',
+            from: memberNo,
+            to: 'seller',
         });
 
         return () => {
+            if (!isEnd) {
+                return;
+            }
             handleRemove();
         };
-    }, []);
+    }, [subMessage, location.pathname]);
 
     const handleRemove = () => {
-        if (subscriptionRef.current) {
-            subscriptionRef.current.unsubscribe(); // 구독 해제
-        }
-        wsDisconnect(); // WebSocket 연결 해제
-        // 이후에 onRemove 실행
+        setIsQrVisible(false);
+        setIsFullScreen(false);
+        setIsLoading(false);
+        setIsAIiLoading(false);
+        setIsEnd(false);
         if (onRemove && typeof onRemove === 'function') {
             onRemove();
         }

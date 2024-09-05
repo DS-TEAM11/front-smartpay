@@ -26,6 +26,7 @@ const Home = () => {
         useWebSocket();
     // Ref를 사용하여 subscription을 관리
     const subscriptionRef = useRef(null);
+    const [subMessage, setSubMessage] = useState(null);
     const fetchData = async () => {
         if (memberNo) {
             try {
@@ -62,24 +63,24 @@ const Home = () => {
             try {
                 subscriptionRef.current = wsSubscribe(
                     `/topic/sellinfo`,
-                    (data) => {
-                        //    console.log('Received message:', message);
-                        const { action, message, memberNo } = data;
-                        // if (memberNo === this.memberNo) {
-                        console.log('홈 받은 값 ', data);
-                        // }
+                    (message) => {
+                        // console.log('홈 받은 값 ', message);
+                        if (message.to === memberNo) {
+                            setSubMessage(message);
+                        }
                     },
                 );
-                console.log('Subscribed to /topic/sellinfo successfully');
+                // console.log('Subscribed to /topic/sellinfo successfully');
             } catch (error) {
                 console.error('Failed to subscribe:', error);
             }
 
             // 메시지 전송
-            console.log('Sending enter message to /topic/sellinfo');
+            // console.log('Sending enter message to /topic/sellinfo');
             wsSendMessage(`/topic/sellinfo`, {
                 action: 'enter',
-                message: 'seller',
+                from: memberNo,
+                to: 'seller',
             });
         });
         // 컴포넌트가 언마운트될 때 구독 해제 및 WebSocket 연결 해제
@@ -103,6 +104,8 @@ const Home = () => {
                 <CardInfo
                     cards={cards}
                     onDeleteCard={handleCardDelete} // onDeleteCard 전달
+                    subscription={subscriptionRef.current}
+                    subMessage={subMessage}
                 />
                 <BenefitsAndManagement
                     benefits={[

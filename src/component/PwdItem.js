@@ -46,16 +46,13 @@ function PwdItem({ Success }) {
         // }
     }, [locationMemberNo]);
 
-
-
     useEffect(() => {
         // Automatically verify PIN when it reaches 6 digits
-        if (checkPin.every(digit => digit !== '')) {
+        if (checkPin.every((digit) => digit !== '')) {
             verifyPin();
         }
     }, [checkPin]);
 
-    
     const handleCheckPinChange = (value) => {
         if (activeCheckPinIndex < checkPin.length) {
             const newCheckPin = [...checkPin];
@@ -100,7 +97,7 @@ function PwdItem({ Success }) {
             })
             .then((response) => {
                 if (response.status === 200) {
-                    // console.log('Data sent:', payload);
+                    Success(true);
                 }
             })
             .catch((error) => {

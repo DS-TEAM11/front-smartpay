@@ -12,10 +12,60 @@ const Seller = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const memberNo = queryParams.get('memberNo');
+    const [orderNo, setOrderNo] = useState(null);
     const { wsConnect, wsDisconnect, wsSubscribe, wsSendMessage } =
         useWebSocket();
+    // Ref를 사용하여 subscription을 관리
+    const subscriptionRef = useRef(null);
+    // WebSocket 연결 및 구독 처리
+    useEffect(() => {
+        if (!memberNo) return;
 
-    //됐음
+        // WebSocket 연결 후 구독 설정
+        wsConnect(() => {
+            // console.log('WebSocket 연결 successfully');
+            // 구독 시도
+            try {
+                subscriptionRef.current = wsSubscribe(
+                    `/topic/sellinfo`,
+                    (message) => {
+                        // if (message.action === 'purchase end') {
+                        //     const confirm_ =
+                        //         window.confirm('결제가 완료되었습니다.');
+                        //     if (confirm_) {
+                        //         window.location.href =
+                        //             'http://localhost:3000/pay/receipt';
+                        //     }
+                        // } else if (message.action === 'buyer exit') {
+                        //     alert('구매자가 주문을 취소하였습니다.');
+                        //     if (subscriptionRef.current) {
+                        //         subscriptionRef.current.unsubscribe(); // 구독 해제
+                        //     }
+                        //     wsDisconnect(); // WebSocket 연결 해제
+                        // }
+                        //메시지 처리 필요함 -> 구매자가 어떤 정보 보내냐
+                    },
+                );
+            } catch (error) {
+                console.error('Failed to subscribe:', error);
+            }
+
+            // 메시지 전송
+            wsSendMessage(`/topic/sellinfo`, {
+                action: 'enter',
+                message: 'seller',
+                memberNo: memberNo,
+            });
+        });
+
+        return () => {
+            if (subscriptionRef.current) {
+                subscriptionRef.current.unsubscribe(); // 구독 해제
+            }
+            wsDisconnect(); // WebSocket 연결 해제
+        };
+    }, [memberNo]);
+
     const today = new Date();
     const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, '');
 
@@ -36,55 +86,18 @@ const Seller = () => {
             const response = await axios.post(url, data, {
                 responseType: 'json',
             });
-            const orderNo = response.data;
-            console.log('Order No:', orderNo);
+            const orderNo_ = response.data;
+            // console.log('Order No:', orderNo_);
 
             setFormData((prevData) => ({
                 ...prevData,
-                orderNo: orderNo,
+                orderNo: orderNo_,
             }));
-            return orderNo;
+            return orderNo_;
         } catch (error) {
             console.error(error);
         }
     };
-
-    // WebSocket 연결 및 구독 처리
-    useEffect(() => {
-        if (!memberNo) return; // memberNo가 없으면 아무것도 하지 않음
-
-        // WebSocket 연결
-        wsConnect();
-        wsSendMessage(`/sellinfo`, { action: 'enter', message: 'seller' });
-        // WebSocket 구독
-        const subscription = wsSubscribe(`/sellinfo`, (message) => {
-            const body = JSON.parse(message.body);
-            console.log('Received message:', body);
-
-            // 메시지 처리
-            if (body.message === 'purchase end') {
-                const confirm_ = window.confirm('결제가 완료되었습니다.');
-                if (confirm_) {
-                    window.location.href = 'http://localhost:3000/pay/receipt';
-                }
-            } else if (body.message === 'buyer exit') {
-                alert('구매자가 주문을 취소하였습니다.');
-
-                subscription.unsubscribe(); // 구독 해제
-                // WebSocket 연결 해제
-                wsDisconnect();
-            }
-        });
-
-        // 컴포넌트가 언마운트될 때 구독 해제 및 연결 해제
-        return () => {
-            if (subscription) {
-                subscription.unsubscribe(); // 구독 해제
-            }
-            wsDisconnect(); // WebSocket 연결 해제
-        };
-    }, [memberNo]); // memberNo 변경 시마다 실행
-
     // 메시지 전송 함수
     const send_information = async () => {
         const {
@@ -108,7 +121,7 @@ const Seller = () => {
         }
 
         // 주문 번호 처리
-        const orderNo = await handleOrderNo();
+        setOrderNo(await handleOrderNo());
         const purchase_data = {
             ...formData,
             memberNo: memberNo,
@@ -117,9 +130,10 @@ const Seller = () => {
         };
 
         // WebSocket을 통해 메시지 전송
-        wsSendMessage(`/sellinfo/`, {
-            message: 'purchase information',
-            data: purchase_data,
+        wsSendMessage(`/topic/sellinfo`, {
+            action: 'purchase information',
+            memberNo: memberNo,
+            message: purchase_data,
         });
     };
     //웹소켓 관련 코드 끝------------------------------------------------------------

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Header from '../component/Header';
 import './Home.css';
@@ -24,52 +24,68 @@ const Home = () => {
     const [showCardDeletePicker, setShowCardDeletePicker] = useState(false); // 카드 삭제 모달 상태
     const { wsConnect, wsDisconnect, wsSubscribe, wsSendMessage } =
         useWebSocket();
+    // Ref를 사용하여 subscription을 관리
+    const subscriptionRef = useRef(null);
+    const fetchData = async () => {
+        if (memberNo) {
+            try {
+                const benefitResponse = await axios.get(
+                    'http://localhost:8091/member/getBenefit',
+                    {
+                        params: { memberNo: memberNo },
+                    },
+                );
+                setTotalSavePrice(benefitResponse.data.totalSavePrice);
+                setTotalDiscountPrice(benefitResponse.data.totalDiscountPrice);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (memberNo) {
-                try {
-                    const benefitResponse = await axios.get(
-                        'http://localhost:8091/member/getBenefit',
-                        {
-                            params: { memberNo: memberNo },
-                        },
-                    );
-                    setTotalSavePrice(benefitResponse.data.totalSavePrice);
-                    setTotalDiscountPrice(
-                        benefitResponse.data.totalDiscountPrice,
-                    );
-
-                    const cardResponse = await axios.get(
-                        `http://localhost:8091/api/cards/details/byMember`,
-                        {
-                            params: { memberNo: memberNo },
-                        },
-                    );
-                    setCards(cardResponse.data);
-                } catch (error) {
-                    console.error('Failed to fetch benefit data', error);
-                } finally {
-                    setIsLoading(false);
-                }
+                const cardResponse = await axios.get(
+                    `http://localhost:8091/api/cards/details/byMember`,
+                    {
+                        params: { memberNo: memberNo },
+                    },
+                );
+                setCards(cardResponse.data);
+            } catch (error) {
+                console.error('Failed to fetch benefit data', error);
+            } finally {
+                setIsLoading(false);
             }
-        };
-
+        }
+    };
+    useEffect(() => {
         fetchData();
         if (!memberNo) return;
-        // 컴포넌트가 마운트될 때 WebSocket 연결을 설정
-        wsConnect(); // WebSocket 연결
-        wsSendMessage(`/sellinfo`, { action: 'enter', message: memberNo }); // WebSocket 메시지 전송
-        // WebSocket 구독 설정
-        const subscription = wsSubscribe(`/sellinfo`, (message) => {
-            // 메시지를 수신하면 콘솔에 출력
-            console.log('Received message:', message);
-        });
+        // WebSocket 연결 후 구독 설정
+        wsConnect(() => {
+            // console.log('WebSocket 연결 successfully');
+            // 구독 시도
+            try {
+                subscriptionRef.current = wsSubscribe(
+                    `/topic/sellinfo`,
+                    (data) => {
+                        //    console.log('Received message:', message);
+                        const { action, message, memberNo } = data;
+                        // if (memberNo === this.memberNo) {
+                        console.log('홈 받은 값 ', data);
+                        // }
+                    },
+                );
+                console.log('Subscribed to /topic/sellinfo successfully');
+            } catch (error) {
+                console.error('Failed to subscribe:', error);
+            }
 
+            // 메시지 전송
+            console.log('Sending enter message to /topic/sellinfo');
+            wsSendMessage(`/topic/sellinfo`, {
+                action: 'enter',
+                message: 'seller',
+            });
+        });
         // 컴포넌트가 언마운트될 때 구독 해제 및 WebSocket 연결 해제
         return () => {
-            if (subscription) {
-                subscription.unsubscribe(); // 구독 해제
+            if (subscriptionRef.current) {
+                subscriptionRef.current.unsubscribe(); // 구독 해제
             }
             wsDisconnect(); // WebSocket 연결 해제
         };

@@ -139,8 +139,8 @@ export const PayProvider = ({ children }) => {
     // console.log(' 최종 멤버번호:', memberNo);
 
     // WebSocket 연결 함수
-    const connectWebSocket = () => {
-        webSocketService.connect();
+    const connectWebSocket = (callback) => {
+        webSocketService.connect(callback);
     };
 
     // WebSocket 해제 함수

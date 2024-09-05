@@ -4,6 +4,31 @@
     background-color: #f5f5f5;
 }
 
+.month-selector {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.month-selector button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #ccc;
+    transition: background-color 0.3s ease;
+}
+
+.month-selector button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.month-selector button:hover {
+    background-color: #0056b3;
+}
+
 .benefittest-container .card-list {
     display: flex;
     flex-wrap: wrap;
@@ -17,8 +42,8 @@
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 15px;
-    width: 100%; /* 카드 아이템이 화면의 가로를 꽉 채우도록 설정 */
-    max-width: 800px; /* 최대 너비를 제한하여 너무 커지지 않도록 설정 */
+    width: 100%;
+    max-width: 800px;
     text-align: center;
     transition: transform 0.3s ease;
     display: flex;
@@ -28,6 +53,10 @@
 
 .benefittest-container .card-item:hover {
     transform: translateY(-5px);
+}
+
+.benefittest-container .d-flex.justify-content-center.mb-4 {
+    margin-bottom: 10px !important;
 }
 
 .benefittest-container .card-item img {

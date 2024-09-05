@@ -101,12 +101,11 @@ function PwdItem({ Success }) {
             .then((response) => {
                 if (response.status === 200) {
                     // console.log('Data sent:', payload);
-                    Success(true);
                 }
             })
             .catch((error) => {
                 if (error.response && error.response.status === 404) {
-                    alert('비밀번호가 일치하지 않습니다. 다시 시도해 주세요.');
+                    // alert('비밀번호가 일치하지 않습니다. 다시 시도해 주세요.');
                     Success(false);
                     setCheckPin(['', '', '', '', '', '']);
                     setActiveCheckPinIndex(0);

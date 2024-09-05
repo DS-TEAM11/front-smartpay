@@ -1,0 +1,47 @@
+.custom-toggle2 {
+    font-size: 12px;
+    position: relative;
+    height: 2em;
+    width: 50%;
+    margin: 1.5em auto;
+    background: #d9d9d9;
+    border-radius: 2em;
+    box-sizing: border-box;
+}
+
+.custom-toggle2 .switch-button2 {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.custom-toggle2 .switch-button-case2 {
+    width: 50%;
+    height: 100%;
+    display: inline-block;
+    position: relative;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: center;
+    line-height: 2em;
+    transition: color 0.3s ease;
+}
+
+.custom-toggle2 .switch-button2 .active2 {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background-color: #4f46e5;
+    border-radius: 2em;
+    transition: left 0.3s ease;
+}
+
+.custom-toggle2 .switch-button-case2.active-case2 {
+    color: white;
+}
+
+.custom-toggle2 .switch-button-case2:not(.active-case2) {
+    color: #4f46e5;
+}

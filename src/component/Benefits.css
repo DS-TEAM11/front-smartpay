@@ -18,13 +18,8 @@
 
 .benefit-item {
     flex: 1;
-    background-color: #ffffff;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 5px;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     min-width: 280px;
     box-sizing: border-box;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -33,7 +28,6 @@
 
 .benefit-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .benefit-item img {

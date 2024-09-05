@@ -1,0 +1,57 @@
+.benefit-card-item {
+    background-color: white;
+    border: 1px solid #ddd;
+    transition: box-shadow 0.3s ease;
+}
+
+.benefit-card-item .mt-3 {
+    top: 5px;
+}
+
+.benefit-card-item .d-flex.align-items-center {
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.benefit-card-item:hover {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.benefit-card-item h5 {
+    margin: 0;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.benefit-card-item__image {
+    width: 100px;
+    height: auto;
+    object-fit: contain;
+}
+
+.benefit-card-item .ms-3 {
+    margin-left: 30px;
+}
+
+.benefit-card-item .toggle-btn {
+    background: none;
+    border: none;
+    color: #6f42c1;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.payinfo-container {
+    display: none;
+    margin-top: 10px;
+}
+
+.payinfo-container.open {
+    display: block;
+}
+
+.no-benefit {
+    color: #d9534f;
+    font-weight: bold;
+    margin-top: 10px;
+}

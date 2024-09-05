@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import './BenefitTest.css'; // CSS 파일을 import
-import { useMemberNo } from '../provider/PayProvider';
 import axios from 'axios';
+import Header from '../component/Header';
+import BenefitCardItem from '../component/BenefitCardItem';
+import CustomToggle2 from '../component/CustomToggle2';
+import { useMemberNo } from '../provider/PayProvider';
+import './BenefitTest.css';
 
 const BenefitTest = () => {
     const memberNo = useMemberNo();
     const [cards, setCards] = useState([]);
     const [cardPayInfos, setCardPayInfos] = useState({});
     const [cardData, setCardData] = useState({});
+    const [selectedMonth, setSelectedMonth] = useState('current');
     const [totalSavePrice, setTotalSavePrice] = useState(0);
     const [totalDiscountPrice, setTotalDiscountPrice] = useState(0);
     const [totalBenefitPrice, setTotalBenefitPrice] = useState(0);
@@ -20,7 +24,10 @@ const BenefitTest = () => {
                     const response = await axios.get(
                         'http://localhost:8091/member/getBenefit',
                         {
-                            params: { memberNo: memberNo },
+                            params: {
+                                memberNo: memberNo,
+                                month: selectedMonth,
+                            },
                         },
                     );
 
@@ -52,79 +59,65 @@ const BenefitTest = () => {
         };
 
         fetchData();
-    }, [memberNo]); // memberNo가 변경될 때마다 effect 재실행
+    }, [selectedMonth, memberNo]);
 
-    if (!memberNo) {
-        return <div>Loading...</div>; // memberNo가 없으면 로딩 표시
-    }
-
-    const renderCardGoals = (card) => {
-        const data = cardData[card.cardNo] || {};
-
-        if (!data.cardGoal1) {
-            return <h3>목표 실적: 0원</h3>;
-        } else if (!data.cardGoal2) {
-            return <h3>목표 실적 1구간: {data.cardGoal1}원</h3>;
-        } else if (!data.cardGoal3) {
-            return (
-                <>
-                    <h3>목표 실적 1구간: {data.cardGoal1}원</h3>
-                    <h3>목표 실적 2구간: {data.cardGoal2}원</h3>
-                </>
-            );
-        } else {
-            return (
-                <>
-                    <h3>목표 실적 1구간: {data.cardGoal1}원</h3>
-                    <h3>목표 실적 2구간: {data.cardGoal2}원</h3>
-                    <h3>목표 실적 3구간: {data.cardGoal3}원</h3>
-                </>
-            );
-        }
+    const handleToggle = () => {
+        setSelectedMonth((prevMonth) =>
+            prevMonth === 'current' ? 'prev' : 'current',
+        );
     };
 
     return (
-        <div className="benefittest-container">
-            <h1>테스트맨의 이번달 혜택내역</h1>
-            <div className="card-list">
-                {cards.map((card) => (
-                    <div key={card.cardNo} className="card-item">
-                        <img src={card.cardImage} alt={card.cardNick} />
-                        <h2>{card.cardNick}</h2>
+        <>
+            <Header />
+            <div className="container pt-4 pt-sm-5">
+                <div className="mb-3 text-center">
+                    <h1>테스트맨의 실적 관리</h1>
+                </div>
 
-                        {/* 목표 실적 출력 함수 호출 */}
-                        {renderCardGoals(card)}
+                {/* 토글 버튼 */}
+                <div className="d-flex justify-content-center mb-4">
+                    <CustomToggle2
+                        isLeftActive={selectedMonth === 'current'}
+                        onClick={handleToggle}
+                    />
+                </div>
 
-                        <p>이번달 사용금액: {card.totalCardPrice}원</p>
-                        {cardPayInfos[card.cardNo] &&
-                        cardPayInfos[card.cardNo].length > 0 ? (
-                            <ul>
-                                {cardPayInfos[card.cardNo].map(
-                                    (payInfo, index) => (
-                                        <li key={index}>
-                                            {payInfo.product}:{' '}
-                                            {payInfo.saveType === 0
-                                                ? '적립금액'
-                                                : '할인금액'}{' '}
-                                            {payInfo.savePrice}원
-                                        </li>
-                                    ),
-                                )}
-                            </ul>
-                        ) : (
-                            <div className="no-benefit">
-                                이번달 받은 혜택 없음
-                            </div>
-                        )}
-                    </div>
-                ))}
+                {/* 카드 리스트 */}
+                <div className="row">
+                    {cards.length > 0 ? (
+                        cards.map((card) => (
+                            <BenefitCardItem
+                                key={card.cardNo}
+                                card={card}
+                                payInfos={cardPayInfos[card.cardNo]} // 카드별 결제 내역 전달
+                                cardData={cardData[card.cardNo]} // 카드별 목표 정보 전달
+                            />
+                        ))
+                    ) : (
+                        <div className="text-center fs-3">
+                            카드 정보가 없습니다.
+                        </div>
+                    )}
+                </div>
+
+                {/* 총액 정보 */}
+                {/* <div className="totals text-center mt-4">
+                    <h3>
+                        {selectedMonth === 'current' ? '이번달' : '저번달'}{' '}
+                        적립금액: {totalSavePrice}원
+                    </h3>
+                    <h3>
+                        {selectedMonth === 'current' ? '이번달' : '저번달'}{' '}
+                        할인금액: {totalDiscountPrice}원
+                    </h3>
+                    <h3>
+                        {selectedMonth === 'current' ? '이번달' : '저번달'}{' '}
+                        혜택금액: {totalBenefitPrice}원
+                    </h3>
+                </div> */}
             </div>
-            <div className="totals">
-                <h3>이번달 적립금액: {totalSavePrice}원</h3>
-                <h3>이번달 할인금액: {totalDiscountPrice}원</h3>
-                <h3>이번달 혜택금액: {totalBenefitPrice}원</h3>
-            </div>
-        </div>
+        </>
     );
 };
 

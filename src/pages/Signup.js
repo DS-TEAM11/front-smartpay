@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import Policy from '../component/Policy'; // Policy 컴포넌트 추가
 import Button from '../component/Button';
@@ -9,10 +9,12 @@ import { useNavigate } from 'react-router-dom';
 import { InputValue } from '../component/common/InputValue'; // InputValue 컴포넌트 임포트
 import './Signup.css';
 import logoImage from '../img/logo3.png'; // 로고 이미지 임포트
-
+import CustomModal from '../component/common/Modal';
 const Signup = () => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
+    const [emailSuccess, setEmailSuccess] = useState(''); // 이메일 사용 가능 메시지 상태 추가
+    const [isEmailDuplicate, setIsEmailDuplicate] = useState(false);
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -27,6 +29,16 @@ const Signup = () => {
     const [isSmsSent, setIsSmsSent] = useState(false);
     const [isPolicyVisible, setIsPolicyVisible] = useState(false);
     const navigate = useNavigate();
+
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
+    const [checkModal, setCheckModal] = useState(true); // 버튼 표시 여부
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setCheckModal(false);
+    };
 
     const validatePhone = (phone) => {
         const re = /^\d{11}$/; // 기본 전화번호 형식 검증
@@ -55,6 +67,9 @@ const Signup = () => {
         setPhone(onlyNums);
     };
 
+    const passwordInputRef = useRef(null);
+    const emailInputRef = useRef(null);
+
     // 현재 방식
     const handleSendSmsCurrent = (e) => {
         e.preventDefault();
@@ -64,14 +79,26 @@ const Signup = () => {
                 .then((response) => {
                     setVerificationCode(response.data); // 서버에서 받은 인증번호 설정
                     setIsSmsSent(true);
-                    alert('인증번호가 발송되었습니다.');
+                    // alert('인증번호가 발송되었습니다.');
+                    setModalTitle('인증번호 발송');
+                    setModalContent('인증번호가 발송되었습니다.');
+                    setShowModal(true);
+                    setCheckModal(false);
                 })
                 .catch((error) => {
                     console.error('인증번호 생성 실패:', error);
-                    alert('인증번호 생성에 실패했습니다.');
+                    // alert('인증번호 생성에 실패했습니다.');
+                    setModalTitle('알림');
+                    setModalContent('인증번호 생성에 실패했습니다.');
+                    setShowModal(true);
+                    setCheckModal(true);
                 });
         } else {
-            alert('전화번호를 올바르게 입력해주세요.');
+            // alert('전화번호를 올바르게 입력해주세요.');
+            setModalTitle('알림');
+            setModalContent('전화번호를 올바르게 입력해주세요.');
+            setShowModal(true);
+            setCheckModal(true);
         }
     };
 
@@ -85,15 +112,54 @@ const Signup = () => {
                 })
                 .then((response) => {
                     setIsSmsSent(true);
-                    alert('인증번호가 발송되었습니다.');
+                    // alert('인증번호가 발송되었습니다.');
+                    setModalTitle('알림');
+                    setModalContent('인증번호가 발송되었습니다.');
+                    setShowModal(true);
+                    setCheckModal(false);
                 })
                 .catch((error) => {
                     console.error('인증번호 생성 실패:', error);
-                    alert('인증번호 생성에 실패했습니다.');
+                    // alert('인증번호 생성에 실패했습니다.');
+                    setModalTitle('알림');
+                    setModalContent('인증번호 생성에 실패했습니다.');
+                    setShowModal(true);
+                    setCheckModal(true);
                 });
         } else {
-            alert('전화번호를 올바르게 입력해주세요.');
+            // alert('전화번호를 올바르게 입력해주세요.');
+            setModalTitle('알림');
+            setModalContent('전화번호를 올바르게 입력해주세요.');
+            setShowModal(true);
+            setCheckModal(true);
         }
+    };
+
+    const checkEmailDuplicate = () => {
+        if (!validateEmail(email)) {
+            setEmailError('올바른 이메일 형식을 입력해주세요.');
+            return;
+        }
+
+        axios
+            .get(`http://localhost:8091/member/checkEmail?email=${email}`)
+            .then((response) => {
+                if (response.data) {
+                    setEmailError('이미 사용중인 이메일입니다.');
+                    setIsEmailDuplicate(true);
+                    setEmail('');
+                    setEmailSuccess('');
+                } else {
+                    setEmailError('');
+                    setEmailSuccess('이메일이 사용 가능합니다.');
+                    setIsEmailDuplicate(false);
+                }
+            })
+            .catch((error) => {
+                console.error('이메일 검사 중복 실패', error);
+                setEmailError('이메일 검사 중 오류가 발생했습니다.');
+                setEmailSuccess(''); // 성공 메시지 초기화
+            });
     };
 
     // 현재 방식
@@ -104,9 +170,17 @@ const Signup = () => {
 
         if (trimmedInputCode === verificationCodeString) {
             setIsVerified(true);
-            alert('인증이 완료되었습니다.');
+            // alert('인증이 완료되었습니다.');
+            setModalTitle('알림');
+            setModalContent('인증이 완료되었습니다.');
+            setShowModal(true);
+            setCheckModal(false);
         } else {
-            alert('인증번호가 올바르지 않습니다.');
+            // alert('인증번호가 올바르지 않습니다.');
+            setModalTitle('알림');
+            setModalContent('인증번호가 올바르지 않습니다.');
+            setShowModal(true);
+            setCheckModal(true);
         }
     };
 
@@ -121,14 +195,26 @@ const Signup = () => {
                 })
                 .then((response) => {
                     setIsVerified(true);
-                    alert('인증이 완료되었습니다.');
+                    // alert('인증이 완료되었습니다.');
+                    setModalTitle('알림');
+                    setModalContent('인증이 완료되었습니다.');
+                    setShowModal(true);
+                    setCheckModal(false);
                 })
                 .catch((error) => {
                     console.error('인증 실패:', error);
-                    alert('인증에 실패했습니다.');
+                    // alert('인증에 실패했습니다.');
+                    setModalTitle('알림');
+                    setModalContent('인증에 실패했습니다.');
+                    setShowModal(true);
+                    setCheckModal(true);
                 });
         } else {
-            alert('전화번호를 올바르게 입력해주세요.');
+            // alert('전화번호를 올바르게 입력해주세요.');
+            setModalTitle('알림');
+            setModalContent('전화번호를 올바르게 입력해주세요.');
+            setShowModal(true);
+            setCheckModal(true);
         }
     };
 
@@ -166,12 +252,20 @@ const Signup = () => {
         }
 
         if (!isVerified) {
-            alert('전화번호 인증을 완료해주세요.');
+            // alert('전화번호 인증을 완료해주세요.');
+            setModalTitle('알림');
+            setModalContent('전화번호 인증을 완료해주세요.');
+            setShowModal(true);
+            setCheckModal(true);
             return;
         }
 
         if (!termsAccepted) {
-            alert('사이트 이용약관에 동의해주세요.');
+            // alert('사이트 이용약관에 동의해주세요.');
+            setModalTitle('알림');
+            setModalContent('사이트 이용약관에 동의해주세요.');
+            setShowModal(true);
+            setCheckModal(false);
             return;
         }
 
@@ -209,22 +303,35 @@ const Signup = () => {
             <img src={logoImage} alt="SP Logo" className="signup-logo" />
             <h2 className="signup-title">회원가입하고 똑똑하게 혜택 챙기기</h2>
             <form onSubmit={handleSignup}>
-                <InputValue
-                    type="email"
-                    placeholder="Email"
-                    title="이메일"
-                    value={email}
-                    onChange={(e) => {
-                        setEmail(e.target.value);
-                        if (!validateEmail(e.target.value)) {
-                            setEmailError('올바른 이메일 형식을 입력해주세요.');
-                        } else {
-                            setEmailError('');
-                        }
-                    }}
-                    required
-                />
-                {emailError && <p className="error-message">{emailError}</p>}
+                <div className="form-group1">
+                    <label>이메일</label>
+                    <div className="verification-group">
+                        <input
+                            type="email"
+                            className="form-control"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                setIsEmailDuplicate(false); // 이메일 변경 시 중복 상태 초기화
+                                setEmailError(''); // 이메일 변경 시 오류 메시지 초기화
+                                setEmailSuccess(''); // 성공 메시지 초기화
+                            }}
+                            required
+                        />
+                        <Button
+                            text="중복 확인"
+                            onClick={checkEmailDuplicate}
+                            disabled={!validateEmail(email)}
+                        />
+                    </div>
+                </div>
+                {emailError && <p className="error-message1">{emailError}</p>}
+                {emailSuccess && (
+                    <p className="error-message1" style={{ color: 'green' }}>
+                        {emailSuccess}
+                    </p>
+                )}
 
                 <InputValue
                     type="password"
@@ -374,6 +481,15 @@ const Signup = () => {
                     disabled={!termsAccepted || !isVerified}
                 />
             </form>
+            {showModal && (
+                <CustomModal
+                    key={modalTitle + modalContent}
+                    title={modalTitle}
+                    content={modalContent}
+                    check={checkModal}
+                    onClose={handleCloseModal}
+                />
+            )}
         </div>
     );
 };

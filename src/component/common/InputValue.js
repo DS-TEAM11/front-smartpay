@@ -2,8 +2,19 @@ import React, { useState } from 'react';
 import Button from '../Button';
 
 const InputValue = React.memo(({ title, ...props }) => {
-    const { placeholder, id, onChange, readOnly, value, type, disabled, onInput, maxLength, onKeyDown, onClick} =
-        props;
+    const {
+        placeholder,
+        id,
+        onChange,
+        readOnly,
+        value,
+        type,
+        disabled,
+        onInput,
+        maxLength,
+        onKeyDown,
+        onClick,
+    } = props;
     const inputProps = {
         id,
         type: type || 'text',

@@ -11,7 +11,6 @@ import BlackContainer from '../component/BlackContainer';
 import PwdItem from '../component/PwdItem';
 import MemberPwd from './MemberPwd';
 
-
 const formatCardNo = (value) => {
     return value
         .replace(/\s?/g, '') // 모든 공백을 제거
@@ -22,6 +21,7 @@ const formatCardNo = (value) => {
 function Register() {
     const [cardNo, setCardNo] = useState('');
     const [cardNick, setCardNick] = useState('');
+    const [cardName, setCardName] = useState('');
     const [category, setCategory] = useState('');
     const [isCredit, setIsCredit] = useState(null);
     const [cardPwd, setCardPwd] = useState('');
@@ -39,14 +39,13 @@ function Register() {
     const navigate = useNavigate();
     const memberNo = useMemberNo();
 
-
     //결제 비밀번호 등록
     const handlePasswordValidation = (isValid) => {
         if (isValid) {
             setShowMemberPwd(false);
             setShowPwdItem(true);
-        } else{   
-            alert("다시 시도해주세요");
+        } else {
+            alert('다시 시도해주세요');
             setShowMemberPwd(false);
             setShowMemberPwd(true);
         }
@@ -54,18 +53,18 @@ function Register() {
 
     const handlePasswordValidation2 = (isValid) => {
         if (isValid) {
-            alert("결제 비밀번호가 등록되었습니다.");
+            alert('결제 비밀번호가 등록되었습니다.');
             setShowPwdItem(false);
             navigate('/home');
-        } else{   
+        } else {
             setShowPwdItem(false);
             setShowMemberPwd(true);
         }
     };
-   
+
     // //블랙컨테이너 클릭시 닫기
     // const handleOverlayClick = () => {
-    //     setShowPwdItem(false); 
+    //     setShowPwdItem(false);
     // };
     // memberNo 가져오기
     // useEffect(() => {
@@ -115,10 +114,10 @@ function Register() {
     }, [memberNo]);
 
     const handleCardSelectClick = async () => {
-        if( category =='카드사 없음'){
-            return alert("올바른 카드 번호를 입력해주세요.");
-        } else if(category == '' || cardNo.length < 17){
-            return alert("카드 번호를 입력해주세요");
+        if (category == '카드사 없음') {
+            return alert('올바른 카드 번호를 입력해주세요.');
+        } else if (category == '' || cardNo.length < 17) {
+            return alert('카드 번호를 입력해주세요');
         }
         setIsModalOpen(true);
         try {
@@ -153,6 +152,7 @@ function Register() {
             cardCode,
             cardImage,
             memberNo,
+            cardName,
         };
 
         // console.log('카드 등록 요청 데이터:', cardData);
@@ -179,14 +179,14 @@ function Register() {
                         // 결제 비밀번호가 없는 경우
                         // navigate('/memberPwd');
                         setShowMemberPwd(true);
-                    } 
+                    }
                     // else {
                     //     navigate('/home'); // 홈 화면으로 이동
                     // }
                 } catch (error) {
                     if (error.response && error.response.status === 404) {
                         // 결제 비밀번호가 있는 경우
-                        navigate('/home');  // ??
+                        navigate('/home'); // ??
                     } else {
                         // 기타 네트워크 오류 처리
                         console.error(
@@ -208,11 +208,13 @@ function Register() {
         const formattedCardNo = formatCardNo(e.target.value);
         setCardNo(formattedCardNo);
 
-        if(formattedCardNo.replace(/\s/g, '').length < 6){
+        if (formattedCardNo.replace(/\s/g, '').length < 6) {
             setCategory('');
             return;
-        }
-        else if (formattedCardNo.replace(/\s/g, '').length >= 6 && formattedCardNo.replace(/\s/g, '').length <= 8) {
+        } else if (
+            formattedCardNo.replace(/\s/g, '').length >= 6 &&
+            formattedCardNo.replace(/\s/g, '').length <= 8
+        ) {
             try {
                 const response = await axios.get(
                     'http://localhost:8091/api/cards/company',
@@ -227,10 +229,13 @@ function Register() {
                 setIsCredit(isCredit);
                 setCardImage(Image);
             } catch {
-               console.log(error);
+                console.log(error);
             }
-        } else if(formattedCardNo.replace(/\s/g, '').length > 15 && category == ''){
-            setCategory("카드사 없음");
+        } else if (
+            formattedCardNo.replace(/\s/g, '').length > 15 &&
+            category == ''
+        ) {
+            setCategory('카드사 없음');
             // console.log("확인`````````");
             // console.log(category);
         }
@@ -247,7 +252,7 @@ function Register() {
         let value = e.target.value;
         //숫자만 입력 가능하도록
         value = value.replace(/[^0-9]/g, '');
-    
+
         // 카드 번호일 경우
         if (type === 'card') {
             e.target.value = value;
@@ -262,22 +267,27 @@ function Register() {
 
     // 방향키 감지 및 방지
     const preventArrowKeys = (e) => {
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        if (
+            e.key === 'ArrowLeft' ||
+            e.key === 'ArrowRight' ||
+            e.key === 'ArrowUp' ||
+            e.key === 'ArrowDown'
+        ) {
             e.preventDefault();
         }
     };
 
     return (
-        <div className='Register'>
+        <div className="Register">
             {showMemberPwd && (
                 <>
-                    <BlackContainer  />
+                    <BlackContainer />
                     <MemberPwd Success={handlePasswordValidation} />
                 </>
             )}
             {showPwdItem && (
                 <>
-                    <BlackContainer  />
+                    <BlackContainer />
                     <PwdItem Success={handlePasswordValidation2} />
                 </>
             )}
@@ -371,13 +381,13 @@ function Register() {
                     />
                 </div> */}
                 <InputValue
-                        type="text"
-                        placeholder="카드 별칭"
-                        title="카드 별칭"
-                        value={cardNick}
-                        onChange={(e) => setCardNick(e.target.value)}
-                        maxLength="8"
-                    />
+                    type="text"
+                    placeholder="카드 별칭"
+                    title="카드 별칭"
+                    value={cardNick}
+                    onChange={(e) => setCardNick(e.target.value)}
+                    maxLength="8"
+                />
                 {/* <div className="form-group">
                     <label>카드 선택</label>
                     <input
@@ -389,18 +399,19 @@ function Register() {
                     />
                 </div> */}
                 <InputValue
-                        type="text"
-                        placeholder="카드 선택"
-                        title="카드 선택"
-                        value={selectedCard ? selectedCard : '카드 선택'}
-                        onClick={handleCardSelectClick} 
-                        readOnly={true}
-                    />
+                    type="text"
+                    placeholder="카드 선택"
+                    title="카드 선택"
+                    value={selectedCard ? selectedCard : '카드 선택'}
+                    onClick={handleCardSelectClick}
+                    readOnly={true}
+                />
                 <input
                     type="hidden"
                     value={cardImage} // 이미지 URL을 숨겨진 필드로 전달
                     name="cardImage"
                 />
+                <input type="hidden" name="cardName" value={cardName} />
                 <Button text="카드 등록" onClick={handleSubmit} />
             </form>
 

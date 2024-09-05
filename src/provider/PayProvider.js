@@ -1,6 +1,8 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { webSocketService } from '../api/webSocketService'; // WebSocket Service 가져오기
+
 const ConfigEnum = Object.freeze({
     PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
     COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
@@ -27,14 +29,24 @@ const excludedPaths = [
 ];
 // Provider 컴포넌트
 let memberNo = null;
+
+// WebSocketContext 생성
+const WebSocketContext = createContext({
+    connect: () => {},
+    disconnect: () => {},
+    subscribe: () => {},
+    sendMessage: () => {},
+});
+
 export const PayProvider = ({ children }) => {
     const [selectedCard, setSelectedCard] = useState('');
     const [showQr, setShowQr] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const location = useLocation();
     const navigate = useNavigate();
     let token = localStorage.getItem('accessToken');
     let newRefreshToken = null;
-    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         const fetchMemberNo = async () => {
             if (!token) {
@@ -127,6 +139,26 @@ export const PayProvider = ({ children }) => {
         }
     }, [location.pathname, navigate]);
     // console.log(' 최종 멤버번호:', memberNo);
+
+    // WebSocket 연결 함수
+    const connectWebSocket = () => {
+        webSocketService.connect();
+    };
+
+    // WebSocket 해제 함수
+    const disconnectWebSocket = () => {
+        webSocketService.disconnect();
+    };
+
+    // WebSocket 메시지 구독 함수
+    const subscribeWebSocket = (destination, callback) => {
+        return webSocketService.subscribe(destination, callback);
+    };
+
+    // WebSocket 메시지 전송 함수
+    const sendMessageWebSocket = (destination, message) => {
+        webSocketService.sendMessage(destination, message);
+    };
     return (
         <ConfigContext.Provider value={ConfigEnum}>
             <MemberContext.Provider value={memberNo}>
@@ -134,7 +166,16 @@ export const PayProvider = ({ children }) => {
                     value={{ selectedCard, setSelectedCard }}
                 >
                     <ShowQrContext.Provider value={{ showQr, setShowQr }}>
-                        {children}
+                        <WebSocketContext.Provider
+                            value={{
+                                wsConnect: connectWebSocket,
+                                wsDisconnect: disconnectWebSocket,
+                                wsSubscribe: subscribeWebSocket,
+                                wsSendMessage: sendMessageWebSocket,
+                            }}
+                        >
+                            {children}
+                        </WebSocketContext.Provider>
                     </ShowQrContext.Provider>
                 </SelectedCardContext.Provider>
             </MemberContext.Provider>
@@ -170,5 +211,12 @@ const useConfig = () => {
     }
     return context;
 };
-
-export { useMemberNo, useSelectedCard, useShowQr, useConfig };
+// Custom Hooks for accessing WebSocketContext
+const useWebSocket = () => {
+    const context = useContext(WebSocketContext);
+    if (!context) {
+        throw new Error('useWebSocket must be used within a PayProvider');
+    }
+    return context;
+};
+export { useWebSocket, useMemberNo, useSelectedCard, useShowQr, useConfig };

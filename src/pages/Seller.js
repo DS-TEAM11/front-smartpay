@@ -7,13 +7,14 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 // import { InputValue, InputValueWithBtn } from '../component/common/InputValue';
 import { InputValue } from '../component/common/InputValue';
+import { useWebSocket } from '../provider/PayProvider';
 const Seller = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const memberNo = queryParams.get('memberNo');
-    //웹소켓 관련 코드
-    const stompClientRef = useRef(null);
-    const isConnectedRef = useRef(false); // stompClient 연결 상태 추적
+    const { wsConnect, wsDisconnect, wsSubscribe, wsSendMessage } =
+        useWebSocket();
+
     //됐음
     const today = new Date();
     const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, '');
@@ -48,80 +49,43 @@ const Seller = () => {
         }
     };
 
+    // WebSocket 연결 및 구독 처리
     useEffect(() => {
-        const socket = new SockJS('http://localhost:8091/ws');
-        const stompClient = Stomp.over(socket);
+        if (!memberNo) return; // memberNo가 없으면 아무것도 하지 않음
 
-        if (!stompClientRef.current) {
-            stompClientRef.current = stompClient;
-        }
+        // WebSocket 연결
+        wsConnect();
+        wsSendMessage(`/sellinfo`, { action: 'enter', message: 'seller' });
+        // WebSocket 구독
+        const subscription = wsSubscribe(`/sellinfo`, (message) => {
+            const body = JSON.parse(message.body);
+            console.log('Received message:', body);
 
-        const connectStompClient = () => {
-            stompClientRef.current.connect(
-                {},
-                function (frame) {
-                    console.log('Connected: ' + frame);
-                    isConnectedRef.current = true; // 연결이 완료된 상태로 설정
-                    subscribeToTopic();
+            // 메시지 처리
+            if (body.message === 'purchase end') {
+                const confirm_ = window.confirm('결제가 완료되었습니다.');
+                if (confirm_) {
+                    window.location.href = 'http://localhost:3000/pay/receipt';
+                }
+            } else if (body.message === 'buyer exit') {
+                alert('구매자가 주문을 취소하였습니다.');
 
-                    // 연결이 완료된 후에만 메시지 전송
-                    stompClientRef.current.send(
-                        '/topic/sellinfo/' + memberNo,
-                        {},
-                        JSON.stringify({ message: 'seller enter' }),
-                    );
-                },
-                function (error) {
-                    console.error('STOMP connection error:', error);
-                    // 필요시 재시도 로직 추가 가능
-                },
-            );
-        };
-
-        if (isConnectedRef.current) {
-            subscribeToTopic();
-        } else {
-            connectStompClient();
-        }
-
-        // 컴포넌트 언마운트 시 연결 해제
-        return () => {
-            if (stompClientRef.current && isConnectedRef.current) {
-                stompClientRef.current.disconnect(() => {
-                    console.log('Disconnected');
-                });
+                subscription.unsubscribe(); // 구독 해제
+                // WebSocket 연결 해제
+                wsDisconnect();
             }
+        });
+
+        // 컴포넌트가 언마운트될 때 구독 해제 및 연결 해제
+        return () => {
+            if (subscription) {
+                subscription.unsubscribe(); // 구독 해제
+            }
+            wsDisconnect(); // WebSocket 연결 해제
         };
-    }, []);
+    }, [memberNo]); // memberNo 변경 시마다 실행
 
-    const subscribeToTopic = () => {
-        stompClientRef.current.subscribe(
-            '/topic/sellinfo/' + memberNo,
-            function (message) {
-                const body = JSON.parse(message.body);
-                console.log('message:', body);
-                if (body.message === 'purchase end') {
-                    var confirm_ = window.confirm('결제가 완료되었습니다.');
-                    if (confirm_) {
-                        window.location.href =
-                            'http://localhost:3000/pay/receipt';
-                    }
-                }
-
-                //구매자가 로딩화면 중에서 취소하기를 누르면
-                if (body.message === 'buyer exit') {
-                    alert('구매자가 주문을 취소하였습니다.');
-
-                    //판매자 웹소켓 끊기(근데 새로고침 하면 다시 연결됨)
-                    if (stompClientRef.current && isConnectedRef.current) {
-                        stompClientRef.current.disconnect(() => {
-                            console.log('Disconnected');
-                        });
-                    }
-                }
-            },
-        );
-    };
+    // 메시지 전송 함수
     const send_information = async () => {
         const {
             franchiseCode,
@@ -131,7 +95,7 @@ const Seller = () => {
             purchasePrice,
         } = formData;
 
-        //모든 값을 입력해야 함
+        // 모든 값을 입력해야 함
         if (
             !franchiseCode ||
             !franchiseType ||
@@ -143,6 +107,7 @@ const Seller = () => {
             return;
         }
 
+        // 주문 번호 처리
         const orderNo = await handleOrderNo();
         const purchase_data = {
             ...formData,
@@ -150,14 +115,12 @@ const Seller = () => {
             payDate: formattedDate,
             orderNo: orderNo,
         };
-        stompClientRef.current.send(
-            '/topic/sellinfo/' + memberNo,
-            {},
-            JSON.stringify({
-                message: 'purchase information',
-                data: purchase_data,
-            }),
-        );
+
+        // WebSocket을 통해 메시지 전송
+        wsSendMessage(`/sellinfo/`, {
+            message: 'purchase information',
+            data: purchase_data,
+        });
     };
     //웹소켓 관련 코드 끝------------------------------------------------------------
     //입력 폼 데이터 핸들링

@@ -11,7 +11,7 @@ import image4 from '../img/home4.png';
 import image5 from '../img/home5.png';
 import image6 from '../img/home6.png';
 import { useNavigate } from 'react-router-dom'; // useNavigate 추가
-import { useMemberNo } from '../provider/PayProvider';
+import { useMemberNo, useWebSocket } from '../provider/PayProvider';
 
 const Home = () => {
     const memberNo = useMemberNo();
@@ -19,6 +19,8 @@ const Home = () => {
     const navigate = useNavigate(); // useNavigate 훅 사용
     const [totalSavePrice, setTotalSavePrice] = useState(0); //이번달 총 적립금액
     const [totalDiscountPrice, setTotalDiscountPrice] = useState(0); //이번달 총 할인금액
+    const { wsConnect, wsDisconnect, wsSubscribe, wsSendMessage } =
+        useWebSocket();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,6 +44,23 @@ const Home = () => {
         };
 
         fetchData();
+        if (!memberNo) return;
+        // 컴포넌트가 마운트될 때 WebSocket 연결을 설정
+        wsConnect(); // WebSocket 연결
+        wsSendMessage(`/sellinfo`, { action: 'enter', message: memberNo }); // WebSocket 메시지 전송
+        // WebSocket 구독 설정
+        const subscription = wsSubscribe(`/sellinfo`, (message) => {
+            // 메시지를 수신하면 콘솔에 출력
+            console.log('Received message:', message);
+        });
+
+        // 컴포넌트가 언마운트될 때 구독 해제 및 WebSocket 연결 해제
+        return () => {
+            if (subscription) {
+                subscription.unsubscribe(); // 구독 해제
+            }
+            wsDisconnect(); // WebSocket 연결 해제
+        };
     }, [memberNo]);
 
     return (

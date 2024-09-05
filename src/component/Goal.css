@@ -1,0 +1,56 @@
+.goal-container {
+    margin-top: 10px;
+    position: relative;
+    height: 10px;
+
+    border-radius: 5px;
+    overflow: visible;
+    width: 100%;
+}
+
+/* 깃발 이미지 컨테이너 */
+.goal-flag-container {
+    position: relative;
+    height: 40px; /* 깃발 높이 포함 */
+}
+
+/* 깃발 이미지 스타일 */
+.goal-flag {
+    position: absolute;
+    top: -13px; /* 깃발이 프로그래스바 위에 표시되도록 조정 */
+    transform: translateX(-50%); /* 깃발을 중앙에 맞춤 */
+}
+
+/* 깃발 설명 컨테이너 */
+.goal-title-container {
+    position: relative;
+    height: 35px; /* 깃발 높이 포함 */
+}
+
+/* 깃발 설명 스타일 */
+.goal-title {
+    position: absolute;
+    bottom: -10px; /* 깃발이 프로그래스바 위에 표시되도록 조정 */
+    transform: translateX(-50%); /* 깃발을 중앙에 맞춤 */
+}
+
+/* 깃발 이미지 크기 */
+.goal-flag img {
+    width: 20px; /* 깃발 크기 조정 */
+    height: auto;
+}
+
+/* 프로그래스바 스타일 */
+.goal-progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #d3d3d3;
+    position: relative;
+    border-radius: 5px;
+}
+
+.goal-progress {
+    height: 100%;
+    background-color: #6f42c1;
+    transition: width 0.5s ease;
+}

@@ -3,20 +3,20 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: 80%;
     height: 70%;
     margin: 0 auto;
     background-color: #ffffff;
     z-index: 100001;
     position: fixed;
-    top: 50%;   
-    left: 50%; 
-    transform: translate(-50%, -50%); 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     border-radius: 2%;
 }
 
 .pwd-container h2 {
-    font-size: 30px; 
+    font-size: 30px;
     font-weight: bold;
     color: #4f46e5;
     margin-bottom: 5%;

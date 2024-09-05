@@ -62,6 +62,9 @@
     margin-bottom: 15px;
     text-align: left;
 }
+.signup-container .form-group1 {
+    text-align: left;
+}
 
 .signup-container .form-control {
     width: 100%;
@@ -88,6 +91,11 @@
     font-size: 12px;
     text-align: left;
     margin-top: 5px;
+}
+.signup-container .error-message1 {
+    color: red;
+    font-size: 12px;
+    text-align: left;
 }
 
 .signup-container .policy-link {

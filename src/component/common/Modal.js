@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import './Modal.css';
-
+import Button from '../Button';
 const CustomModal = ({ title, content, check, onClose }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -12,7 +12,7 @@ const CustomModal = ({ title, content, check, onClose }) => {
         if (!check) {
             timer = setTimeout(() => {
                 setModalIsOpen(false);
-                onClose(); 
+                onClose();
             }, 1000);
         }
 
@@ -20,6 +20,10 @@ const CustomModal = ({ title, content, check, onClose }) => {
     }, [check, onClose]);
 
     const closeModal = () => {
+        if (onClose) {
+            onClose();
+            return;
+        }
         setModalIsOpen(false);
         onClose();
     };
@@ -39,7 +43,7 @@ const CustomModal = ({ title, content, check, onClose }) => {
                 <p>{content}</p>
             </div>
             <div className="modal-footer">
-                {check && <button onClick={closeModal}>확인</button>}
+                {check && <Button onClick={closeModal} text="확인"></Button>}
             </div>
         </Modal>
     );

@@ -1,0 +1,38 @@
+.login-container .login-logo-wrapper1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.mainTitle {
+    font-size: 30px;
+    margin-bottom: 50px;
+}
+.label1 {
+    margin-bottom: 10px;
+    font-size: 17px;
+}
+
+.backForward {
+    margin-top: 20px;
+}
+
+.form-control {
+    width: 50%;
+    display: inline-block;
+    margin-right: 10px;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.verification-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.success-message,
+.error-message {
+    margin-top: 10px;
+}

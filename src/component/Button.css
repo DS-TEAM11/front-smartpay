@@ -10,3 +10,14 @@
     background-color: #4f46e5;
     color: white;
 }
+
+.Button.white {
+    background-color: white;
+    color: #4f46e5;
+    border: 1px solid #4f46e5;
+}
+
+.Button:active,
+.Button:hover {
+    opacity: 90%;
+}

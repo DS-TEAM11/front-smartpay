@@ -36,6 +36,7 @@ function MyCalendar({ value, onChange }) {
     const handleDateChange = (dateRange) => {
         setSelectedDateRange(dateRange);
         onChange(dateRange); // 날짜 범위가 변경되면 부모 컴포넌트에 알림
+        toggleCalendar();
     };
 
     const formatDateRange = (dateRange) => {

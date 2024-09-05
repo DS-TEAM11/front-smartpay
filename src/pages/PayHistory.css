@@ -55,13 +55,23 @@
     text-align: left;
     margin-left: 5%;
     align-content: end;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
 }
 
 .payhistory .data .table-container .dayTable .table-row .item2 {
     grid-area: 2/1/3/3;
     margin-left: 5%;
     display: flex;
+    align-items: center;
     font-weight: bold;
+    align-content: end;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
 }
 
 .payhistory .data .table-container .dayTable .table-row .item3 {
@@ -85,8 +95,8 @@
 .payhistory .data .table-container .dayTable .table-row .cardImg {
     width: 100%;
     height: 100%;
-    filter: drop-shadow(1px 3px 4px black);
     margin-right: 8px;
+    filter: none;
 }
 
 .payhistory .data .table-container .dayTable .table-row .cardImg img {

@@ -11,6 +11,7 @@ import { useMemberNo, useSelectedCard } from '../provider/PayProvider';
 import PwdItem from '../component/PwdItem';
 import BlackContainer from '../component/BlackContainer';
 import Loading from '../component/Loading';
+import CustomModal from '../component/common/Modal';
 import './Pay.css';
 
 const Pay = () => {
@@ -40,6 +41,17 @@ const Pay = () => {
     // PwdItem 표시 상태
     const [showPwdItem, setShowPwdItem] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    //모달
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
+    const [checkModal, setCheckModal] = useState(true); // 버튼 표시 여부
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setCheckModal(false); 
+    };
 
     // 카드 코드와 AI 상태 설정
     useEffect(() => {
@@ -168,6 +180,11 @@ const Pay = () => {
             setShowPwdItem(false);
             setIsLoading(true);
             handlePayment(); //결제 로직 수행
+        } else {
+            setModalTitle('알림');
+            setModalContent('비밀번호가 일치하지 않습니다.');
+            setShowModal(true);
+            setCheckModal(true);
         }
     };
     //블랙컨테이너 클릭시 닫기
@@ -221,7 +238,11 @@ const Pay = () => {
 
             if (paymentStatus === 0) {
                 // 결제 성공
-                alert('결제가 완료되었습니다.');
+                // alert('결제가 완료되었습니다.');
+                setModalTitle('결제 완료');
+                setModalContent('결제가 완료되었습니다.');
+                setShowModal(true);
+                setCheckModal(false);
                 // setPaymentSuccess(true);
                 // setPaymentData(response.data);
                 navigate(`/pay/receipt?orderNo=${orderNo}`);
@@ -229,19 +250,36 @@ const Pay = () => {
             } else if (paymentStatus === 1) {
                 // 카드 불일치
                 setIsLoading(true);
-                alert('결제 실패: 카드 정보 불일치 다시 시도해주세요');
+                // alert('결제 실패: 카드 정보 불일치 다시 시도해주세요');
+                setModalTitle('결제 실패');
+                setModalContent('카드 정보 불일치\n다시 시도해주세요');
+                setShowModal(true);
+                setCheckModal(false);
+                
                 handleHomeClick();
             } else if (paymentStatus === 2) {
                 // 유효기간 만료
-                alert('결제 실패:  유효기간 만료  다시 시도해주세요');
+                // alert('결제 실패:  유효기간 만료  다시 시도해주세요');
+                setModalTitle('결제 실패');
+                setModalContent('유효기간 만료\n다시 시도해주세요');
+                setShowModal(true);
+                setCheckModal(false);
                 handleHomeClick();
             } else if (paymentStatus === 3) {
                 // 한도 초과
-                alert('결제 실패: 카드 한도 초과  다시 시도해주세요');
+                // alert('결제 실패: 카드 한도 초과  다시 시도해주세요');
+                setModalTitle('결제 실패');
+                setModalContent('카드 한도 초과\n다시 시도해주세요');
+                setShowModal(true);
+                setCheckModal(false);
                 handleHomeClick();
             } else {
                 // 예외 에러
-                alert('결제 실패: 서버 에러 발생  다시 시도해주세요');
+                // alert('결제 실패: 서버 에러 발생  다시 시도해주세요');
+                setModalTitle('결제 실패');
+                setModalContent('서버 에러 발생\n다시 시도해주세요');
+                setShowModal(true);
+                setCheckModal(false);
                 handleHomeClick();
             }
         } catch (error) {
@@ -255,6 +293,15 @@ const Pay = () => {
 
     return (
         <div className="Pay">
+            {showModal && (
+               <CustomModal
+               key={modalTitle + modalContent} 
+               title={modalTitle}
+               content={modalContent}
+               check={checkModal}
+               onClose={handleCloseModal}
+           />
+            )}
             {isLoading && <Loading text={'결제 진행 중입니다.'} />}
             {showPwdItem && (
                 <>
@@ -300,6 +347,7 @@ const Pay = () => {
                     setCardCode={setCardCode}
                 />
             )}
+            
         </div>
     );
 };

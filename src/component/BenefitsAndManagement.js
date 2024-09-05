@@ -4,13 +4,21 @@ import ManagementItem from '../component/ManagementItem';
 import './BenefitsAndManagement.css';
 import { useConfig, useMemberNo } from '../provider/PayProvider';
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 const BenefitsAndManagement = ({ benefits, managementItems }) => {
     const memberNo = useMemberNo();
     const { PAY_SERVER_URL } = useConfig();
     const [memberInfo, setMemberInfo] = useState(null);
     const [loading, setLoading] = useState(true); // 로딩 상태 추가
-
+    const navigate = useNavigate();
+    const benefitClick = (e) => {
+        console.log(this);
+        // if (this.target.className === 'benefit-point') {
+        //     navigate('/mypage?tab=benefit');
+        // } else if (this.target.className === 'benefit-discount') {
+        //     navigate('/mypage?tab=discount');
+        // }
+    };
     useEffect(() => {
         const fetchMemberInfo = async () => {
             if (memberNo) {
@@ -50,9 +58,11 @@ const BenefitsAndManagement = ({ benefits, managementItems }) => {
                 <div className="benefits-items">
                     {benefits.map((benefit, index) => (
                         <Benefits
+                            className={benefit.className}
                             key={index}
                             imageSrc={benefit.imageSrc}
                             description={benefit.description}
+                            onClick={benefitClick}
                         />
                     ))}
                 </div>

@@ -15,6 +15,11 @@ function MemberPwd({ Success }) {
     const navigate = useNavigate();
     const memberNo = useMemberNo();
 
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     useEffect(() => {
         // 임의로 섞인 숫자 패드를 설정
         const shuffleNumbers = () => {
@@ -63,7 +68,7 @@ function MemberPwd({ Success }) {
         };
 
         axios
-            .post('http://localhost:8091/member/setPaypwd', payload, {
+            .post(`${ConfigEnum.PAY_SERVER_URL}/member/setPaypwd`, payload, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem(
                         'accessToken',

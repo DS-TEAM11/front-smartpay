@@ -14,6 +14,10 @@ function MyStatics() {
         seriesThisMonth: [],
         seriesLastMonthTotal: [],
     });
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
     const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
     // 가맹점 코드와 이름을 매핑하는 객체
@@ -47,7 +51,7 @@ function MyStatics() {
     const mystaticsApi = () => {
         axios
             .get(
-                `http://localhost:8091/api/payment/statics?memberNo=${memberNo}`,
+                `${ConfigEnum.PAY_SERVER_URL}/api/payment/statics?memberNo=${memberNo}`,
             )
             .then((res) => {
                 console.log(res.data);

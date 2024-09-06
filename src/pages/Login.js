@@ -25,6 +25,11 @@ const Login = () => {
     const [modalTitle, setModalTitle] = useState('');
     const [checkModal, setCheckModal] = useState(true); // 버튼 표시 여부
 
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -39,7 +44,7 @@ const Login = () => {
 
         try {
             const response = await axios.post(
-                'http://localhost:8091/login',
+                `${ConfigEnum.PAY_SERVER_URL}/login`,
                 loginData,
                 { withCredentials: true }
             );
@@ -84,7 +89,7 @@ const Login = () => {
 
     const handleKakaoLogin = () => {
         window.location.href =
-            'http://localhost:8091/oauth2/authorization/kakao';
+            `${ConfigEnum.PAY_SERVER_URL}/oauth2/authorization/kakao`;
     };
 
     const handleCloseModal = () => {

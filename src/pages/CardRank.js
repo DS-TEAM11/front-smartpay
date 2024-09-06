@@ -12,10 +12,15 @@ const CardRank = () => {
         setCategory(event.target.value); // 카테고리 상태 업데이트
     };
 
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     const handleRank = async () => {
         try {
             const response = await axios.get(
-                'http://localhost:8091/api/payment/ranking',
+                `${ConfigEnum.PAY_SERVER_URL}/api/payment/ranking`,
                 {
                     params: { category },
                 },
@@ -43,13 +48,13 @@ const CardRank = () => {
                 </div>
 
                 <div className="py-3">
-                    <div className='mb-4'>
+                    <div className="mb-4">
                         <Categoryselect
                             category={category}
                             onChange={handleCategoryChange}
                         />
                     </div>
-                    
+
                     <RankItem rankItems={rankItems} />
                 </div>
             </div>

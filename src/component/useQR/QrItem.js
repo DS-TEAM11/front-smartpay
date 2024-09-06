@@ -27,8 +27,12 @@ function QrItem({ onRemove, cardCode, subscription, subMessage }) {
         useWebSocket();
     // Ref를 사용하여 subscription을 관리
     const subscriptionRef = useRef(subscription);
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
     const cardRecommend = (data) => {
-        const url = 'http://localhost:8091/api/payment/ai';
+        const url = `${ConfigEnum.PAY_SERVER_URL}/api/payment/ai`;
         const params = {
             memberNo: memberNo,
         };
@@ -66,9 +70,12 @@ function QrItem({ onRemove, cardCode, subscription, subMessage }) {
         }
 
         axios
-            .get('http://localhost:8091/qr/seller?memberNo=' + memberNo, {
-                responseType: 'blob',
-            })
+            .get(
+                `${ConfigEnum.PAY_SERVER_URL}/qr/seller?memberNo=` + memberNo,
+                {
+                    responseType: 'blob',
+                },
+            )
             .then((response) => {
                 setQrCodeUrl(URL.createObjectURL(response.data));
                 wsConnect();

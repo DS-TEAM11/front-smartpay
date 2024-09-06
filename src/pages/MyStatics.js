@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useMemberNo } from '../provider/PayProvider';
 import Header from '../component/Header';
 import { BarChart } from '@mui/x-charts/BarChart';
-import './MyStatics.css'
+import './MyStatics.css';
 
 function MyStatics() {
     const memberNo = useMemberNo();
@@ -41,10 +41,11 @@ function MyStatics() {
         10009: 'assets/images/public_transport.png',
     };
 
-
     const mystaticsApi = () => {
         axios
-            .get(`http://localhost:8091/api/payment/statics?memberNo=${memberNo}`)
+            .get(
+                `http://localhost:8091/api/payment/statics?memberNo=${memberNo}`,
+            )
             .then((res) => {
                 console.log(res.data);
 
@@ -53,8 +54,12 @@ function MyStatics() {
                 setData(responseData);
 
                 // 차트 데이터 업데이트
-                const seriesThisMonth = responseData.map((item) => item.thisMonth); // 이번 달 금액
-                const seriesLastMonthTotal = responseData.map((item) => item.lastMonthTotal);
+                const seriesThisMonth = responseData.map(
+                    (item) => item.thisMonth,
+                ); // 이번 달 금액
+                const seriesLastMonthTotal = responseData.map(
+                    (item) => item.lastMonthTotal,
+                );
 
                 setChartData({
                     seriesThisMonth,
@@ -91,7 +96,8 @@ function MyStatics() {
                         {data.length > 0 ? (
                             <div>
                                 <div>
-                                    {data[0]['thisMonthTotal'].toLocaleString()}원
+                                    {data[0]['thisMonthTotal'].toLocaleString()}
+                                    원
                                 </div>
                                 <div>
                                     <div>지난달 이 맘때 보다</div>
@@ -111,36 +117,57 @@ function MyStatics() {
                         <BarChart
                             width={600}
                             height={300}
-                            series={chartData.seriesThisMonth.map((item, index) => ({
-                                data: [item],
-                                label: franchiseMap[data[index].franchiseCode],
-                            }))}
+                            series={chartData.seriesThisMonth.map(
+                                (item, index) => ({
+                                    data: [item],
+                                    label: franchiseMap[
+                                        data[index].franchiseCode
+                                    ],
+                                }),
+                            )}
                         />
                     </div>
                     <div>
                         {data.map((item) => (
-                            <div className='table-container' key={item.franchiseCode}>
-                                <div className='row-img'>
+                            <div
+                                className="table-container"
+                                key={item.franchiseCode}
+                            >
+                                <div className="row-img">
                                     {/* 이미지 경로를 franchiseCode에 맞춰 동적으로 설정 */}
-                                    <img 
-                                        src={franchiseImageMap[item.franchiseCode]} 
-                                        alt={franchiseMap[item.franchiseCode]} 
-                                        style={{ width: '50px', height: '50px' }}
+                                    <img
+                                        src={
+                                            franchiseImageMap[
+                                                item.franchiseCode
+                                            ]
+                                        }
+                                        alt={franchiseMap[item.franchiseCode]}
+                                        style={{
+                                            width: '50px',
+                                            height: '50px',
+                                        }}
                                     />
                                 </div>
-                                <div className='row-name'>
-                                    {franchiseMap[item.franchiseCode]}
+                                <div className="row-content">
+                                    <div className="row-name">
+                                        {franchiseMap[item.franchiseCode]}
+                                    </div>
+                                    <div className="row-percent">
+                                        {/* 백분율 계산 (소수점 한 자리까지 표시) */}
+                                        {(
+                                            (item.thisMonth /
+                                                item.thisMonthTotal) *
+                                            100
+                                        ).toFixed(1)}
+                                        %
+                                    </div>
                                 </div>
-                                <div className='row-percent'>
-                                    {/* 백분율 계산 (소수점 한 자리까지 표시) */}
-                                    {((item.thisMonth / item.thisMonthTotal) * 100).toFixed(1)}%
-                                </div>
-                                <div className='row-price'>
+                                <div className="row-price text-end">
                                     {item.thisMonth.toLocaleString()}원
                                 </div>
                             </div>
                         ))}
-                    </div>                                        
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,7 +1,14 @@
 .statics {
-
 }
 
 .statics .table-container {
     display: flex;
+}
+
+.statics .table-container .row-content {
+    display: column;
+}
+
+.statics .table-container .row-content .row-price {
+    /* text- */
 }

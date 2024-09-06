@@ -3,6 +3,7 @@ import axios from 'axios';
 import Header from '../component/Header';
 import BenefitCardItem from '../component/BenefitCardItem';
 import CustomToggle2 from '../component/CustomToggle2';
+import CustomToggle3 from '../component/CustomToggle3';
 import { useMemberNo } from '../provider/PayProvider';
 import './BenefitTest.css';
 
@@ -71,9 +72,11 @@ const BenefitTest = () => {
         <>
             <Header />
             <div className="container pt-4 pt-sm-5">
-                <div className="mb-3 text-center">
+                {/* 공통 토글 버튼 */}
+                <CustomToggle3 />
+                {/* <div className="mb-3 text-center">
                     <h1>테스트맨의 실적 관리</h1>
-                </div>
+                </div> */}
 
                 {/* 토글 버튼 */}
                 <div className="d-flex justify-content-center mb-4">

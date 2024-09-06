@@ -3,16 +3,18 @@ import React, { useState, useEffect, PureComponent } from 'react';
 import { useMemberNo } from '../provider/PayProvider';
 import Header from '../component/Header';
 import StackBar from '../component/StackBar';
+import CustomToggle3 from '../component/CustomToggle3';
+import Loading from '../component/Loading';
 import './MyStatics.css';
 
 function MyStatics() {
-    
     const memberNo = useMemberNo();
     const [data, setData] = useState([]);
     const [chartData, setChartData] = useState({
         seriesThisMonth: [],
         seriesLastMonthTotal: [],
     });
+    const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
     // 가맹점 코드와 이름을 매핑하는 객체
     const franchiseMap = {
@@ -66,76 +68,89 @@ function MyStatics() {
                     seriesThisMonth,
                     seriesLastMonthTotal,
                 });
+                setLoading(false); // 데이터 로드 완료 시 로딩 상태를 false로 설정
             })
             .catch((e) => {
                 console.error('통계 데이터 요청 에러', e);
+                setLoading(false); // 데이터 로드 완료 시 로딩 상태를 false로 설정
             });
     };
 
     useEffect(() => {
+        setLoading(true); // 데이터를 로드하기 시작할 때 로딩 상태를 true로 설정
         mystaticsApi();
     }, [memberNo]);
 
     return (
         <>
-           
-                <Header />
-                <div className="statics p-4">
-                    <div className='my-3'>
-                        {/* 데이터가 로드되었는지 확인 */}
-                        {data.length > 0 ? (
-                            <div>
+            <Header />
+            <div className="container pt-4 pt-sm-5">
+                <CustomToggle3 />
+                {loading && (
+                    <div className="statics p-4">
+                        <Loading></Loading>
+                    </div>
+                )}
+                {!loading && (
+                    <div className="statics p-4">
+                        <div className="my-3">
+                            {/* 데이터가 로드되었는지 확인 */}
+                            {data.length > 0 ? (
                                 <div>
-                                    <StackBar />
-                                </div>
-                            </div>
-                        ) : (
-                            <div>데이터를 불러오는 중...</div>
-                        )}
-                    </div>
-                    <div className='mt-6'>
-                        {data.map((item) => (
-                            <div
-                                className="table-container d-flex align-items-center mb-3 p-2"
-                                key={item.franchiseCode}
-                            >
-                                <div className="row-img me-3">
-                                    {/* 이미지 경로를 franchiseCode에 맞춰 동적으로 설정 */}
-                                    <img
-                                        src={
-                                            franchiseImageMap[
-                                                item.franchiseCode
-                                            ]
-                                        }
-                                        alt={franchiseMap[item.franchiseCode]}
-                                        style={{
-                                            width: '50px',
-                                            height: '50px',
-                                        }}
-                                    />
-                                </div>
-                                <div className="row-content flex-grow-1 ">
-                                    <div className="row-name fs-6 fw-bold">
-                                        {franchiseMap[item.franchiseCode]}
-                                    </div>
-                                    <div className="row-percent fs-6 text-muted">
-                                        {/* 백분율 계산 (소수점 한 자리까지 표시) */}
-                                        {(
-                                            (item.thisMonth /
-                                                item.thisMonthTotal) *
-                                            100
-                                        ).toFixed(1)}
-                                        %
+                                    <div>
+                                        <StackBar />
                                     </div>
                                 </div>
-                                <div className="row-price fs-5 fw-bold">
-                                    {item.thisMonth.toLocaleString()}원
+                            ) : (
+                                <div>데이터를 불러오는 중...</div>
+                            )}
+                        </div>
+                        <div className="mt-6">
+                            {data.map((item) => (
+                                <div
+                                    className="table-container d-flex align-items-center mb-3 p-2"
+                                    key={item.franchiseCode}
+                                >
+                                    <div className="row-img me-3">
+                                        {/* 이미지 경로를 franchiseCode에 맞춰 동적으로 설정 */}
+                                        <img
+                                            src={
+                                                franchiseImageMap[
+                                                    item.franchiseCode
+                                                ]
+                                            }
+                                            alt={
+                                                franchiseMap[item.franchiseCode]
+                                            }
+                                            style={{
+                                                width: '50px',
+                                                height: '50px',
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="row-content flex-grow-1 ">
+                                        <div className="row-name fs-6 fw-bold">
+                                            {franchiseMap[item.franchiseCode]}
+                                        </div>
+                                        <div className="row-percent fs-6 text-muted">
+                                            {/* 백분율 계산 (소수점 한 자리까지 표시) */}
+                                            {(
+                                                (item.thisMonth /
+                                                    item.thisMonthTotal) *
+                                                100
+                                            ).toFixed(1)}
+                                            %
+                                        </div>
+                                    </div>
+                                    <div className="row-price fs-5 fw-bold">
+                                        {item.thisMonth.toLocaleString()}원
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
-                </div>
-            
+                )}
+            </div>
         </>
     );
 }

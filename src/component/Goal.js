@@ -82,7 +82,7 @@ const Goal = ({
                         className="goal-title"
                         style={{ left: `${goal1Percentage}%` }}
                     >
-                        <p>1구간 목표</p>
+                        <p>1구간</p>
                     </div>
                 )}
                 {cardGoal2 && goal2Percentage < 100 && (
@@ -90,7 +90,7 @@ const Goal = ({
                         className="goal-title"
                         style={{ left: `${goal2Percentage}%` }}
                     >
-                        <p>2구간 목표</p>
+                        <p>2구간</p>
                     </div>
                 )}
                 {cardGoal3 && goal3Percentage < 100 && (
@@ -98,7 +98,7 @@ const Goal = ({
                         className="goal-title"
                         style={{ left: `${goal3Percentage}%` }}
                     >
-                        <p>3구간 목표</p>
+                        <p>3구간</p>
                     </div>
                 )}
             </div>

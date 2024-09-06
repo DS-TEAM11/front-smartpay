@@ -1,0 +1,31 @@
+.custom-toggle3-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.custom-toggle3-item {
+    flex-grow: 1;
+    text-align: center;
+    padding: 10px 0;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.custom-toggle3-item:hover {
+    color: #007bff;
+}
+
+.custom-toggle3-active {
+    border-bottom: 2px solid #007bff;
+    color: #007bff;
+}
+
+.custom-toggle3-item:disabled {
+    cursor: default;
+    color: #999;
+}

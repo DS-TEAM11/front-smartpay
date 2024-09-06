@@ -75,6 +75,7 @@ function App() {
                         <Route path="/benefitTest" element={<BenefitTest />} />
                         <Route path="/mypage" element={<MyPage />} />
                         <Route path="/mystatics" element={<MyStatics />} />
+                        <Route path="/cardGoal" element={<BenefitTest />} />
                         {/* <Route path="/memberPwd" element={<MemberPwd />} />
                         <Route path="/checkPwd" element={<CheckPwd />} /> */}
                         <Route path="/idpwCheck" element={<IdPwCheck />} />

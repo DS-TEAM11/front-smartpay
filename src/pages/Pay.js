@@ -255,6 +255,7 @@ const Pay = () => {
                 to: 'seller',
                 from: memberNo,
                 data: result,
+                link: `/pay/receipt?orderNo=${orderNo}`,
             });
 
             //웹소켓 끝 ------------------------------

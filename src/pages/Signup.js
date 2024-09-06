@@ -35,6 +35,12 @@ const Signup = () => {
     const [modalTitle, setModalTitle] = useState('');
     const [checkModal, setCheckModal] = useState(true); // 버튼 표시 여부
 
+    const timeout = () => {
+        setTimeout(() => {
+            navigate('/login');
+        }, 1000);
+    };
+
     const handleCloseModal = () => {
         setShowModal(false);
         setCheckModal(false);
@@ -279,12 +285,20 @@ const Signup = () => {
         axios
             .post('http://localhost:8091/member/signup', signupData)
             .then(() => {
-                alert('회원가입이 완료되었습니다.');
-                navigate('/login');
+                // alert('회원가입이 완료되었습니다.');
+                setModalTitle('완료');
+                setModalContent('회원가입이 완료되었습니다. 로그인 해주세요');
+                setShowModal(true);
+                setCheckModal(true);
+                timeout();
             })
             .catch((error) => {
                 console.error('회원가입 실패:', error);
-                alert('회원가입에 실패했습니다.');
+                // alert('회원가입에 실패했습니다.');
+                setModalTitle('실패');
+                setModalContent('회원가입에 실패했습니다.');
+                setShowModal(true);
+                setCheckModal(true);
             });
     };
 

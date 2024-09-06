@@ -50,6 +50,14 @@ function Register() {
     const [modalTitle, setModalTitle] = useState('');
     const [checkModal, setCheckModal] = useState(true); // 버튼 표시 여부
 
+
+    const timeout = () => {
+        setTimeout(() => {
+            navigate('/home');
+        }, 1000);
+    };
+
+    
     //결제 비밀번호 등록
     const handlePasswordValidation = (isValid) => {
         if (isValid) {
@@ -74,36 +82,14 @@ function Register() {
             setShowModal(true);
             setCheckModal(false);
             setShowPwdItem(false);
-            navigate('/home');
+            timeout();
+            // navigate('/home');
         } else {
             setShowPwdItem(false);
             setShowMemberPwd(true);
         }
     };
-
-    // //블랙컨테이너 클릭시 닫기
-    // const handleOverlayClick = () => {
-    //     setShowPwdItem(false);
-    // };
-    // memberNo 가져오기
-    // useEffect(() => {
-    //     const token = localStorage.getItem('accessToken');
-
-    //     if (token) {
-    //         axios
-    //             .get('http://localhost:8091/member/findMember', {
-    //                 headers: {
-    //                     Authorization: token,
-    //                 },
-    //             })
-    //             .then((response) => {
-    //                 setMemberNo(response.data);
-    //             })
-    //             .catch((error) => {
-    //                 console.error('memberNo 요청 에러', error);
-    //             });
-    //     }
-    // }, []);
+    
 
     // memberNo로 카드 데이터 가져오기
     useEffect(() => {
@@ -184,9 +170,9 @@ function Register() {
             cardPwd: parseInt(cardPwd),
             validPeriod,
             cardCode,
-            cardImage,
+            cardImage:cardImage,
             memberNo,
-            cardName,
+            cardName:selectedCard,
         };
         console.log(cardData);
 
@@ -236,7 +222,7 @@ function Register() {
                 } catch (error) {
                     if (error.response && error.response.status === 404) {
                         // 결제 비밀번호가 있는 경우
-                        navigate('/home');  
+                        timeout();
                     } else {
                         // 기타 네트워크 오류 처리
                         console.error(
@@ -283,7 +269,7 @@ function Register() {
                 setIsCredit(isCredit);
                 setCardImage(Image);
             } catch {
-                console.log(error);
+                // console.log(error);
             }
         } else if (
             formattedCardNo.replace(/\s/g, '').length > 15 &&

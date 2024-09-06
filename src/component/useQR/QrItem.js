@@ -85,13 +85,15 @@ function QrItem({ onRemove, cardCode, subscription, subMessage }) {
     //QR 생성 버튼 처음 눌렀을 때만 생김
 
     useEffect(() => {
-        createQr();
-        console.log('받아온 ref', subscriptionRef.current);
-        console.log('받아온 subMessage', subMessage);
+        // console.log('받아온 ref', subscriptionRef.current);
+        // console.log('받아온 subMessage', subMessage);
         //기존 구독이 있을 때만 체크
+        if (subscriptionRef.current) {
+            createQr();
+        }
         if (subscriptionRef.current && subMessage) {
             // console.log('구독 후 ref', subscriptionRef.current);
-            console.log('Home-QrItem에서 받음 Received message:', subMessage);
+            // console.log('Home-QrItem에서 받음 Received message:', subMessage);
             const { action, from, to, data } = subMessage;
             if (from === 'seller') {
                 if (action === 'enter') {

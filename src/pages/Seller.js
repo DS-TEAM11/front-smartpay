@@ -9,10 +9,25 @@ const Seller = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const memberNo = queryParams.get('memberNo');
+    const today = new Date();
+    const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, '');
+
     const [orderNo, setOrderNo] = useState(null);
     const [isMatched, setIsMatched] = useState(false);
     const [isFirst, setIsFirst] = useState(true);
     const [isEnd, setIsEnd] = useState(false);
+    //입력 폼 데이터 핸들링
+    const [formData, setFormData] = useState({
+        franchiseCode: '',
+        franchiseType: '',
+        franchiseName: '',
+        purchaseItems: '',
+        purchasePrice: '',
+        isAi: true,
+        payDate: formattedDate,
+        memberNo: memberNo,
+        orderNo: '',
+    });
     const { wsConnect, wsDisconnect, wsSubscribe, wsSendMessage } =
         useWebSocket();
     // Ref를 사용하여 subscription을 관리
@@ -30,7 +45,7 @@ const Seller = () => {
                 subscriptionRef.current = wsSubscribe(
                     `/topic/sellinfo`,
                     (message) => {
-                        const { action, to, from, data } = message;
+                        const { action, to, from, data, link } = message;
                         console.log('받은 값:', message);
                         if (to === 'seller' && from === memberNo) {
                             if (action === 'createQR') {
@@ -52,7 +67,7 @@ const Seller = () => {
                                     subscriptionRef.current.unsubscribe(); // 구독 해제
                                 }
                                 wsDisconnect(); // WebSocket 연결 해제
-                                navigate(`/pay/receipt?orderNo=${orderNo}`, {
+                                navigate(link, {
                                     replace: true,
                                 });
                             }
@@ -90,38 +105,6 @@ const Seller = () => {
         };
     }, [memberNo, isMatched]);
 
-    const today = new Date();
-    const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, '');
-
-    //주문번호 생성
-    const handleOrderNo = async () => {
-        try {
-            const url = 'http://localhost:8091/api/payment/pay';
-            const data = {
-                product: formData.purchaseItems,
-                price: formData.purchasePrice,
-                isAi: true,
-                payDate: formattedDate,
-                franchiseName: formData.franchiseName,
-                franchiseCode: formData.franchiseCode,
-                memberNo: memberNo,
-            };
-            // console.log('Sending data:', data);
-            const response = await axios.post(url, data, {
-                responseType: 'json',
-            });
-            setOrderNo(response.data);
-            console.log('Order No:', orderNo);
-
-            setFormData((prevData) => ({
-                ...prevData,
-                orderNo: orderNo,
-            }));
-            return orderNo;
-        } catch (error) {
-            console.error(error);
-        }
-    };
     // 메시지 전송 함수
     const sendInformation = async () => {
         if (!isMatched) {
@@ -147,31 +130,50 @@ const Seller = () => {
             alert('모든 값을 입력해주세요');
             return;
         }
-
-        // 주문 번호 처리
-        const purchase_data = {
-            ...formData,
-            memberNo: memberNo,
-            payDate: formattedDate,
-            orderNo: orderNo,
+        //주문번호 생성
+        const createOrderNo = async () => {
+            try {
+                const url = 'http://localhost:8091/api/payment/pay';
+                const data = {
+                    product: formData.purchaseItems,
+                    price: formData.purchasePrice,
+                    isAi: true,
+                    payDate: formattedDate,
+                    franchiseName: formData.franchiseName,
+                    franchiseCode: formData.franchiseCode,
+                    memberNo: memberNo,
+                };
+                console.log('Sending data:', data);
+                await axios
+                    .post(url, data, {
+                        responseType: 'json',
+                    })
+                    .then((response) => {
+                        console.log(response.data);
+                        setOrderNo(response.data);
+                        setFormData((prevData) => ({
+                            ...prevData,
+                            orderNo: response.data,
+                        }));
+                    });
+                return orderNo;
+            } catch (error) {
+                console.error(error);
+            }
         };
-        console.log(purchase_data);
-        // WebSocket을 통해 메시지 전송
-        await wsSendMessage(`/topic/sellinfo`, {
-            action: 'fillout',
-            to: memberNo,
-            from: 'seller',
-            data: purchase_data,
-        });
+        createOrderNo();
     };
-    //입력 폼 데이터 핸들링
-    const [formData, setFormData] = useState({
-        franchiseCode: '',
-        franchiseType: '',
-        franchiseName: '',
-        purchaseItems: '',
-        purchasePrice: '',
-    });
+    useEffect(() => {
+        if (formData.orderNo) {
+            wsSendMessage(`/topic/sellinfo`, {
+                action: 'fillout',
+                to: memberNo,
+                from: 'seller',
+                data: formData,
+            });
+        }
+    }, [formData]);
+
     const handleInputChange = useCallback((event) => {
         const { id, value } = event.target;
         setFormData((prevData) => ({

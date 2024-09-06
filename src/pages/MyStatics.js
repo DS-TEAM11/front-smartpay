@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useMemberNo } from '../provider/PayProvider';
 import Header from '../component/Header';
 import { BarChart } from '@mui/x-charts/BarChart';
+import './MyStatics.css'
 
 function MyStatics() {
     const memberNo = useMemberNo();
@@ -26,21 +27,39 @@ function MyStatics() {
         10009: '대중교통',
     };
 
+    // 가맹점 코드와 이미지 경로를 매핑하는 객체
+    const franchiseImageMap = {
+        10000: 'assets/images/general_store.png',
+        10001: 'assets/images/bill_payment.png',
+        10002: 'assets/images/gas_station.png',
+        10003: 'assets/images/convenience_store.png',
+        10004: 'assets/images/cafe.png',
+        10005: 'assets/images/mart.png',
+        10006: 'assets/images/shopping.png',
+        10007: 'assets/images/airline.png',
+        10008: 'assets/images/restaurant.png',
+        10009: 'assets/images/public_transport.png',
+    };
+
+
     const mystaticsApi = () => {
         axios
-            .get(
-                `http://localhost:8091/api/payment/statics?memberNo=${memberNo}`,
-            )
+            .get(`http://localhost:8091/api/payment/statics?memberNo=${memberNo}`)
             .then((res) => {
                 console.log(res.data);
-                // 데이터 상태 업데이트
-                setData(res.data);
+
+                // 객체를 배열로 변환
+                const responseData = Object.values(res.data);
+                setData(responseData);
 
                 // 차트 데이터 업데이트
-                const seriesThisMonth = res.data.map((item) => item.thisMonth); // 이번 달 금액
-                const seriesLastMonthTotal = res.data.map(
-                    (item) => item.lastMonthTotal,
-                );
+                const seriesThisMonth = responseData.map((item) => item.thisMonth); // 이번 달 금액
+                const seriesLastMonthTotal = responseData.map((item) => item.lastMonthTotal);
+
+                setChartData({
+                    seriesThisMonth,
+                    seriesLastMonthTotal,
+                });
             })
             .catch((e) => {
                 console.error('통계 데이터 요청 에러', e);
@@ -62,47 +81,6 @@ function MyStatics() {
         }
     };
 
-    const series0 = {
-        data: [2],
-        label: '일반 가맹점',
-    };
-    const series1 = {
-        data: [3],
-        label: '공과금',
-    };
-    const series2 = {
-        data: [0],
-        label: '주유',
-    };
-    const series3 = {
-        data: [2],
-        label: '편의점',
-    };
-    const series4 = {
-        data: [3],
-        label: '카페',
-    };
-    const series5 = {
-        data: [0],
-        label: '마트',
-    };
-    const series6 = {
-        data: [2],
-        label: '쇼핑',
-    };
-    const series7 = {
-        data: [3],
-        label: '항공',
-    };
-    const series8 = {
-        data: [0],
-        label: '음식점',
-    };
-    const series9 = {
-        data: [2],
-        label: '대중교통',
-    };
-
     return (
         <div>
             <div>
@@ -110,11 +88,10 @@ function MyStatics() {
                 <div className="statics">
                     <div>
                         {/* 데이터가 로드되었는지 확인 */}
-                        {data.length > 0 && data[0] ? (
+                        {data.length > 0 ? (
                             <div>
                                 <div>
-                                    {data[0]['thisMonthTotal'].toLocaleString()}
-                                    원
+                                    {data[0]['thisMonthTotal'].toLocaleString()}원
                                 </div>
                                 <div>
                                     <div>지난달 이 맘때 보다</div>
@@ -134,29 +111,36 @@ function MyStatics() {
                         <BarChart
                             width={600}
                             height={300}
-                            series={[
-                                { ...series0, stack: 'total' },
-                                { ...series1, stack: 'total' },
-                                { ...series2, stack: 'total' },
-                                { ...series3, stack: 'total' },
-                                { ...series4, stack: 'total' },
-                                { ...series5, stack: 'total' },
-                                { ...series6, stack: 'total' },
-                                { ...series7, stack: 'total' },
-                                { ...series8, stack: 'total' },
-                                { ...series9, stack: 'total' },
-                            ]}
+                            series={chartData.seriesThisMonth.map((item, index) => ({
+                                data: [item],
+                                label: franchiseMap[data[index].franchiseCode],
+                            }))}
                         />
                     </div>
-                    <ul>
+                    <div>
                         {data.map((item) => (
-                            <li key={item.franchiseCode}>
-                                {/* 가맹점 이름과 이번 달 소비 금액 표시 */}
-                                {franchiseMap[item.franchiseCode]}:{' '}
-                                {item.thisMonth.toLocaleString()}원
-                            </li>
+                            <div className='table-container' key={item.franchiseCode}>
+                                <div className='row-img'>
+                                    {/* 이미지 경로를 franchiseCode에 맞춰 동적으로 설정 */}
+                                    <img 
+                                        src={franchiseImageMap[item.franchiseCode]} 
+                                        alt={franchiseMap[item.franchiseCode]} 
+                                        style={{ width: '50px', height: '50px' }}
+                                    />
+                                </div>
+                                <div className='row-name'>
+                                    {franchiseMap[item.franchiseCode]}
+                                </div>
+                                <div className='row-percent'>
+                                    {/* 백분율 계산 (소수점 한 자리까지 표시) */}
+                                    {((item.thisMonth / item.thisMonthTotal) * 100).toFixed(1)}%
+                                </div>
+                                <div className='row-price'>
+                                    {item.thisMonth.toLocaleString()}원
+                                </div>
+                            </div>
                         ))}
-                    </ul>
+                    </div>                                        
                 </div>
             </div>
         </div>

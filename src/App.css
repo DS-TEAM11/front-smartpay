@@ -1,4 +1,23 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+@media (min-width: 429px) and (min-height: 933px) {
+    /* iPhone 14 Pro Max 사이즈 맞춤 */
+    #root {
+        /* iPhone 14 Pro Max 사이즈 맞춤 */
+        max-width: 430px;
+        max-height: 932px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        overflow-y: scroll;
+        overflow-x: hidden;
+        border: 1px solid #c0c0c0;
+        border-radius: 10px;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+        margin: 0;
+        padding: 0;
+    }
+}
 
 html,
 body,

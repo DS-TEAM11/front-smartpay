@@ -21,13 +21,18 @@ const CardEdit = () => {
         setIsLeftActive(isLeftActive ? false : true);
     };
 
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     // memberNo가 있을 때 카드 데이터를 가져오는 useEffect
     useEffect(() => {
         if (memberNo) {
             setLoading(true); // 데이터를 로드하기 시작할 때 로딩 상태를 true로 설정
             axios
                 .get(
-                    'http://localhost:8091/api/cards/details/byMember2', // 새로운 엔드포인트 사용
+                    `${ConfigEnum.PAY_SERVER_URL}/api/cards/details/byMember2`, // 새로운 엔드포인트 사용
                     {
                         params: { memberNo },
                     },

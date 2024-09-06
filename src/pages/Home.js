@@ -28,11 +28,16 @@ const Home = () => {
     // Ref를 사용하여 subscription을 관리
     const subscriptionRef = useRef(null);
     const [subMessage, setSubMessage] = useState(null);
+
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
     const fetchData = async () => {
         if (memberNo) {
             try {
                 const benefitResponse = await axios.get(
-                    'http://localhost:8091/member/getBenefit',
+                    `${ConfigEnum.PAY_SERVER_URL}/member/getBenefit`,
                     {
                         params: { memberNo: memberNo },
                     },
@@ -41,7 +46,7 @@ const Home = () => {
                 setTotalDiscountPrice(benefitResponse.data.totalDiscountPrice);
 
                 const cardResponse = await axios.get(
-                    `http://localhost:8091/api/cards/details/byMember`,
+                    `${ConfigEnum.PAY_SERVER_URL}/api/cards/details/byMember`,
                     {
                         params: { memberNo: memberNo },
                     },

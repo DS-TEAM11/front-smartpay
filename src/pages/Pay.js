@@ -54,6 +54,11 @@ const Pay = () => {
     const [modalTitle, setModalTitle] = useState('');
     const [checkModal, setCheckModal] = useState(true); // 버튼 표시 여부
 
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     const handleCloseModal = () => {
         setShowModal(false);
         setCheckModal(false);
@@ -75,7 +80,7 @@ const Pay = () => {
         //카드 정보 가져오는 API 호출
         const getCardInfo = async (code) => {
             try {
-                const url = 'http://localhost:8091/api/payment/card';
+                const url = `${ConfigEnum.PAY_SERVER_URL}/api/payment/card`;
                 const data = {
                     cardCode: code, //recommenData 추출 해서 넣기(근데 AI 카드가 아닌 경우에는 선택한 카드코드 줘야 함)
                     memberNo: memberNo,
@@ -160,7 +165,7 @@ const Pay = () => {
     const handleShowCardPicker = async () => {
         try {
             const response = await axios.get(
-                'http://localhost:8091/api/cards/details/byMember',
+                `${ConfigEnum.PAY_SERVER_URL}/api/cards/details/byMember`,
                 {
                     params: { memberNo },
                     responseType: 'json', // 응답 타입을 JSON으로 설정
@@ -227,7 +232,7 @@ const Pay = () => {
         console.log('결제 데이터', paymentData);
         try {
             const response = await axios.post(
-                'http://localhost:8091/api/payment/request',
+                `${ConfigEnum.PAY_SERVER_URL}/api/payment/request`,
                 paymentData,
                 {
                     headers: {

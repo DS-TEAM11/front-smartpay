@@ -18,6 +18,10 @@ const IdPwCheck = () => {
         const re = /^\d{11}$/;
         return re.test(phone);
     };
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
 
     const handleSearch = async () => {
         setError(''); // 초기화
@@ -30,7 +34,7 @@ const IdPwCheck = () => {
 
         try {
             const response = await fetch(
-                `http://localhost:8091/member/findByPhone?phone=${phone}`,
+                `${ConfigEnum.PAY_SERVER_URL}/member/findByPhone?phone=${phone}`,
             );
             if (response.ok) {
                 const data = await response.json();

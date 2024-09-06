@@ -1,10 +1,35 @@
-.mypage-benefit-container {
+.benefittest-container {
     padding: 20px;
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
 }
 
-.mypage-benefit-container .card-list {
+.month-selector {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.month-selector button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #ccc;
+    transition: background-color 0.3s ease;
+}
+
+.month-selector button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.month-selector button:hover {
+    background-color: #0056b3;
+}
+
+.benefittest-container .card-list {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -12,13 +37,13 @@
     justify-content: center;
 }
 
-.mypage-benefit-container .card-item {
+.benefittest-container .card-item {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 15px;
-    width: 100%; /* 카드 아이템이 화면의 가로를 꽉 채우도록 설정 */
-    max-width: 800px; /* 최대 너비를 제한하여 너무 커지지 않도록 설정 */
+    width: 100%;
+    max-width: 800px;
     text-align: center;
     transition: transform 0.3s ease;
     display: flex;
@@ -26,17 +51,21 @@
     align-items: center;
 }
 
-.mypage-benefit-container .card-item:hover {
+.benefittest-container .card-item:hover {
     transform: translateY(-5px);
 }
 
-.mypage-benefit-container .card-item img {
+.benefittest-container .d-flex.justify-content-center.mb-4 {
+    margin-bottom: 10px !important;
+}
+
+.benefittest-container .card-item img {
     width: 100px;
     height: 60px;
     margin-bottom: 10px;
 }
 
-.mypage-benefit-container .card-item h2 {
+.benefittest-container .card-item h2 {
     font-size: 1.2em;
     margin-bottom: 10px;
     white-space: nowrap;
@@ -44,21 +73,21 @@
     text-overflow: ellipsis;
 }
 
-.mypage-benefit-container .card-item ul {
+.benefittest-container .card-item ul {
     list-style-type: none;
     padding: 0;
     width: 100%;
     text-align: left;
 }
 
-.mypage-benefit-container .card-item ul li {
+.benefittest-container .card-item ul li {
     background-color: #f0f0f0;
     margin-bottom: 5px;
     padding: 8px;
     border-radius: 5px;
 }
 
-.mypage-benefit-container .card-item .no-benefit {
+.benefittest-container .card-item .no-benefit {
     background-color: #ffdddd;
     padding: 10px;
     border-radius: 5px;
@@ -66,12 +95,12 @@
     font-weight: bold;
 }
 
-.mypage-benefit-container .totals {
+.benefittest-container .totals {
     margin-top: 30px;
     text-align: left;
 }
 
-.mypage-benefit-container .totals h3 {
+.benefittest-container .totals h3 {
     font-size: 1.2em;
     color: #333;
     margin-bottom: 10px;

@@ -10,6 +10,12 @@ import { error } from 'jquery';
 import BlackContainer from '../component/BlackContainer';
 import PwdItem from '../component/PwdItem';
 import MemberPwd from './MemberPwd';
+import CustomModal  from '../component/common/Modal';
+
+
+
+
+
 
 const formatCardNo = (value) => {
     return value
@@ -39,13 +45,22 @@ function Register() {
     const navigate = useNavigate();
     const memberNo = useMemberNo();
 
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
+    const [checkModal, setCheckModal] = useState(true); // 버튼 표시 여부
+
     //결제 비밀번호 등록
     const handlePasswordValidation = (isValid) => {
         if (isValid) {
             setShowMemberPwd(false);
             setShowPwdItem(true);
-        } else {
-            alert('다시 시도해주세요');
+        } else{   
+            // alert("다시 시도해주세요");
+            setModalTitle('알림');
+            setModalContent('다시 시도해주세요');
+            setShowModal(true);
+            setCheckModal(false);
             setShowMemberPwd(false);
             setShowMemberPwd(true);
         }
@@ -53,7 +68,11 @@ function Register() {
 
     const handlePasswordValidation2 = (isValid) => {
         if (isValid) {
-            alert('결제 비밀번호가 등록되었습니다.');
+            // alert("결제 비밀번호가 등록되었습니다.");
+            setModalTitle('알림');
+            setModalContent('결제 비밀번호가 등록되었습니다.');
+            setShowModal(true);
+            setCheckModal(false);
             setShowPwdItem(false);
             navigate('/home');
         } else {
@@ -114,10 +133,20 @@ function Register() {
     }, [memberNo]);
 
     const handleCardSelectClick = async () => {
-        if (category == '카드사 없음') {
-            return alert('올바른 카드 번호를 입력해주세요.');
-        } else if (category == '' || cardNo.length < 17) {
-            return alert('카드 번호를 입력해주세요');
+        if( category =='카드사 없음'){
+            setModalTitle('알림');
+            setModalContent('올바른 카드 번호를 입력해주세요.');
+            setShowModal(true);
+            setCheckModal(true);
+            // return alert("올바른 카드 번호를 입력해주세요.");
+            return;
+        } else if(category == '' || cardNo.length < 17){
+            setModalTitle('알림');
+            setModalContent('카드 번호를 입력해주세요');
+            setShowModal(true);
+            setCheckModal(true);
+            // return alert("카드 번호를 입력해주세요");
+            return;
         }
         setIsModalOpen(true);
         try {
@@ -135,6 +164,11 @@ function Register() {
         setIsModalOpen(false);
     };
 
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setCheckModal(true); 
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -145,7 +179,7 @@ function Register() {
 
         const cardData = {
             cardNo: cardNo.replace(/\s/g, ''),
-            cardNick,
+            cardNick: cardNick || selectedCard, 
             isCredit,
             cardPwd: parseInt(cardPwd),
             validPeriod,
@@ -154,6 +188,18 @@ function Register() {
             memberNo,
             cardName,
         };
+        console.log(cardData);
+
+        const values = Object.values(cardData);
+        const hasNullValue = values.some(value => value === null || value === '');
+
+        if (hasNullValue) {
+            setModalTitle('알림');
+            setModalContent('모든 정보를 입력해주세요');
+            setShowModal(true);
+            setCheckModal(false);
+            return;
+        }
 
         // console.log('카드 등록 요청 데이터:', cardData);
 
@@ -167,7 +213,11 @@ function Register() {
             });
 
             if (response.ok) {
-                alert('카드가 성공적으로 등록되었습니다.');
+                // alert('카드가 성공적으로 등록되었습니다.');
+                setModalTitle('알림');
+                setModalContent('카드가 성공적으로 등록되었습니다.');
+                setShowModal(true);
+                setCheckModal(false);
                 // console.log('카드가 성공적으로 등록되었습니다.');
                 try {
                     const pwdResponse = await axios.get(
@@ -186,7 +236,7 @@ function Register() {
                 } catch (error) {
                     if (error.response && error.response.status === 404) {
                         // 결제 비밀번호가 있는 경우
-                        navigate('/home'); // ??
+                        navigate('/home');  
                     } else {
                         // 기타 네트워크 오류 처리
                         console.error(
@@ -197,6 +247,10 @@ function Register() {
                 }
             } else {
                 console.error('카드 등록에 실패했습니다.');
+                setModalTitle('알림');
+                setModalContent('카드 등록에 실패했습니다.');
+                setShowModal(true);
+                setCheckModal(false);
             }
         } catch (error) {
             console.error('네트워크 오류가 발생했습니다.', error);
@@ -423,6 +477,15 @@ function Register() {
                     setCardCode={setCardCode}
                     closeModal={closeModal}
                 />
+            )}
+            {showModal && (
+               <CustomModal
+               key={modalTitle + modalContent} 
+               title={modalTitle}
+               content={modalContent}
+               check={checkModal}
+               onClose={handleCloseModal}
+           />
             )}
         </div>
     );

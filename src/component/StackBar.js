@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Tooltip, Legend } from 'recharts';
 import axios from 'axios';
 import { useMemberNo } from '../provider/PayProvider';
 
@@ -11,22 +10,18 @@ const StackBar = () => {
   const [lastMonthTotal2, setLastMonthTotal2] = useState(0);
   const [thisMonthTotal2, setThisMonthTotal2] = useState(0);
 
-  // 가맹점 코드와 이름을 매핑하는 객체
-  const franchiseMap = {
-    10000: '일반 가맹점',
-    10001: '공과금',
-    10002: '주유',
-    10003: '편의점',
-    10004: '카페',
-    10005: '마트',
-    10006: '쇼핑',
-    10007: '항공',
-    10008: '음식점',
-    10009: '대중교통',
+  const franchiseData = {
+    10000: { name: '일반 가맹점', color: '#EF4250' },
+    10001: { name: '공과금', color: '#00FF00' },
+    10002: { name: '주유', color: '#0000FF' },
+    10003: { name: '편의점', color: '#FFFF00' },
+    10004: { name: '카페', color: '#89D7D7' },
+    10005: { name: '마트', color: '#00FFFF' },
+    10006: { name: '쇼핑', color: '#FF8000' },
+    10007: { name: '항공', color: '#8000FF' },
+    10008: { name: '음식점', color: '#00FF80' },
+    10009: { name: '대중교통', color: '#FF0080' },
   };
-
-  // 색상 배열
-  const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FF8000', '#8000FF', '#00FF80', '#FF0080'];
 
   useEffect(() => {
     const mystaticsApi = () => {
@@ -36,25 +31,22 @@ const StackBar = () => {
           const data = res.data;
 
           const firstObjectKey = Object.keys(data[0])[0];
-        
-          // thisMonthTotal과 lastMonthTotal 추출
+
           const thisMonthTotalValue = data[0][firstObjectKey].thisMonthTotal;
           const lastMonthTotalValue = data[0][firstObjectKey].lastMonthTotal;
           setThisMonthTotal(thisMonthTotalValue);
           setLastMonthTotal(lastMonthTotalValue);
           setThisMonthTotal2(thisMonthTotalValue.toLocaleString());
           setLastMonthTotal2(lastMonthTotalValue.toLocaleString());
-          
-          // 각 가맹점에 대한 thisMonth / thisMonthTotal 비율 계산
-          const calculatedRatios = data.map(item => {
+          const calculatedRatios = data.map((item) => {
             const key = Object.keys(item)[0];
             const thisMonth = item[key].thisMonth;
-            const ratio = Math.round((thisMonth / thisMonthTotalValue) * 100);  // thisMonthTotal에 대한 비율
+            const ratio = Math.round((thisMonth / thisMonthTotalValue) * 100);
 
             return {
               franchiseCode: item[key].franchiseCode,
-              thisMonth,  // thisMonth 값을 저장
-              ratio       // thisMonthTotal에 대한 비율
+              thisMonth,
+              ratio,
             };
           });
 
@@ -68,78 +60,85 @@ const StackBar = () => {
     mystaticsApi();
   }, [memberNo]);
 
-  // thisMonthTotal / lastMonthTotal 비율을 구함
-  const thisMonthTotalRatio = (thisMonthTotal / lastMonthTotal) * 100;
+  // thisMonthTotal이 lastMonthTotal에 대한 비율
+  const thisMonthTotalRatio = Math.round((thisMonthTotal / lastMonthTotal) * 100);
 
   // 각 프랜차이즈의 비율을 바 데이터에 맞게 변환
   const transformDataForStackedBar = () => {
-    return [{
-      name: 'Total',
-      lastMonthTotal: thisMonthTotal > lastMonthTotal ? null : 100,  // thisMonthTotal이 더 크면 lastMonthTotal을 표시하지 않음
-      ...ratios.reduce((acc, entry, index) => {
-        // 각 프랜차이즈의 thisMonth 비율을 lastMonthTotal 기준으로 변환
-        const franchiseRatio = (entry.thisMonth / thisMonthTotal) * thisMonthTotalRatio;
+    return {
+      lastMonthTotal: thisMonthTotal > lastMonthTotal ? null : 100, // lastMonthTotal을 100%로 표시
+      ...ratios.reduce((acc, entry) => {
+        const franchise = franchiseData[entry.franchiseCode];
+        const franchiseRatio = Math.round((entry.thisMonth / thisMonthTotal) * thisMonthTotalRatio); // thisMonthTotal에 대한 비율을 lastMonthTotal을 기준으로 변환
         return {
           ...acc,
-          [franchiseMap[entry.franchiseCode]]: franchiseRatio
+          [franchise.name]: franchiseRatio,
         };
-      }, {})
-    }];
+      }, {}),
+    };
   };
 
   const transformedData = transformDataForStackedBar();
-  const compareTotal = (thisMonthTotal, lastMonthTotal) => {
-    if (thisMonthTotal < lastMonthTotal) {
-        return '덜 쓰는 중';
-    } else if (thisMonthTotal > lastMonthTotal) {
-        return '더 쓰는 중';
-    } else {
-        return '같은 금액 사용 중';
-    }
-};  
+
   return (
     <>
-    <div className='px-2 fs-2 fw-medium'>
-        {thisMonthTotal2}원
-    </div>
-    <div>지난달 이 맘때 보다</div>
-        <div>
-            {compareTotal(
-                thisMonthTotal,
-                lastMonthTotal,
-            )}
+      <div className="fs-4 fw-medium">이번달 소비</div>
+      <div className="fs-1 fw-bold">{thisMonthTotal2}원</div>
+      <div className="text-end my-2 px-3">
+        지난달 이 맘때 보다 &emsp;
+        <span className="fs-2 text-danger fw-medium">
+          {thisMonthTotal > lastMonthTotal ? '더' : '덜'}
+        </span>
+        <span>&ensp; 쓰는 중</span>
+      </div>
+
+      {thisMonthTotal > lastMonthTotal ? (
+        // thisMonthTotal이 lastMonthTotal보다 클 때
+        <div className="progress" style={{ height: '40px' }}>
+        {ratios.map((entry, index) => {
+          const franchise = franchiseData[entry.franchiseCode];
+          return (
+            <div
+              key={entry.franchiseCode}
+              className="progress-bar"
+              role="progressbar"
+              style={{
+                width: `${entry.ratio}%`,
+                backgroundColor: franchise.color,
+              }}
+              aria-valuenow={entry.ratio}
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              {franchise.name} ({entry.ratio}%)
+            </div>
+          );
+        })}
+      </div>
+      ) : (
+        // thisMonthTotal이 lastMonthTotal보다 작을 때
+        <div className="progress-stacked" style={{ height: '3rem' }}>
+          {/* thisMonth 비율을 표시하는 스택된 바 */}
+          {Object.entries(transformedData).map(([key, value], index) => (
+            key !== 'lastMonthTotal' && (
+              <div
+                key={index}
+                className="progress-bar"
+                role="progressbar"
+                style={{
+                  width: `${value}%`,
+                  backgroundColor: franchiseData[Object.keys(franchiseData).find(code => franchiseData[code].name === key)].color,
+                }}
+                aria-valuenow={value}
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                {key} ({value}%)
+              </div>
+            )
+          ))}
         </div>
-    <ResponsiveContainer width="100%" height={120}>
-      <BarChart
-        layout="vertical"
-        data={transformedData}
-        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-      >
-        <XAxis type="number" hide />
-        <YAxis type="category" dataKey="name" hide/>
-        <Tooltip />
-        <Legend />
-        {/* thisMonth 비율을 표시하는 스택된 바 */}
-        {ratios.map((entry, index) => (
-          <Bar
-            key={`bar-${entry.franchiseCode}`}
-            dataKey={franchiseMap[entry.franchiseCode]}
-            stackId="a"
-            fill={colors[index % colors.length]}
-            name={franchiseMap[entry.franchiseCode]}
-          />
-        ))}
-        {/* lastMonthTotal이 thisMonthTotal보다 클 때만 표시 */}
-        {thisMonthTotal <= lastMonthTotal && (
-          <Bar
-            dataKey="lastMonthTotal"
-            stackId="a"
-            fill='gray'
-            name='지난 소비 (100%)'
-          />
-        )}
-      </BarChart>
-    </ResponsiveContainer>
+      )}
     </>
   );
 };

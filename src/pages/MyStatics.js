@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useState, useEffect, PureComponent } from 'react';
 import { useMemberNo } from '../provider/PayProvider';
 import Header from '../component/Header';
-import { BarChart, Bar, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import StackBar from '../component/StackBar';
 
 function MyStatics() {
@@ -53,14 +52,14 @@ function MyStatics() {
 
     
     return (
-        <div>
+        <>
            
                 <Header />
-                <div className="statics p-3">
+                <div className="statics p-3 py-">
                 <StackBar />
                 </div>
             
-        </div>
+        </>
     );
 }
 

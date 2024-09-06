@@ -25,33 +25,33 @@
 /* 작은 리스트 */
 .cardImg.small img,
 .cardImg.small .benefit-container {
-    width: clamp(40px, 15vw, 4rem);
-    height: clamp(40px, 15vw, 4rem);
-    max-width: clamp(40px, 15vw, 4rem);
-    max-height: clamp(40px, 15vw, 4rem);
+    width: clamp(40px, 3rem, 4rem);
+    height: clamp(40px, 3rem, 4rem);
+    max-width: clamp(40px, 3rem, 4rem);
+    max-height: clamp(40px, 3rem, 4rem);
 }
 /* 중간 리스트 */
 .cardImg.sm img,
 .cardImg.sm .benefit-container {
-    width: clamp(70px, 20vw, 7rem);
-    height: clamp(70px, 20vw, 7rem);
-    max-width: clamp(70px, 20vw, 7rem);
-    max-height: clamp(70px, 20vw, 7rem);
+    width: clamp(70px, 6rem, 7rem);
+    height: clamp(70px, 6rem, 7rem);
+    max-width: clamp(70px, 6rem, 7rem);
+    max-height: clamp(70px, 6rem, 7rem);
 }
 /* 큰 리스트 */
 .cardImg.medium img,
 .cardImg.medium .benefit-container {
-    width: clamp(120px, 30vw, 10rem);
-    height: clamp(120px, 30vw, 10rem);
-    max-width: clamp(120px, 30vw, 10rem);
-    max-height: clamp(120px, 30vw, 10rem);
+    width: clamp(120px, 8rem, 10rem);
+    height: clamp(120px, 8rem, 10rem);
+    max-width: clamp(120px, 8rem, 10rem);
+    max-height: clamp(120px, 8rem, 10rem);
 }
 
 /* 메인 이미지용 */
 .cardImg.large img.rotate,
 .cardImg.large .benefit-container {
-    width: clamp(200px, 60vw, 350px);
-    height: clamp(200px, 60vw, 350px);
-    max-width: clamp(200px, 60vw, 350px);
-    max-height: clamp(200px, 60vw, 350px);
+    width: clamp(200px, 18rem, 350px);
+    height: clamp(200px, 18rem, 350px);
+    max-width: clamp(200px, 18rem, 350px);
+    max-height: clamp(200px, 18rem, 350px);
 }

@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { replace, useNavigate } from 'react-router-dom';
 import Button from '../component/Button';
 import Order from '../component/Order';
 import Header from '../component/Header';
 import RecoCard from '../component/RecoCard';
 import CardPicker from '../component/homeCards/CardPicker';
 import { useLocation } from 'react-router-dom';
-import { useMemberNo, useSelectedCard } from '../provider/PayProvider';
+import {
+    useMemberNo,
+    useSelectedCard,
+    useWebSocket,
+} from '../provider/PayProvider';
 import PwdItem from '../component/PwdItem';
 import BlackContainer from '../component/BlackContainer';
 import Loading from '../component/Loading';
@@ -23,6 +27,8 @@ const Pay = () => {
         location.state.purchaseData,
     ); //구매 정보 데이터
 
+    const { wsConnect, wsDisconnect, wsSendMessage, wsSubscribe } =
+        useWebSocket();
     const memberNo = useMemberNo();
     // const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [paymentData, setPaymentData] = useState({}); //결제요청할 데이터 해야함
@@ -50,7 +56,7 @@ const Pay = () => {
 
     const handleCloseModal = () => {
         setShowModal(false);
-        setCheckModal(false); 
+        setCheckModal(false);
     };
 
     // 카드 코드와 AI 상태 설정
@@ -203,8 +209,6 @@ const Pay = () => {
             cardNo = cardInfo.selectedCard.lastNums;
         }
 
-        // console.log(cardNo);
-
         const paymentData = {
             orderNo: purchaseData.orderNo, //이전에서 받아와야 함?
             price: purchaseData.purchasePrice, //이것도 판매자
@@ -219,7 +223,8 @@ const Pay = () => {
             franchiseCode: purchaseData.franchiseCode, //판매자
             memberNo: memberNo,
         };
-
+        console.log('결제 로직 들어왔음', cardNo);
+        console.log('결제 데이터', paymentData);
         try {
             const response = await axios.post(
                 'http://localhost:8091/api/payment/request',
@@ -230,13 +235,30 @@ const Pay = () => {
                     },
                 },
             );
-            const paymentStatus = response.data; // API가 반환하는 return 값(결제 상태)
+            const paymentStatus = [
+                'successPay',
+                'cardMismatch',
+                'expirationDate',
+                'overLimit',
+                'etcError',
+            ]; // 결제 상태
+            const result = paymentStatus[response.data]; // API가 반환하는 return 값(결제 상태)
 
             // console.log(paymentStatus);
 
             const orderNo = paymentData.orderNo;
 
-            if (paymentStatus === 0) {
+            // WebSocket 연결 후 구독 설정
+            // 결제 정보 메시지 전송
+            wsSendMessage(`/topic/sellinfo`, {
+                action: 'payInfo',
+                to: 'seller',
+                from: memberNo,
+                data: result,
+            });
+
+            //웹소켓 끝 ------------------------------
+            if (response.data === 0) {
                 // 결제 성공
                 // alert('결제가 완료되었습니다.');
                 setModalTitle('결제 완료');
@@ -245,9 +267,9 @@ const Pay = () => {
                 setCheckModal(false);
                 // setPaymentSuccess(true);
                 // setPaymentData(response.data);
-                navigate(`/pay/receipt?orderNo=${orderNo}`);
+                navigate(`/pay/receipt?orderNo=${orderNo}`, { replace: true });
                 //결제 요청 값? 데이터 그대로 보내줘? 아님 쿼리파라미터로 달아서 페이지 이동? -> receipt에서는 파라미터 값 가져와서 API 호출?
-            } else if (paymentStatus === 1) {
+            } else if (response.data === 1) {
                 // 카드 불일치
                 setIsLoading(true);
                 // alert('결제 실패: 카드 정보 불일치 다시 시도해주세요');
@@ -255,9 +277,8 @@ const Pay = () => {
                 setModalContent('카드 정보 불일치\n다시 시도해주세요');
                 setShowModal(true);
                 setCheckModal(false);
-                
                 handleHomeClick();
-            } else if (paymentStatus === 2) {
+            } else if (response.data === 2) {
                 // 유효기간 만료
                 // alert('결제 실패:  유효기간 만료  다시 시도해주세요');
                 setModalTitle('결제 실패');
@@ -265,7 +286,7 @@ const Pay = () => {
                 setShowModal(true);
                 setCheckModal(false);
                 handleHomeClick();
-            } else if (paymentStatus === 3) {
+            } else if (response.data === 3) {
                 // 한도 초과
                 // alert('결제 실패: 카드 한도 초과  다시 시도해주세요');
                 setModalTitle('결제 실패');
@@ -294,13 +315,13 @@ const Pay = () => {
     return (
         <div className="Pay">
             {showModal && (
-               <CustomModal
-               key={modalTitle + modalContent} 
-               title={modalTitle}
-               content={modalContent}
-               check={checkModal}
-               onClose={handleCloseModal}
-           />
+                <CustomModal
+                    key={modalTitle + modalContent}
+                    title={modalTitle}
+                    content={modalContent}
+                    check={checkModal}
+                    onClose={handleCloseModal}
+                />
             )}
             {isLoading && <Loading text={'결제 진행 중입니다.'} />}
             {showPwdItem && (
@@ -347,7 +368,6 @@ const Pay = () => {
                     setCardCode={setCardCode}
                 />
             )}
-            
         </div>
     );
 };

@@ -481,6 +481,9 @@ const Signup = () => {
                     disabled={!termsAccepted || !isVerified}
                 />
             </form>
+            <div className="backForward" onClick={() => navigate('/login')}>
+                ← 로그인으로 돌아가기
+            </div>
             {showModal && (
                 <CustomModal
                     key={modalTitle + modalContent}

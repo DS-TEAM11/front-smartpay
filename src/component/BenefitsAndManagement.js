@@ -11,13 +11,8 @@ const BenefitsAndManagement = ({ benefits, managementItems }) => {
     const [memberInfo, setMemberInfo] = useState(null);
     const [loading, setLoading] = useState(true); // 로딩 상태 추가
     const navigate = useNavigate();
-    const benefitClick = (e) => {
-        console.log(this);
-        // if (this.target.className === 'benefit-point') {
-        //     navigate('/mypage?tab=benefit');
-        // } else if (this.target.className === 'benefit-discount') {
-        //     navigate('/mypage?tab=discount');
-        // }
+    const benefitClick = (className) => {
+        navigate(`/mypage?tab=${className}`);
     };
     useEffect(() => {
         const fetchMemberInfo = async () => {
@@ -62,7 +57,7 @@ const BenefitsAndManagement = ({ benefits, managementItems }) => {
                             key={index}
                             imageSrc={benefit.imageSrc}
                             description={benefit.description}
-                            onClick={benefitClick}
+                            onClick={() => benefitClick(benefit.className)}
                         />
                     ))}
                 </div>

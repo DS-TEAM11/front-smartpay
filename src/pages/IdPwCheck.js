@@ -61,7 +61,7 @@ const IdPwCheck = () => {
                 <div className="verification-group">
                     <input
                         type="phone"
-                        className="form-control"
+                        className="form-control1"
                         placeholder="Phone Number"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}

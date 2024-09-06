@@ -3,11 +3,24 @@
     margin: auto;
 }
 
-.Order img {
-    width: 70%;
+.Order .card-info-container1 .cardImg {
+    width: 100%;
     height: auto;
-    border-radius: 7%;
 }
+
+.Order .card-info-container1 .cardImg img {
+    max-width: 20rem;
+    width: auto;
+    max-height: 20rem;
+}
+
+.Order .card-info-container1 .cardImg img.rotate {
+    transform-origin: center center;
+    max-height: 20rem;
+    height: auto;
+    max-width: 20rem;
+}
+
 .Order .cardImg {
     display: flex;
     justify-content: center;
@@ -29,7 +42,7 @@
     align-items: center;
     overflow: hidden;
     min-width: -webkit-fill-available;
-    height: clamp(20rem, 70vw, 35rem);
+    height: 360px;
 }
 
 .card-info-container2 {

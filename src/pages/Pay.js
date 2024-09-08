@@ -278,7 +278,7 @@ const Pay = () => {
                 setModalContent('카드 정보 불일치\n다시 시도해주세요');
                 setShowModal(true);
                 setCheckModal(false);
-                handleHomeClick();
+                timeout();
             } else if (response.data === 2) {
                 // 유효기간 만료
                 // alert('결제 실패:  유효기간 만료  다시 시도해주세요');
@@ -286,7 +286,7 @@ const Pay = () => {
                 setModalContent('유효기간 만료\n다시 시도해주세요');
                 setShowModal(true);
                 setCheckModal(false);
-                handleHomeClick();
+                timeout();
             } else if (response.data === 3) {
                 // 한도 초과
                 // alert('결제 실패: 카드 한도 초과  다시 시도해주세요');
@@ -294,7 +294,7 @@ const Pay = () => {
                 setModalContent('카드 한도 초과\n다시 시도해주세요');
                 setShowModal(true);
                 setCheckModal(false);
-                handleHomeClick();
+                timeout();
             } else {
                 // 예외 에러
                 // alert('결제 실패: 서버 에러 발생  다시 시도해주세요');
@@ -302,15 +302,25 @@ const Pay = () => {
                 setModalContent('서버 에러 발생\n다시 시도해주세요');
                 setShowModal(true);
                 setCheckModal(false);
-                handleHomeClick();
+                timeout();
             }
         } catch (error) {
             console.log('에러');
+            setModalTitle('결제 실패');
+            setModalContent('서버 에러 발생\n다시 시도해주세요');
+            setShowModal(true);
+            setCheckModal(false);
+            timeout();
         }
     };
 
-    const handleHomeClick = () => {
-        navigate('/home'); // /home 경로로 이동
+    // const handleHomeClick = () => {
+    //     navigate('/home'); // /home 경로로 이동
+    // };
+    const timeout = () => {
+        setTimeout(() => {
+            navigate('/home');
+        }, 1500);
     };
 
     return (

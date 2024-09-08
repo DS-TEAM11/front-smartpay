@@ -10,12 +10,7 @@ import { error } from 'jquery';
 import BlackContainer from '../component/BlackContainer';
 import PwdItem from '../component/PwdItem';
 import MemberPwd from './MemberPwd';
-import CustomModal  from '../component/common/Modal';
-
-
-
-
-
+import CustomModal from '../component/common/Modal';
 
 const formatCardNo = (value) => {
     return value
@@ -50,20 +45,23 @@ function Register() {
     const [modalTitle, setModalTitle] = useState('');
     const [checkModal, setCheckModal] = useState(true); // 버튼 표시 여부
 
-
     const timeout = () => {
         setTimeout(() => {
             navigate('/home');
         }, 1000);
     };
 
-    
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     //결제 비밀번호 등록
     const handlePasswordValidation = (isValid) => {
         if (isValid) {
             setShowMemberPwd(false);
             setShowPwdItem(true);
-        } else{   
+        } else {
             // alert("다시 시도해주세요");
             setModalTitle('알림');
             setModalContent('다시 시도해주세요');
@@ -89,7 +87,6 @@ function Register() {
             setShowMemberPwd(true);
         }
     };
-    
 
     // memberNo로 카드 데이터 가져오기
     useEffect(() => {
@@ -97,7 +94,7 @@ function Register() {
             const token = localStorage.getItem('accessToken');
 
             axios
-                .get('http://localhost:8091/api/cards/byMember', {
+                .get(`${ConfigEnum.PAY_SERVER_URL}/api/cards/byMember`, {
                     params: { memberNo },
                     headers: {
                         Authorization: token,
@@ -119,14 +116,14 @@ function Register() {
     }, [memberNo]);
 
     const handleCardSelectClick = async () => {
-        if( category =='카드사 없음'){
+        if (category == '카드사 없음') {
             setModalTitle('알림');
             setModalContent('올바른 카드 번호를 입력해주세요.');
             setShowModal(true);
             setCheckModal(true);
             // return alert("올바른 카드 번호를 입력해주세요.");
             return;
-        } else if(category == '' || cardNo.length < 17){
+        } else if (category == '' || cardNo.length < 17) {
             setModalTitle('알림');
             setModalContent('카드 번호를 입력해주세요');
             setShowModal(true);
@@ -137,7 +134,7 @@ function Register() {
         setIsModalOpen(true);
         try {
             const response = await axios.get(
-                'http://localhost:8091/api/cards/byCompany',
+                `${ConfigEnum.PAY_SERVER_URL}/api/cards/byCompany`,
                 { params: { cardCompany: category } },
             );
             setCards(response.data);
@@ -152,7 +149,7 @@ function Register() {
 
     const handleCloseModal = () => {
         setShowModal(false);
-        setCheckModal(true); 
+        setCheckModal(true);
     };
 
     const handleSubmit = async (e) => {
@@ -165,19 +162,21 @@ function Register() {
 
         const cardData = {
             cardNo: cardNo.replace(/\s/g, ''),
-            cardNick: cardNick || selectedCard, 
+            cardNick: cardNick || selectedCard,
             isCredit,
             cardPwd: parseInt(cardPwd),
             validPeriod,
             cardCode,
-            cardImage:cardImage,
+            cardImage: cardImage,
             memberNo,
-            cardName:selectedCard,
+            cardName: selectedCard,
         };
         console.log(cardData);
 
         const values = Object.values(cardData);
-        const hasNullValue = values.some(value => value === null || value === '');
+        const hasNullValue = values.some(
+            (value) => value === null || value === '',
+        );
 
         if (hasNullValue) {
             setModalTitle('알림');
@@ -190,13 +189,16 @@ function Register() {
         // console.log('카드 등록 요청 데이터:', cardData);
 
         try {
-            const response = await fetch('http://localhost:8091/api/cards', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+            const response = await fetch(
+                `${ConfigEnum.PAY_SERVER_URL}/api/cards`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(cardData),
                 },
-                body: JSON.stringify(cardData),
-            });
+            );
 
             if (response.ok) {
                 // alert('카드가 성공적으로 등록되었습니다.');
@@ -207,7 +209,7 @@ function Register() {
                 // console.log('카드가 성공적으로 등록되었습니다.');
                 try {
                     const pwdResponse = await axios.get(
-                        'http://localhost:8091/member/isPaypwdEmpty',
+                        `${ConfigEnum.PAY_SERVER_URL}/member/isPaypwdEmpty`,
                         { params: { memberNo } },
                     );
 
@@ -257,7 +259,7 @@ function Register() {
         ) {
             try {
                 const response = await axios.get(
-                    'http://localhost:8091/api/cards/company',
+                    `${ConfigEnum.PAY_SERVER_URL}/api/cards/company`,
                     {
                         params: {
                             cardNumber: formattedCardNo.replace(/\s/g, ''),
@@ -465,13 +467,13 @@ function Register() {
                 />
             )}
             {showModal && (
-               <CustomModal
-               key={modalTitle + modalContent} 
-               title={modalTitle}
-               content={modalContent}
-               check={checkModal}
-               onClose={handleCloseModal}
-           />
+                <CustomModal
+                    key={modalTitle + modalContent}
+                    title={modalTitle}
+                    content={modalContent}
+                    check={checkModal}
+                    onClose={handleCloseModal}
+                />
             )}
         </div>
     );

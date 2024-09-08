@@ -16,6 +16,12 @@ const Seller = () => {
     const [isMatched, setIsMatched] = useState(false);
     const [isFirst, setIsFirst] = useState(true);
     const [isEnd, setIsEnd] = useState(false);
+
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     //입력 폼 데이터 핸들링
     const [formData, setFormData] = useState({
         franchiseCode: '',
@@ -133,7 +139,7 @@ const Seller = () => {
         //주문번호 생성
         const createOrderNo = async () => {
             try {
-                const url = 'http://localhost:8091/api/payment/pay';
+                const url = `${ConfigEnum.PAY_SERVER_URL}/api/payment/pay`;
                 const data = {
                     product: formData.purchaseItems,
                     price: formData.purchasePrice,

@@ -18,6 +18,10 @@ const BenefitTest = () => {
     const [totalSavePrice, setTotalSavePrice] = useState(0);
     const [totalDiscountPrice, setTotalDiscountPrice] = useState(0);
     const [totalBenefitPrice, setTotalBenefitPrice] = useState(0);
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,7 +30,7 @@ const BenefitTest = () => {
                 try {
                     // API 호출하여 카드 및 결제 정보 가져오기
                     const response = await axios.get(
-                        'http://localhost:8091/member/getBenefit',
+                        `${ConfigEnum.PAY_SERVER_URL}/member/getBenefit`,
                         {
                             params: {
                                 memberNo: memberNo,

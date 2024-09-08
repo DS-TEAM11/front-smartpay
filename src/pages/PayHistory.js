@@ -20,6 +20,11 @@ function PayHistory() {
             parentDiv.style.width = imgElement.height + 'px';
         }
     };
+
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
     // 현재 달의 시작일과 종료일 계산
     const today = new Date();
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -47,7 +52,7 @@ function PayHistory() {
 
         axios
             .get(
-                `http://localhost:8091/api/payment/history?memberNo=${memberNo}&cardNo=${cardNo}&startDate=${startDate}&endDate=${endDate}`,
+                `${ConfigEnum.PAY_SERVER_URL}/api/payment/history?memberNo=${memberNo}&cardNo=${cardNo}&startDate=${startDate}&endDate=${endDate}`,
             )
             .then((res) => {
                 console.log(res.data);
@@ -61,7 +66,7 @@ function PayHistory() {
     const cardListApi = () => {
         axios
             .get(
-                `http://localhost:8091/api/cards/byMember?memberNo=${memberNo}`,
+                `${ConfigEnum.PAY_SERVER_URL}/api/cards/byMember?memberNo=${memberNo}`,
             )
             .then((res) => {
                 console.log(res.data);
@@ -168,8 +173,13 @@ function PayHistory() {
                     {Object.keys(groupedData).length > 0 ? (
                         <div className="table-container">
                             {Object.keys(groupedData).map((dayName) => (
-                                <div className="dayTable mb-3 shadow" key={dayName}>
-                                    <div className="dayName px-2 py-1">{dayName}</div>
+                                <div
+                                    className="dayTable mb-3 shadow"
+                                    key={dayName}
+                                >
+                                    <div className="dayName px-2 py-1">
+                                        {dayName}
+                                    </div>
                                     {groupedData[dayName].map((payment) => (
                                         <div
                                             key={payment.orderNo}

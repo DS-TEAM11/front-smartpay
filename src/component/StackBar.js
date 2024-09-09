@@ -95,7 +95,7 @@ const StackBar = () => {
             <div className="fs-1 fw-bold">{thisMonthTotal2}원</div>
             <div className="text-end my-3 px-1">
                 지난달 이 맘때 보다 &emsp;
-                <span className="fs-2 text-danger fw-medium">
+                <span className="fs-2 fw-medium" style={{ color: '#4f46e5'}}>
                     {thisMonthTotal > lastMonthTotal ? '더' : '덜'}
                 </span>
                 <span>&ensp; 쓰는 중</span>

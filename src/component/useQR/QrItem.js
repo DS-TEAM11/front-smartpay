@@ -9,7 +9,9 @@ import $ from 'jquery';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useMemberNo, useWebSocket } from '../../provider/PayProvider';
 
-function QrItem({ onRemove, cardCode, subscription, subMessage }) {
+function QrItem({ onRemove, cardCode, subscription, subMessage, isLeftActive }) {
+
+    console.log("Qr생성에서 모드:"+ isLeftActive);  // true이면 헤택, false이면 실적, undefined는 직접 카드 선택
     // console.log(cardCode, 'QrItem으로 받아온 카드코드');
     const location = useLocation();
     const navigate = useNavigate();
@@ -31,10 +33,18 @@ function QrItem({ onRemove, cardCode, subscription, subMessage }) {
         PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
         COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
     });
+
+    const getAiModeValue = () => {
+        if (isLeftActive === true) return 0;
+        if (isLeftActive === false) return 1;
+        return 2; // undefined
+    };
+
     const cardRecommend = (data) => {
         const url = `${ConfigEnum.PAY_SERVER_URL}/api/payment/ai`;
         const params = {
             memberNo: memberNo,
+            aiMode: getAiModeValue(),
         };
         axios
             .post(url, data, {
@@ -56,6 +66,7 @@ function QrItem({ onRemove, cardCode, subscription, subMessage }) {
                         purchaseData: data,
                         aiData: response.data,
                         cardCode: cardCode,
+                        aiMode: getAiModeValue(),
                     },
                 });
             })
@@ -63,15 +74,20 @@ function QrItem({ onRemove, cardCode, subscription, subMessage }) {
                 console.error(error);
             });
     };
+
+    
+
+    
     const createQr = () => {
         if (qrCodeUrl != '') {
             setIsQrVisible(true);
             return;
         }
+        
 
         axios
             .get(
-                `${ConfigEnum.PAY_SERVER_URL}/qr/seller?memberNo=` + memberNo,
+                `${ConfigEnum.PAY_SERVER_URL}/qr/seller?memberNo=${memberNo}`,
                 {
                     responseType: 'blob',
                 },
@@ -121,6 +137,7 @@ function QrItem({ onRemove, cardCode, subscription, subMessage }) {
                         to: 'seller',
                     });
                     setIsEnd(true);
+                    console.log("데이터확인입니다 ", JSON.stringify(data, null, 2));
                     cardRecommend(data);
                 }
             }

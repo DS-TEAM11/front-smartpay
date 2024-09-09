@@ -3,9 +3,9 @@ import './Order.css';
 import './homeCards/CardImg.css';
 import { useState, useEffect, useRef } from 'react';
 
-const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
-    const imgRef = useRef(null);
+const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi, aiMode }) => {
     const containerRef = useRef(null);
+    console.log("Order컴포넌트에서의 모드 : " + aiMode);
     //회전에 따라 저장
     const [isRotated, setIsRotated] = useState(false);
     const handleRotateChange = (rotated, parentDiv, imgElement) => {
@@ -33,46 +33,40 @@ const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
         }
     }, [getCardInfo, getIsAi]);
 
-    // useEffect(() => {
-    //     if (imgRef.current && containerRef.current && cardData.card_img) {
-    //         const imgElement = imgRef.current;
-    //         const containerElement = containerRef.current;
-    //         const { naturalWidth: width, naturalHeight: height } = imgElement;
-
-    //         if (width > height) { // 가로로 된 카드이면
-    //             imgElement.classList.add('rotate-image');
-    //             imgElement.classList.remove('img-size');
-    //             containerElement.style.width = `${height + 15}px`;
-    //             containerElement.style.height = `${width + 15}px`;
-    //         }
-    //     }
-    // }, [cardData.card_img]);
-    // const isAIRecommended = true; // AI 추천 여부를 나타내는 변수인데 어디서 받아할까,,,
-
     let FirstMessage;
     let SecondMessage;
     let ThirdMessage;
 
+    let aiModeMessage;
+    
     const money = parseInt(getPurchase.price);
     const saveMoney = parseInt(getBenefit.maximumBenefits);
 
+    console.log(aiMode);
+    if (aiMode === 0) {
+        aiModeMessage ='혜택 우선';
+    } else if (aiMode === 1) {
+        aiModeMessage = '실적 우선';
+    } 
+
+    console.log(aiModeMessage);
     if (getIsAi) {
-        FirstMessage = <>AI 추천 카드로</>;
+        FirstMessage = <>{aiModeMessage} AI 추천 카드로</>;
         SecondMessage = (
             <>
-                <span className="blue-text"> {getPurchase.franchiseName}</span>
+                <span className="blue-text fw-bold"> {getPurchase.franchiseName}</span>
                 에서
-                <span className="blue-text"> {money.toLocaleString()}원</span>
+                <span className="blue-text fw-bold"> {money.toLocaleString()}원</span>
             </>
         );
         ThirdMessage = (
             <>
                 결제하고
-                <span className="blue-text">
+                <span className="blue-text fw-bold">
                     {' '}
                     {saveMoney.toLocaleString()}원
                 </span>
-                <span className="blue-text"> {getBenefit.benefitType} </span>
+                <span className="blue-text fw-bold"> {getBenefit.benefitType} </span>
                 받을게요.
             </>
         );
@@ -80,9 +74,9 @@ const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi }) => {
         FirstMessage = <>선택한 카드로</>;
         SecondMessage = (
             <>
-                <span className="blue-text"> {getPurchase.franchiseName}</span>
+                <span className="blue-text fw-bold"> {getPurchase.franchiseName}</span>
                 에서
-                <span className="blue-text"> {money.toLocaleString()}원</span>
+                <span className="blue-text fw-bold"> {money.toLocaleString()}원</span>
             </>
         );
         ThirdMessage = <>결제할게요.</>;

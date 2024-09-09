@@ -23,6 +23,7 @@ const Home = () => {
     const [totalDiscountPrice, setTotalDiscountPrice] = useState(0);
     const [cards, setCards] = useState([]); // 사용자가 소유한 카드 목록
     const [showCardDeletePicker, setShowCardDeletePicker] = useState(false); // 카드 삭제 모달 상태
+    const [isLeftActive, setIsLeftActive] = useState(true);
     const { wsConnect, wsDisconnect, wsSubscribe, wsSendMessage } =
         useWebSocket();
     // Ref를 사용하여 subscription을 관리
@@ -103,9 +104,13 @@ const Home = () => {
             prevCards.filter((card) => card.cardNo !== deletedCard.cardNo),
         );
     };
+    const handleToggleSwitch = (newIsLeftActive) => {
+        setIsLeftActive(newIsLeftActive);
+    };
     return (
         <>
-            <Header
+            <Header 
+                isLeftActive={isLeftActive}
                 subscription={subscriptionRef.current}
                 subMessage={subMessage}
             />
@@ -115,6 +120,8 @@ const Home = () => {
                     onDeleteCard={handleCardDelete} // onDeleteCard 전달
                     subscription={subscriptionRef.current}
                     subMessage={subMessage}
+                    isLeftActive={isLeftActive}
+                    onToggleSwitch={handleToggleSwitch}
                 />
                 <BenefitsAndManagement
                     benefits={[

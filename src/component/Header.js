@@ -12,7 +12,7 @@ const ConfigEnum = Object.freeze({
 });
 const ConfigContext = createContext(ConfigEnum); // ConfigContext 생성
 
-const Header = ({ subscription, subMessage }) => {
+const Header = ({ subscription, subMessage, isLeftActive }) => {
     const [showQr, setShowQr] = useState(false); // 상태를 추가하여 QR 코드를 표시할지 여부를 관리합니다.
     const location = useLocation();
     const navigate = useNavigate();
@@ -61,6 +61,7 @@ const Header = ({ subscription, subMessage }) => {
                         cardCode={null}
                         subscription={subscription}
                         subMessage={subMessage}
+                        isLeftActive={isLeftActive}
                     />
                 )}
             </div>

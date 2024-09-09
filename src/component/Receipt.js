@@ -33,6 +33,11 @@ const Receipt = () => {
         memberNo: '',
     });
 
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     // const handleChange = (e) => {
     //     setFormData({
     //         ...formData,
@@ -44,7 +49,7 @@ const Receipt = () => {
         const getOrderData = async () => {
             try {
                 const response = await axios.get(
-                    'http://localhost:8091/api/payment/completed',
+                    `${ConfigEnum.PAY_SERVER_URL}/api/payment/completed`,
                     {
                         params: { orderNo },
                     },

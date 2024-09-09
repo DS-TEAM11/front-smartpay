@@ -35,6 +35,17 @@ const Signup = () => {
     const [modalTitle, setModalTitle] = useState('');
     const [checkModal, setCheckModal] = useState(true); // 버튼 표시 여부
 
+    const timeout = () => {
+        setTimeout(() => {
+            navigate('/login');
+        }, 1000);
+    };
+
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     const handleCloseModal = () => {
         setShowModal(false);
         setCheckModal(false);
@@ -75,7 +86,9 @@ const Signup = () => {
         e.preventDefault();
         if (validatePhone(phone)) {
             axios
-                .get(`http://localhost:8091/member/checkSms?phone=${phone}`)
+                .get(
+                    `${ConfigEnum.PAY_SERVER_URL}/member/checkSms?phone=${phone}`,
+                )
                 .then((response) => {
                     setVerificationCode(response.data); // 서버에서 받은 인증번호 설정
                     setIsSmsSent(true);
@@ -107,7 +120,7 @@ const Signup = () => {
         e.preventDefault();
         if (validatePhone(phone)) {
             axios
-                .post('http://localhost:8091/api/sms/send', {
+                .post(`${ConfigEnum.PAY_SERVER_URL}/api/sms/send`, {
                     phoneNumber: phone,
                 })
                 .then((response) => {
@@ -142,7 +155,9 @@ const Signup = () => {
         }
 
         axios
-            .get(`http://localhost:8091/member/checkEmail?email=${email}`)
+            .get(
+                `${ConfigEnum.PAY_SERVER_URL}/member/checkEmail?email=${email}`,
+            )
             .then((response) => {
                 if (response.data) {
                     setEmailError('이미 사용중인 이메일입니다.');
@@ -189,7 +204,7 @@ const Signup = () => {
         e.preventDefault();
         if (validatePhone(phone)) {
             axios
-                .post('http://localhost:8091/api/sms/verify', {
+                .post(`${ConfigEnum.PAY_SERVER_URL}/api/sms/verify`, {
                     phoneNumber: phone,
                     code: inputCode,
                 })
@@ -277,14 +292,22 @@ const Signup = () => {
         };
 
         axios
-            .post('http://localhost:8091/member/signup', signupData)
+            .post(`${ConfigEnum.PAY_SERVER_URL}/member/signup`, signupData)
             .then(() => {
-                alert('회원가입이 완료되었습니다.');
-                navigate('/login');
+                // alert('회원가입이 완료되었습니다.');
+                setModalTitle('완료');
+                setModalContent('회원가입이 완료되었습니다. 로그인 해주세요');
+                setShowModal(true);
+                setCheckModal(true);
+                timeout();
             })
             .catch((error) => {
                 console.error('회원가입 실패:', error);
-                alert('회원가입에 실패했습니다.');
+                // alert('회원가입에 실패했습니다.');
+                setModalTitle('실패');
+                setModalContent('회원가입에 실패했습니다.');
+                setShowModal(true);
+                setCheckModal(true);
             });
     };
 

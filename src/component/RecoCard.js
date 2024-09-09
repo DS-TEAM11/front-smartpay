@@ -6,9 +6,14 @@ const RecoCard = ({ recommendData, setCardCode }) => {
     const [cardInfo, setCardInfo] = useState({});
     const imgRef = useRef(null);
 
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     const getCardInfo = async () => {
         try {
-            const url = 'http://localhost:8091/api/payment/card';
+            const url = `${ConfigEnum.PAY_SERVER_URL}/api/payment/card`;
             const data = {
                 cardCode: recommendData.recommendCard,
                 memberNo: 'test',

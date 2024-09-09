@@ -71,6 +71,11 @@ function PwdItem({ Success }) {
         }
     };
 
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     const verifyPin = () => {
         const checkPinCode = checkPin.join('');
 
@@ -88,7 +93,7 @@ function PwdItem({ Success }) {
         };
 
         axios
-            .post('http://localhost:8091/member/isTruePaypwd', payload, {
+            .post(`${ConfigEnum.PAY_SERVER_URL}/member/isTruePaypwd`, payload, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem(
                         'accessToken',

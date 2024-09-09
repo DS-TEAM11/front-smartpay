@@ -14,6 +14,11 @@ function Chat() {
         setInputValue(event.target.value);
     };
 
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     // 웹소켓 연결 설정
     const connect = () => {
         const socket = new WebSocket('ws://localhost:8091/ws');
@@ -36,7 +41,7 @@ function Chat() {
     // 기존 채팅 메시지를 서버로부터 가져오는 함수
     const fetchMessages = () => {
         return axios
-            .get('http://localhost:8091/chat/1')
+            .get(`${ConfigEnum.PAY_SERVER_URL}/chat/1`)
             .then((response) => {
                 console.log(response.data); // 응답 데이터 로그
                 setMessages(response.data);

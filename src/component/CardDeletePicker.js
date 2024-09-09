@@ -13,6 +13,11 @@ const CardDeletePicker = ({ title, onRemove, cards, onDeleteCard }) => {
         setSelectedCard(card); // 카드 선택 시 상태 업데이트
     };
 
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     const handleConfirmDelete = async () => {
         if (selectedCard) {
             // 카드가 선택된 경우
@@ -23,7 +28,7 @@ const CardDeletePicker = ({ title, onRemove, cards, onDeleteCard }) => {
             if (confirmDelete) {
                 try {
                     const response = await axios.delete(
-                        `http://localhost:8091/api/cards/${selectedCard.cardNo}`,
+                        `${ConfigEnum.PAY_SERVER_URL}/api/cards/${selectedCard.cardNo}`,
                     );
                     alert(response.data); // 성공 메시지 표시
                     onDeleteCard(selectedCard); // 삭제 후 카드 목록 업데이트

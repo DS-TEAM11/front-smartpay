@@ -17,6 +17,11 @@ const CardInfo = () => {
     const { selectedCard, setSelectedCard } = useSelectedCard(); // 선택된 카드 상태 추가
     const { showQr, setShowQr } = useShowQr(); // 상태를 추가하여 QR 코드를 표시할지 여부를 관리합니다.
 
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     const handleDrag = () => {
         setShowQr(true);
     };
@@ -30,7 +35,7 @@ const CardInfo = () => {
                 const token = localStorage.getItem('accessToken');
                 if (token) {
                     const memberResponse = await axios.get(
-                        'http://localhost:8091/member/findMember',
+                        `${ConfigEnum.PAY_SERVER_URL}/member/findMember`,
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`, // Bearer 포함
@@ -57,7 +62,7 @@ const CardInfo = () => {
                 try {
                     const token = localStorage.getItem('accessToken');
                     const cardsResponse = await axios.get(
-                        'http://localhost:8091/api/cards/details/byMember', // 새로운 엔드포인트 사용
+                        `${ConfigEnum.PAY_SERVER_URL}/api/cards/details/byMember`, // 새로운 엔드포인트 사용
                         {
                             params: { memberNo },
                             headers: {

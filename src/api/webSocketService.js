@@ -10,7 +10,11 @@ class WebSocketService {
         // console.log('현재 websocket 상태 connected', this.connected);
         // console.log('현재 websocket 상태 stompClient', this.stompClient);
         if (!this.stompClient || !this.connected) {
-            const socket = new SockJS('http://localhost:8091/ws');
+            const ConfigEnum = Object.freeze({
+                PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+                COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+            });
+            const socket = new SockJS(`${ConfigEnum.PAY_SERVER_URL}/ws`);
             this.stompClient = Stomp.over(socket);
             this.stompClient.connect(
                 {},

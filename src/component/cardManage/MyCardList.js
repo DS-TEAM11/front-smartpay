@@ -79,6 +79,11 @@ const MyCardList = ({ isLeftActive, cardList, onCardNickUpdate }) => {
         setIsModalOpen(false);
     };
 
+    const ConfigEnum = Object.freeze({
+        PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
+        COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
+    });
+
     const handleSaveNewNick = () => {
         if (selectedCard) {
             console.log('Selected Card:', selectedCard); // 선택된 카드 확인
@@ -86,7 +91,7 @@ const MyCardList = ({ isLeftActive, cardList, onCardNickUpdate }) => {
 
             // 수정된 별칭을 DB에 저장하는 API 요청
             axios
-                .post('http://localhost:8091/api/cards/updateNickname', {
+                .post(`${ConfigEnum.PAY_SERVER_URL}/api/cards/updateNickname`, {
                     cardNo: selectedCard.cardNo, // 카드 번호로 카드 식별
                     newCardNick: newCardNick, // 변경된 별칭
                 })
@@ -139,7 +144,10 @@ const MyCardList = ({ isLeftActive, cardList, onCardNickUpdate }) => {
         // console.log(sortedCards);
 
         axios
-            .post('http://localhost:8091/api/cards/update/benefit', sortedCards)
+            .post(
+                `${ConfigEnum.PAY_SERVER_URL}/api/cards/update/benefit`,
+                sortedCards,
+            )
             .then((response) => {
                 // console.log(response);
                 alert('저장되었습니다.');

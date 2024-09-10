@@ -132,7 +132,7 @@ const CardInfo = ({ subscription, subMessage, isLeftActive, onToggleSwitch }) =>
         ); // 로딩 중일 때 표시할 UI
     }
 
-    if (!fetchedCards || fetchedCards.length === 0) {
+    if (!fetchedCards || fetchedCards.length === 0 || !selectedCard) {
         return (
             <div className="card-info-container">
                 <div className="cardText">

@@ -51,25 +51,43 @@ const Order = ({ getCardInfo, getBenefit, getPurchase, getIsAi, aiMode }) => {
 
     console.log(aiModeMessage);
     if (getIsAi) {
-        FirstMessage = <>{aiModeMessage} AI 추천 카드로</>;
-        SecondMessage = (
-            <>
-                <span className="blue-text fw-bold"> {getPurchase.franchiseName}</span>
-                에서
-                <span className="blue-text fw-bold"> {money.toLocaleString()}원</span>
-            </>
-        );
-        ThirdMessage = (
-            <>
-                결제하고
-                <span className="blue-text fw-bold">
-                    {' '}
-                    {saveMoney.toLocaleString()}원
-                </span>
-                <span className="blue-text fw-bold"> {getBenefit.benefitType} </span>
-                받을게요.
-            </>
-        );
+        if (aiMode === 1) {
+            // aiMode가 1일 때 문구
+            FirstMessage = <>AI 추천카드로</>;
+            SecondMessage = (
+                <>
+                    <span className="blue-text fw-bold"> {getPurchase.franchiseName}</span>
+                    에서
+                    <span className="blue-text fw-bold"> {money.toLocaleString()}원</span>
+                </>
+            );
+            ThirdMessage = (
+                <>
+                    결제하고 <span className="blue-text fw-bold"> 실적</span>을 쌓을게요.
+                </>
+            );
+        } else if (aiMode === 0) {
+            // aiMode가 0일 때 문구 (기존 문구)
+            FirstMessage = <>AI 추천 카드로</>;
+            SecondMessage = (
+                <>
+                    <span className="blue-text fw-bold"> {getPurchase.franchiseName}</span>
+                    에서
+                    <span className="blue-text fw-bold"> {money.toLocaleString()}원</span>
+                </>
+            );
+            ThirdMessage = (
+                <>
+                    결제하고
+                    <span className="blue-text fw-bold">
+                        {' '}
+                        {saveMoney.toLocaleString()}원
+                    </span>
+                    <span className="blue-text fw-bold"> {getBenefit.benefitType} </span>
+                    받을게요.
+                </>
+            );
+        }
     } else {
         FirstMessage = <>선택한 카드로</>;
         SecondMessage = (

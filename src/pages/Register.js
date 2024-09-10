@@ -201,12 +201,6 @@ function Register() {
             );
 
             if (response.ok) {
-                // alert('카드가 성공적으로 등록되었습니다.');
-                setModalTitle('알림');
-                setModalContent('카드가 성공적으로 등록되었습니다.');
-                setShowModal(true);
-                setCheckModal(false);
-                // console.log('카드가 성공적으로 등록되었습니다.');
                 try {
                     const pwdResponse = await axios.get(
                         `${ConfigEnum.PAY_SERVER_URL}/member/isPaypwdEmpty`,
@@ -214,19 +208,25 @@ function Register() {
                     );
 
                     if (pwdResponse.status === 200) {
-                        // 결제 비밀번호가 없는 경우
-                        // navigate('/memberPwd');
+                        // 결제 비밀번호가 없는 경우 -> 비밀번호 등록 화면 띄우기
                         setShowMemberPwd(true);
+                    } else {
+                        // 결제 비밀번호가 있는 경우 -> 성공 모달 띄우기
+                        setModalTitle('알림');
+                        setModalContent('카드가 성공적으로 등록되었습니다.');
+                        setShowModal(true);
+                        setCheckModal(false);
+                        timeout(); // 일정 시간이 지나면 홈 화면으로 이동
                     }
-                    // else {
-                    //     navigate('/home'); // 홈 화면으로 이동
-                    // }
                 } catch (error) {
                     if (error.response && error.response.status === 404) {
-                        // 결제 비밀번호가 있는 경우
-                        timeout();
+                        // 비밀번호가 이미 등록된 경우 -> 성공 모달 띄우기
+                        setModalTitle('알림');
+                        setModalContent('카드가 성공적으로 등록되었습니다.');
+                        setShowModal(true);
+                        setCheckModal(false);
+                        timeout(); // 일정 시간이 지나면 홈 화면으로 이동
                     } else {
-                        // 기타 네트워크 오류 처리
                         console.error(
                             '결제 비밀번호 확인 중 오류가 발생했습니다.',
                             error,
@@ -234,7 +234,6 @@ function Register() {
                     }
                 }
             } else {
-                console.error('카드 등록에 실패했습니다.');
                 setModalTitle('알림');
                 setModalContent('카드 등록에 실패했습니다.');
                 setShowModal(true);

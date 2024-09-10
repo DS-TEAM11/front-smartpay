@@ -27,6 +27,9 @@ const Pay = () => {
         location.state.purchaseData,
     ); //구매 정보 데이터
 
+    const [aiMode, setaiMode] = useState(location.state.aiMode);
+    console.log("결제카드선택페이지에서의 모드: " + aiMode);
+
     const { wsConnect, wsDisconnect, wsSendMessage, wsSubscribe } =
         useWebSocket();
     const memberNo = useMemberNo();
@@ -106,6 +109,8 @@ const Pay = () => {
             } else {
                 // AI 추천 카드와 선택한 카드 정보 모두 가져오기
                 selectedCardInfo = await getCardInfo(cardCode);
+                console.log("선택한 카드:", JSON.stringify(cardInfo));
+
                 aiCardInfo = await getCardInfo(recommendData.recommendCard);
             }
             //데이터 담기
@@ -158,6 +163,9 @@ const Pay = () => {
     const handleCardSelect = (card) => {
         // setSelectedCard(card); // CardPicker에서 선택한 카드 설정
         setCardCode(card.cardCode); // 선택된 카드의 코드 설정
+        console.log("=======확인용=======");
+        console.log(cardCode);
+        console.log(card.card_code);
         setShowCardPicker(false); // 카드 선택 후 CardPicker 닫기
     };
 
@@ -219,7 +227,7 @@ const Pay = () => {
             price: purchaseData.purchasePrice, //이것도 판매자
             product: purchaseData.purchaseItems, //판매자
             cardNo: cardNo, //cardInfo 받아올때 card_no를 풀로 받아와야 할 듯 => ai일때와 선택카드일 때 잘 변경해서 넣어줘야 하는데 어떻게 해야할까
-            cardCode: recommendData.recommendCard, //cardInfo에서
+            cardCode: getIsAi ? recommendData.recommendCard : cardCode, //cardInfo에서
             getIsAi: getIsAi, //이전 구매자 QR 생성부터 들고 와야 함
             payDate: purchaseData.payDate, //판매자 쪽에서
             saveType: getIsAi ? saveType : null, //여기서 AI 결과 값에 따라 자바스트립트로 처리 해야 할 듯
@@ -249,6 +257,7 @@ const Pay = () => {
             ]; // 결제 상태
             const result = paymentStatus[response.data]; // API가 반환하는 return 값(결제 상태)
 
+
             // console.log(paymentStatus);
 
             const orderNo = paymentData.orderNo;
@@ -264,6 +273,7 @@ const Pay = () => {
             });
 
             //웹소켓 끝 ------------------------------
+            console.log(response.data);
             if (response.data === 0) {
                 // 결제 성공
                 // alert('결제가 완료되었습니다.');
@@ -283,7 +293,7 @@ const Pay = () => {
                 setModalContent('카드 정보 불일치\n다시 시도해주세요');
                 setShowModal(true);
                 setCheckModal(false);
-                handleHomeClick();
+                timeout();
             } else if (response.data === 2) {
                 // 유효기간 만료
                 // alert('결제 실패:  유효기간 만료  다시 시도해주세요');
@@ -291,7 +301,7 @@ const Pay = () => {
                 setModalContent('유효기간 만료\n다시 시도해주세요');
                 setShowModal(true);
                 setCheckModal(false);
-                handleHomeClick();
+                timeout();
             } else if (response.data === 3) {
                 // 한도 초과
                 // alert('결제 실패: 카드 한도 초과  다시 시도해주세요');
@@ -299,7 +309,7 @@ const Pay = () => {
                 setModalContent('카드 한도 초과\n다시 시도해주세요');
                 setShowModal(true);
                 setCheckModal(false);
-                handleHomeClick();
+                timeout();
             } else {
                 // 예외 에러
                 // alert('결제 실패: 서버 에러 발생  다시 시도해주세요');
@@ -307,15 +317,25 @@ const Pay = () => {
                 setModalContent('서버 에러 발생\n다시 시도해주세요');
                 setShowModal(true);
                 setCheckModal(false);
-                handleHomeClick();
+                timeout();
             }
         } catch (error) {
             console.log('에러');
+            setModalTitle('결제 실패');
+            setModalContent('서버 에러 발생\n다시 시도해주세요');
+            setShowModal(true);
+            setCheckModal(false);
+            timeout();
         }
     };
 
-    const handleHomeClick = () => {
-        navigate('/home'); // /home 경로로 이동
+    // const handleHomeClick = () => {
+    //     navigate('/home'); // /home 경로로 이동
+    // };
+    const timeout = () => {
+        setTimeout(() => {
+            navigate('/home');
+        }, 1500);
     };
 
     return (
@@ -342,6 +362,7 @@ const Pay = () => {
                 getBenefit={getBenefit}
                 getPurchase={getPurchase}
                 getIsAi={getIsAi}
+                aiMode={location.state.aiMode}
             />
 
             <div className="d-flex justify-content-center">

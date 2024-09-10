@@ -23,6 +23,7 @@ const Home = () => {
     const [totalDiscountPrice, setTotalDiscountPrice] = useState(0);
     const [cards, setCards] = useState([]); // 사용자가 소유한 카드 목록
     const [showCardDeletePicker, setShowCardDeletePicker] = useState(false); // 카드 삭제 모달 상태
+    const [isLeftActive, setIsLeftActive] = useState(true);
     const { wsConnect, wsDisconnect, wsSubscribe, wsSendMessage } =
         useWebSocket();
     // Ref를 사용하여 subscription을 관리
@@ -33,6 +34,14 @@ const Home = () => {
         PAY_SERVER_URL: process.env.REACT_APP_PAY_SERVER_URL,
         COMPANY_SERVER_URL: process.env.REACT_APP_COMPANY_SERVER_URL,
     });
+
+    //삭제 상태 받아와서 홈 화면을 다시 새로 고침하고 싶음
+    const reloadingHome = (isValid) => {
+        console.log(isValid);
+        if (isValid) {
+            window.location.replace('/home');
+        }
+    };
     const fetchData = async () => {
         if (memberNo) {
             try {
@@ -103,9 +112,13 @@ const Home = () => {
             prevCards.filter((card) => card.cardNo !== deletedCard.cardNo),
         );
     };
+    const handleToggleSwitch = (newIsLeftActive) => {
+        setIsLeftActive(newIsLeftActive);
+    };
     return (
         <>
             <Header
+                isLeftActive={isLeftActive}
                 subscription={subscriptionRef.current}
                 subMessage={subMessage}
             />
@@ -115,6 +128,8 @@ const Home = () => {
                     onDeleteCard={handleCardDelete} // onDeleteCard 전달
                     subscription={subscriptionRef.current}
                     subMessage={subMessage}
+                    isLeftActive={isLeftActive}
+                    onToggleSwitch={handleToggleSwitch}
                 />
                 <BenefitsAndManagement
                     benefits={[
@@ -165,6 +180,7 @@ const Home = () => {
                         cards={cards}
                         onRemove={() => setShowCardDeletePicker(false)} // 모달 닫기
                         onDeleteCard={handleCardDelete} // 카드 삭제 핸들러
+                        state={reloadingHome}
                     />
                 )}
             </div>

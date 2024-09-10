@@ -26,6 +26,7 @@ const CardRank = () => {
                 },
             );
             setRankItems(response.data); // 응답 데이터를 상태에 저장
+            console.log(response.data);
         } catch (error) {
             console.error('에러남', error);
         }

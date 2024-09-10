@@ -17,7 +17,7 @@ import {
     useMemberNo,
 } from '../../provider/PayProvider';
 
-const CardInfo = ({ subscription, subMessage }) => {
+const CardInfo = ({ subscription, subMessage, isLeftActive, onToggleSwitch }) => {
     const navigate = useNavigate();
     const memberNo = useMemberNo();
     const [fetchedCards, setFetchedCards] = useState([]); // API에서 가져온 카드 목록 상태
@@ -25,10 +25,12 @@ const CardInfo = ({ subscription, subMessage }) => {
     const [cardPicker, setCardPicker] = useState(false); // 카드 선택 모달 상태 추가
     const { selectedCard, setSelectedCard } = useSelectedCard(); // 선택된 카드 상태를 추가하여 관리합니다.
     const { showQr, setShowQr } = useShowQr(); // 상태를 추가하여 QR 코드를 표시할지 여부를 관리합니다.
-    const [isLeftActive, setIsLeftActive] = useState(true);
+    const [isLeftActiveLocal, setIsLeftActiveLocal] = useState(isLeftActive);
 
     const handleSwitchPriorityMode = () => {
-        setIsLeftActive(isLeftActive ? false : true);
+        const newIsLeftActive = !isLeftActiveLocal;
+        setIsLeftActiveLocal(newIsLeftActive);
+        onToggleSwitch(newIsLeftActive); // 부모 컴포넌트로 상태 변경 알림
     };
 
     const handleDrag = () => {
@@ -130,7 +132,7 @@ const CardInfo = ({ subscription, subMessage }) => {
         ); // 로딩 중일 때 표시할 UI
     }
 
-    if (!fetchedCards || fetchedCards.length === 0) {
+    if (!fetchedCards || fetchedCards.length === 0 || !selectedCard) {
         return (
             <div className="card-info-container">
                 <div className="cardText">

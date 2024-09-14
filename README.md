@@ -1,4 +1,25 @@
 # Front-Smartpay
+<p align="left">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=git,github,docker,aws,ubuntu&theme=light" />
+  </a>
+</p>
+<p align="left">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=vscode,idea,mysql,redis&theme=light" />
+  </a>
+</p>
+<p align="left">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=java,gradle,spring,react&theme=light" />
+  </a>
+</p>
+</p>
+<p align="left">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=figma,notion,discord&theme=light" />
+  </a>
+</p>
 
 ## 목차
 1. [프로젝트 목표](#1-프로젝트-목표)

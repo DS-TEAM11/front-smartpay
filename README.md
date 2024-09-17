@@ -22,209 +22,16 @@
 </p>
 
 ## 목차
-1. [프로젝트 구조](#1-프로젝트-구조)
-2. [프로젝트 목표](#2-프로젝트-목표)
+1. [프로젝트 목표](#1-프로젝트-목표)
+2. [프로젝트 구조](#2-프로젝트-구조)
 3. [프로젝트 설명](#3-화면-설명)
 4. [ERD](#4-erd)
-5. [프로젝트 설명](#5-프로젝트-설명)
-6. [결제 프로세스](#6-결제-프로세스)
-7. [AI 프로세스](#7-ai-프로세스)
+5. [결제 프로세스](#5-결제-프로세스)
+6. [AI 프로세스](#6-ai-프로세스)
 
 
 
-## 1. 프로젝트 구조
-
-백앤드 - https://github.com/DS-TEAM11/smartpay
-프론트앤드 - https://github.com/DS-TEAM11/front-smartpay
-
-
-### (1) 폴더 구조
-```
-src
- ┣ api
- ┃ ┗ webSocketService.js
- ┣ component
- ┃ ┣ cardManage
- ┃ ┃ ┣ MyCardList.css
- ┃ ┃ ┗ MyCardList.js
- ┃ ┣ common
- ┃ ┃ ┣ InputValue.css
- ┃ ┃ ┣ InputValue.js
- ┃ ┃ ┣ Modal.css
- ┃ ┃ ┗ Modal.js
- ┃ ┣ homeCards
- ┃ ┃ ┣ BenefitItem.css
- ┃ ┃ ┣ BenefitItem.js
- ┃ ┃ ┣ CardImg.css
- ┃ ┃ ┣ CardImg.js
- ┃ ┃ ┣ CardInfo2.css
- ┃ ┃ ┣ CardInfo2.js
- ┃ ┃ ┣ CardListBox.css
- ┃ ┃ ┣ CardListBox.js
- ┃ ┃ ┣ CardOwnedList.css
- ┃ ┃ ┣ CardOwnedList.js
- ┃ ┃ ┣ CardPicker.css
- ┃ ┃ ┣ CardPicker.js
- ┃ ┃ ┣ MainCard.js
- ┃ ┃ ┣ SlidingYComponent.css
- ┃ ┃ ┣ SlidingYComponent.js
- ┃ ┃ ┣ SpreadCards.css
- ┃ ┃ ┗ SpreadCards.js
- ┃ ┣ useQR
- ┃ ┃ ┣ QrItem.css
- ┃ ┃ ┣ QrItem.js
- ┃ ┃ ┣ Timer.css
- ┃ ┃ ┗ Timer.js
- ┃ ┣ BenefitCardItem.css
- ┃ ┣ BenefitCardItem.js
- ┃ ┣ Benefits.css
- ┃ ┣ Benefits.js
- ┃ ┣ BenefitsAndManagement.css
- ┃ ┣ BenefitsAndManagement.js
- ┃ ┣ BlackContainer.css
- ┃ ┣ BlackContainer.js
- ┃ ┣ Button.css
- ┃ ┣ Button.js
- ┃ ┣ CardCategory.js
- ┃ ┣ CardDeletePicker.css
- ┃ ┣ CardDeletePicker.js
- ┃ ┣ CardInfo.css
- ┃ ┣ CardInfo.js
- ┃ ┣ CardItem.css
- ┃ ┣ CardItem.js
- ┃ ┣ CardList.css
- ┃ ┣ CardList.js
- ┃ ┣ CardList2.js
- ┃ ┣ CardListItem.css
- ┃ ┣ CardListItem.js
- ┃ ┣ CardListItem2.css
- ┃ ┣ CardListItem2.js
- ┃ ┣ Chat.css
- ┃ ┣ Chat.js
- ┃ ┣ CustomToggle.css
- ┃ ┣ CustomToggle.js
- ┃ ┣ CustomToggle2.css
- ┃ ┣ CustomToggle2.js
- ┃ ┣ CustomToggle3.css
- ┃ ┣ CustomToggle3.js
- ┃ ┣ DateCardHistory.css
- ┃ ┣ DateCardHistory.js
- ┃ ┣ Footer.css
- ┃ ┣ Footer.js
- ┃ ┣ Goal.css
- ┃ ┣ Goal.js
- ┃ ┣ GrayButton.css
- ┃ ┣ GrayButton.js
- ┃ ┣ Header.css
- ┃ ┣ Header.js
- ┃ ┣ Loading.css
- ┃ ┣ Loading.js
- ┃ ┣ Loading2.js
- ┃ ┣ LongButton.css
- ┃ ┣ LongButton.js
- ┃ ┣ ManagementItem.css
- ┃ ┣ ManagementItem.js
- ┃ ┣ MyCalendar copy.js
- ┃ ┣ MyCalendar.css
- ┃ ┣ MyCalendar.js
- ┃ ┣ NavBar.css
- ┃ ┣ NavBar.js
- ┃ ┣ Order.css
- ┃ ┣ Order.js
- ┃ ┣ PayCardList.css
- ┃ ┣ PayCardList.js
- ┃ ┣ Policy.css
- ┃ ┣ Policy.js
- ┃ ┣ PwdItem.css
- ┃ ┣ PwdItem.js
- ┃ ┣ RankItem.css
- ┃ ┣ RankItem.js
- ┃ ┣ Receipt.css
- ┃ ┣ Receipt.js
- ┃ ┣ RecoCard.css
- ┃ ┣ RecoCard.js
- ┃ ┗ StackBar.js
- ┣ img
- ┃ ┣ airline.png
- ┃ ┣ bill_payment.png
- ┃ ┣ cafe.png
- ┃ ┣ convenience_store.png
- ┃ ┣ gas_station.png
- ┃ ┣ general_store.png
- ┃ ┣ HOME.png
- ┃ ┣ home1.png
- ┃ ┣ home2.png
- ┃ ┣ home3.png
- ┃ ┣ home4.png
- ┃ ┣ home5.png
- ┃ ┣ home6.png
- ┃ ┣ kakao_invisible_small.png
- ┃ ┣ kakao_login_small.png
- ┃ ┣ kako_login.png
- ┃ ┣ logo.png
- ┃ ┣ logo3.png
- ┃ ┣ logo4.png
- ┃ ┣ mart.png
- ┃ ┣ payment1.gif
- ┃ ┣ payment2.gif
- ┃ ┣ priorityUpBtn.svg
- ┃ ┣ public_transport.png
- ┃ ┣ qrUpBtn.png
- ┃ ┣ red-flag.png
- ┃ ┣ restaurant.png
- ┃ ┣ shopping.png
- ┃ ┣ sp logo2.png
- ┃ ┣ sp_logo.png
- ┃ ┗ upArrow.png
- ┣ pages
- ┃ ┣ 404.css
- ┃ ┣ 404.js
- ┃ ┣ Afterkakao.js
- ┃ ┣ BenefitTest.css
- ┃ ┣ BenefitTest.js
- ┃ ┣ CardEdit.js
- ┃ ┣ CardRank.js
- ┃ ┣ Home.css
- ┃ ┣ Home.js
- ┃ ┣ IdPwCheck.css
- ┃ ┣ IdPwCheck.js
- ┃ ┣ Login.css
- ┃ ┣ Login.js
- ┃ ┣ MemberPwd.css
- ┃ ┣ MemberPwd.js
- ┃ ┣ MyPage.css
- ┃ ┣ MyPage.js
- ┃ ┣ MyStatics.css
- ┃ ┣ MyStatics.js
- ┃ ┣ Pay.css
- ┃ ┣ Pay.js
- ┃ ┣ PayHistory copy 2.js
- ┃ ┣ PayHistory copy.js
- ┃ ┣ PayHistory.css
- ┃ ┣ PayHistory.js
- ┃ ┣ Register.css
- ┃ ┣ Register.js
- ┃ ┣ Seller.js
- ┃ ┣ Signup.css
- ┃ ┣ Signup.js
- ┃ ┣ Test.js
- ┃ ┣ WelcomePage.css
- ┃ ┗ WelcomePage.js
- ┣ provider
- ┃ ┗ PayProvider.js
- ┣ App.css
- ┣ App.js
- ┗ index.js
-```
-
-### (2) 인프라 구조
-![](img/shds2_project2.drawio.png)
-
-### (3) 네트워크 구조
-![](img/shds_network.drawio.png)
-
-
-## 2. 프로젝트 목표
+## 1. 프로젝트 목표
 
 ### (1) 배경
 ![](img/graph.png)
@@ -237,6 +44,128 @@ src
 - 복잡한 카드 혜택 정보를 간단하고 직관적으로 제공한다. 
 - AI와 고객별 결제 내역을 활용한 개인화된 맞춤형 서비스 제공한다.
 - 단순하고 편리한 UI를 통해 만족도 높은 서비스를 제공한다.
+
+
+
+## 2. 프로젝트 구조
+
+백앤드 - https://github.com/DS-TEAM11/smartpay  
+프론트앤드 - https://github.com/DS-TEAM11/front-smartpay
+
+
+### (1) 폴더 구조
+```
+smartpay
+ ┣ config
+ ┃ ┣ ChatGptClientConfig.java
+ ┃ ┣ RedisConfig.java
+ ┃ ┣ SecurityConfig.java
+ ┃ ┣ WebClientConfig.java
+ ┃ ┣ WebConfig.java
+ ┃ ┗ WebSocketConfig.java
+ ┣ controller
+ ┃ ┣ BinController.java
+ ┃ ┣ CardController.java
+ ┃ ┣ ChatGptController.java
+ ┃ ┣ MemberController.java
+ ┃ ┣ PaymentController.java
+ ┃ ┣ QrCodeController.java
+ ┃ ┣ SellerController.java
+ ┃ ┗ SmsController.java
+ ┣ dto
+ ┃ ┣ BinTableDTO.java
+ ┃ ┣ CardDTO.java
+ ┃ ┣ CardInfoDTO.java
+ ┃ ┣ CardRecommendDTO.java
+ ┃ ┣ HistoryDTO.java
+ ┃ ┣ MemberDTO.java
+ ┃ ┣ MyStaticDTO.java
+ ┃ ┣ OrderCancelDTO.java
+ ┃ ┣ OrderDTO.java
+ ┃ ┣ PageRequestDTO.java
+ ┃ ┣ PageResultDTO.java
+ ┃ ┣ PayDTO.java
+ ┃ ┣ PayInfoDTO.java
+ ┃ ┗ SellerDTO.java
+ ┣ entity
+ ┃ ┣ BaseEntity.java
+ ┃ ┣ BinTable.java
+ ┃ ┣ Card.java
+ ┃ ┣ CardBenefits.java
+ ┃ ┣ CardInfo.java
+ ┃ ┣ History.java
+ ┃ ┣ Member.java
+ ┃ ┣ MemberRole.java
+ ┃ ┣ Order.java
+ ┃ ┗ PayInfo.java
+ ┣ filter
+ ┃ ┗ CORSFilter.java
+ ┣ repository
+ ┃ ┣ BinTableRepository.java
+ ┃ ┣ CardBenefitsRepository.java
+ ┃ ┣ CardInfoRepository.java
+ ┃ ┣ CardRepository.java
+ ┃ ┣ MemberRepository.java
+ ┃ ┣ OrderRepository.java
+ ┃ ┣ PayHistoryRepository.java
+ ┃ ┣ PayInfoRepository.java
+ ┃ ┣ PayInfoRepositoryCustom.java
+ ┃ ┗ PayInfoRepositoryCustomImpl.java
+ ┣ security
+ ┃ ┣ dto
+ ┃ ┃ ┣ MemberAuthDTO.java
+ ┃ ┃ ┗ MemberRegisterDTO.java
+ ┃ ┣ filter
+ ┃ ┃ ┣ CustomJsonUsernamePasswordAuthenticationFilter.java
+ ┃ ┃ ┗ JwtAuthenticationProcessingFilter.java
+ ┃ ┣ handler
+ ┃ ┃ ┣ LoginFailureHandler.java
+ ┃ ┃ ┗ LoginSuccessHandler.java
+ ┃ ┣ oauth
+ ┃ ┃ ┣ handler
+ ┃ ┃ ┃ ┣ OAuth2LoginFailureHandler.java
+ ┃ ┃ ┃ ┗ OAuth2LoginSuccessHandler.java
+ ┃ ┃ ┣ service
+ ┃ ┃ ┃ ┗ CustomOAuth2UserService.java
+ ┃ ┃ ┣ userinfo
+ ┃ ┃ ┃ ┣ KakaoOAuth2UserInfo.java
+ ┃ ┃ ┃ ┗ OAuth2UserInfo.java
+ ┃ ┃ ┣ CustomOAuth2User.java
+ ┃ ┃ ┗ OAuthAttributes.java
+ ┃ ┣ service
+ ┃ ┃ ┣ JwtService.java
+ ┃ ┃ ┗ LoginService.java
+ ┃ ┗ util
+ ┃ ┃ ┗ PasswordUtil.java
+ ┣ service
+ ┃ ┣ CardInfoService.java
+ ┃ ┣ CardService.java
+ ┃ ┣ CardServiceImpl.java
+ ┃ ┣ ChatGptService.java
+ ┃ ┣ ChatGptServiceImpl.java
+ ┃ ┣ CoolSmsServiceImpl.java
+ ┃ ┣ MemberService.java
+ ┃ ┣ MemberServiceImpl.java
+ ┃ ┣ OrderService.java
+ ┃ ┣ OrderServiceImpl.java
+ ┃ ┣ PaymentService.java
+ ┃ ┣ PaymentServiceImpl.java
+ ┃ ┗ VerificationServiceImpl.java
+ ┣ websocket
+ ┃ ┣ ChatMessage.java
+ ┃ ┣ CustomStompSessionHandler.java
+ ┃ ┗ WebSocketController.java
+ ┗ SmartpayApplication.java
+```
+
+### (2) 인프라 구조
+![](img/shds2_project2.drawio.png)
+
+### (3) 네트워크 구조
+![](img/shds_network.drawio.png)
+
+
+
 
 
 ## 3. 화면 설명
@@ -287,23 +216,10 @@ src
 ## 4. ERD
 ![](img/erd.png)
 
-## 5. 프로젝트 설명
-
-### (1) 배경
-![](img/graph.png)
-- PLCC가 늘어남(*PLCC란, 혜택의 범위를 좁히고 할인률을 높인 카드)
-- 모든 영역에서 혜택을 주는 만능 카드가 없다.
-- 소비자는 각 카드의 특화된 혜택을 직접 비교해서 사용해야 한다.
-- Open AI API등 고성능 AI 모델의 접근성 확대되고 있다.
-### (2) 목표
-- 사용자에게 최적의 카드를 추천하여 자동으로 혜택과 실적을 제공한다.
-- 복잡한 카드 혜택 정보를 간단하고 직관적으로 제공한다. 
-- AI와 고객별 결제 내역을 활용한 개인화된 맞춤형 서비스 제공한다.
-- 단순하고 편리한 UI를 통해 만족도 높은 서비스를 제공한다.
 
 
 
-## 6. 결제 프로세스
+## 5. 결제 프로세스
 
 ```mermaid
 sequenceDiagram
@@ -334,5 +250,5 @@ sequenceDiagram
 ```
 
 
-## 7. AI 프로세스
+## 6. AI 프로세스
 ![](img/ai_process.png)

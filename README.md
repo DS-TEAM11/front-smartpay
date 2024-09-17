@@ -40,107 +40,181 @@
 
 ### (1) 폴더 구조
 ```
-smartpay
- ┣ config
- ┃ ┣ ChatGptClientConfig.java
- ┃ ┣ RedisConfig.java
- ┃ ┣ SecurityConfig.java
- ┃ ┣ WebClientConfig.java
- ┃ ┣ WebConfig.java
- ┃ ┗ WebSocketConfig.java
- ┣ controller
- ┃ ┣ BinController.java
- ┃ ┣ CardController.java
- ┃ ┣ ChatGptController.java
- ┃ ┣ MemberController.java
- ┃ ┣ PaymentController.java
- ┃ ┣ QrCodeController.java
- ┃ ┣ SellerController.java
- ┃ ┗ SmsController.java
- ┣ dto
- ┃ ┣ BinTableDTO.java
- ┃ ┣ CardDTO.java
- ┃ ┣ CardInfoDTO.java
- ┃ ┣ CardRecommendDTO.java
- ┃ ┣ HistoryDTO.java
- ┃ ┣ MemberDTO.java
- ┃ ┣ MyStaticDTO.java
- ┃ ┣ OrderCancelDTO.java
- ┃ ┣ OrderDTO.java
- ┃ ┣ PageRequestDTO.java
- ┃ ┣ PageResultDTO.java
- ┃ ┣ PayDTO.java
- ┃ ┣ PayInfoDTO.java
- ┃ ┗ SellerDTO.java
- ┣ entity
- ┃ ┣ BaseEntity.java
- ┃ ┣ BinTable.java
- ┃ ┣ Card.java
- ┃ ┣ CardBenefits.java
- ┃ ┣ CardInfo.java
- ┃ ┣ History.java
- ┃ ┣ Member.java
- ┃ ┣ MemberRole.java
- ┃ ┣ Order.java
- ┃ ┗ PayInfo.java
- ┣ filter
- ┃ ┗ CORSFilter.java
- ┣ repository
- ┃ ┣ BinTableRepository.java
- ┃ ┣ CardBenefitsRepository.java
- ┃ ┣ CardInfoRepository.java
- ┃ ┣ CardRepository.java
- ┃ ┣ MemberRepository.java
- ┃ ┣ OrderRepository.java
- ┃ ┣ PayHistoryRepository.java
- ┃ ┣ PayInfoRepository.java
- ┃ ┣ PayInfoRepositoryCustom.java
- ┃ ┗ PayInfoRepositoryCustomImpl.java
- ┣ security
- ┃ ┣ dto
- ┃ ┃ ┣ MemberAuthDTO.java
- ┃ ┃ ┗ MemberRegisterDTO.java
- ┃ ┣ filter
- ┃ ┃ ┣ CustomJsonUsernamePasswordAuthenticationFilter.java
- ┃ ┃ ┗ JwtAuthenticationProcessingFilter.java
- ┃ ┣ handler
- ┃ ┃ ┣ LoginFailureHandler.java
- ┃ ┃ ┗ LoginSuccessHandler.java
- ┃ ┣ oauth
- ┃ ┃ ┣ handler
- ┃ ┃ ┃ ┣ OAuth2LoginFailureHandler.java
- ┃ ┃ ┃ ┗ OAuth2LoginSuccessHandler.java
- ┃ ┃ ┣ service
- ┃ ┃ ┃ ┗ CustomOAuth2UserService.java
- ┃ ┃ ┣ userinfo
- ┃ ┃ ┃ ┣ KakaoOAuth2UserInfo.java
- ┃ ┃ ┃ ┗ OAuth2UserInfo.java
- ┃ ┃ ┣ CustomOAuth2User.java
- ┃ ┃ ┗ OAuthAttributes.java
- ┃ ┣ service
- ┃ ┃ ┣ JwtService.java
- ┃ ┃ ┗ LoginService.java
- ┃ ┗ util
- ┃ ┃ ┗ PasswordUtil.java
- ┣ service
- ┃ ┣ CardInfoService.java
- ┃ ┣ CardService.java
- ┃ ┣ CardServiceImpl.java
- ┃ ┣ ChatGptService.java
- ┃ ┣ ChatGptServiceImpl.java
- ┃ ┣ CoolSmsServiceImpl.java
- ┃ ┣ MemberService.java
- ┃ ┣ MemberServiceImpl.java
- ┃ ┣ OrderService.java
- ┃ ┣ OrderServiceImpl.java
- ┃ ┣ PaymentService.java
- ┃ ┣ PaymentServiceImpl.java
- ┃ ┗ VerificationServiceImpl.java
- ┣ websocket
- ┃ ┣ ChatMessage.java
- ┃ ┣ CustomStompSessionHandler.java
- ┃ ┗ WebSocketController.java
- ┗ SmartpayApplication.java
+src
+ ┣ api
+ ┃ ┗ webSocketService.js
+ ┣ component
+ ┃ ┣ cardManage
+ ┃ ┃ ┣ MyCardList.css
+ ┃ ┃ ┗ MyCardList.js
+ ┃ ┣ common
+ ┃ ┃ ┣ InputValue.css
+ ┃ ┃ ┣ InputValue.js
+ ┃ ┃ ┣ Modal.css
+ ┃ ┃ ┗ Modal.js
+ ┃ ┣ homeCards
+ ┃ ┃ ┣ BenefitItem.css
+ ┃ ┃ ┣ BenefitItem.js
+ ┃ ┃ ┣ CardImg.css
+ ┃ ┃ ┣ CardImg.js
+ ┃ ┃ ┣ CardInfo2.css
+ ┃ ┃ ┣ CardInfo2.js
+ ┃ ┃ ┣ CardListBox.css
+ ┃ ┃ ┣ CardListBox.js
+ ┃ ┃ ┣ CardOwnedList.css
+ ┃ ┃ ┣ CardOwnedList.js
+ ┃ ┃ ┣ CardPicker.css
+ ┃ ┃ ┣ CardPicker.js
+ ┃ ┃ ┣ MainCard.js
+ ┃ ┃ ┣ SlidingYComponent.css
+ ┃ ┃ ┣ SlidingYComponent.js
+ ┃ ┃ ┣ SpreadCards.css
+ ┃ ┃ ┗ SpreadCards.js
+ ┃ ┣ useQR
+ ┃ ┃ ┣ QrItem.css
+ ┃ ┃ ┣ QrItem.js
+ ┃ ┃ ┣ Timer.css
+ ┃ ┃ ┗ Timer.js
+ ┃ ┣ BenefitCardItem.css
+ ┃ ┣ BenefitCardItem.js
+ ┃ ┣ Benefits.css
+ ┃ ┣ Benefits.js
+ ┃ ┣ BenefitsAndManagement.css
+ ┃ ┣ BenefitsAndManagement.js
+ ┃ ┣ BlackContainer.css
+ ┃ ┣ BlackContainer.js
+ ┃ ┣ Button.css
+ ┃ ┣ Button.js
+ ┃ ┣ CardCategory.js
+ ┃ ┣ CardDeletePicker.css
+ ┃ ┣ CardDeletePicker.js
+ ┃ ┣ CardInfo.css
+ ┃ ┣ CardInfo.js
+ ┃ ┣ CardItem.css
+ ┃ ┣ CardItem.js
+ ┃ ┣ CardList.css
+ ┃ ┣ CardList.js
+ ┃ ┣ CardList2.js
+ ┃ ┣ CardListItem.css
+ ┃ ┣ CardListItem.js
+ ┃ ┣ CardListItem2.css
+ ┃ ┣ CardListItem2.js
+ ┃ ┣ Chat.css
+ ┃ ┣ Chat.js
+ ┃ ┣ CustomToggle.css
+ ┃ ┣ CustomToggle.js
+ ┃ ┣ CustomToggle2.css
+ ┃ ┣ CustomToggle2.js
+ ┃ ┣ CustomToggle3.css
+ ┃ ┣ CustomToggle3.js
+ ┃ ┣ DateCardHistory.css
+ ┃ ┣ DateCardHistory.js
+ ┃ ┣ Footer.css
+ ┃ ┣ Footer.js
+ ┃ ┣ Goal.css
+ ┃ ┣ Goal.js
+ ┃ ┣ GrayButton.css
+ ┃ ┣ GrayButton.js
+ ┃ ┣ Header.css
+ ┃ ┣ Header.js
+ ┃ ┣ Loading.css
+ ┃ ┣ Loading.js
+ ┃ ┣ Loading2.js
+ ┃ ┣ LongButton.css
+ ┃ ┣ LongButton.js
+ ┃ ┣ ManagementItem.css
+ ┃ ┣ ManagementItem.js
+ ┃ ┣ MyCalendar copy.js
+ ┃ ┣ MyCalendar.css
+ ┃ ┣ MyCalendar.js
+ ┃ ┣ NavBar.css
+ ┃ ┣ NavBar.js
+ ┃ ┣ Order.css
+ ┃ ┣ Order.js
+ ┃ ┣ PayCardList.css
+ ┃ ┣ PayCardList.js
+ ┃ ┣ Policy.css
+ ┃ ┣ Policy.js
+ ┃ ┣ PwdItem.css
+ ┃ ┣ PwdItem.js
+ ┃ ┣ RankItem.css
+ ┃ ┣ RankItem.js
+ ┃ ┣ Receipt.css
+ ┃ ┣ Receipt.js
+ ┃ ┣ RecoCard.css
+ ┃ ┣ RecoCard.js
+ ┃ ┗ StackBar.js
+ ┣ img
+ ┃ ┣ airline.png
+ ┃ ┣ bill_payment.png
+ ┃ ┣ cafe.png
+ ┃ ┣ convenience_store.png
+ ┃ ┣ gas_station.png
+ ┃ ┣ general_store.png
+ ┃ ┣ HOME.png
+ ┃ ┣ home1.png
+ ┃ ┣ home2.png
+ ┃ ┣ home3.png
+ ┃ ┣ home4.png
+ ┃ ┣ home5.png
+ ┃ ┣ home6.png
+ ┃ ┣ kakao_invisible_small.png
+ ┃ ┣ kakao_login_small.png
+ ┃ ┣ kako_login.png
+ ┃ ┣ logo.png
+ ┃ ┣ logo3.png
+ ┃ ┣ logo4.png
+ ┃ ┣ mart.png
+ ┃ ┣ payment1.gif
+ ┃ ┣ payment2.gif
+ ┃ ┣ priorityUpBtn.svg
+ ┃ ┣ public_transport.png
+ ┃ ┣ qrUpBtn.png
+ ┃ ┣ red-flag.png
+ ┃ ┣ restaurant.png
+ ┃ ┣ shopping.png
+ ┃ ┣ sp logo2.png
+ ┃ ┣ sp_logo.png
+ ┃ ┗ upArrow.png
+ ┣ pages
+ ┃ ┣ 404.css
+ ┃ ┣ 404.js
+ ┃ ┣ Afterkakao.js
+ ┃ ┣ BenefitTest.css
+ ┃ ┣ BenefitTest.js
+ ┃ ┣ CardEdit.js
+ ┃ ┣ CardRank.js
+ ┃ ┣ Home.css
+ ┃ ┣ Home.js
+ ┃ ┣ IdPwCheck.css
+ ┃ ┣ IdPwCheck.js
+ ┃ ┣ Login.css
+ ┃ ┣ Login.js
+ ┃ ┣ MemberPwd.css
+ ┃ ┣ MemberPwd.js
+ ┃ ┣ MyPage.css
+ ┃ ┣ MyPage.js
+ ┃ ┣ MyStatics.css
+ ┃ ┣ MyStatics.js
+ ┃ ┣ Pay.css
+ ┃ ┣ Pay.js
+ ┃ ┣ PayHistory copy 2.js
+ ┃ ┣ PayHistory copy.js
+ ┃ ┣ PayHistory.css
+ ┃ ┣ PayHistory.js
+ ┃ ┣ Register.css
+ ┃ ┣ Register.js
+ ┃ ┣ Seller.js
+ ┃ ┣ Signup.css
+ ┃ ┣ Signup.js
+ ┃ ┣ Test.js
+ ┃ ┣ WelcomePage.css
+ ┃ ┗ WelcomePage.js
+ ┣ provider
+ ┃ ┗ PayProvider.js
+ ┣ App.css
+ ┣ App.js
+ ┗ index.js
 ```
 
 ### (2) 인프라 구조
